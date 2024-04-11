@@ -2,9 +2,8 @@ package kr.co.dw.Controller;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import kr.co.dw.Domain.NameCountDto;
@@ -18,17 +17,12 @@ public class AptController {
 	private final AptService AptService;
 	
 	@GetMapping("/api/get")
-	private String get() {
-		
-		System.out.println(AptService.get()); 
-		return "test";
+	private List<NameCountDto> get(@RequestParam("arr")  List<String> arr,
+					   @RequestParam("year") String year) {
+						
+		return AptService.get(arr,year);
 	}
 	
-	@GetMapping("/api/get2")
-	private List<NameCountDto> get2() {
-		
-		return AptService.get2(); 
-		
-	}
+	
 	
 }

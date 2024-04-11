@@ -3,17 +3,22 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.co.dw.Mapper.AptMapper">
+    <resultMap type="NameCountDto" id="newNameCountDto">
+  	<!-- 1:1로 DTO의 멤버변수를 매핑-->
+  	<result column="sigungu" property="SIGUNGU"/>
+  	<result column="bungi" property="BUNGI"/>
+  	<result column="apartmentname" property="APARTMENTNAME"/>
+  	<result column="roadname" property="ROADNAME"/>
+	</resultMap>   
+    <select id="get" parameterType="hashMap" resultMap="newNameCountDto">
+       
     
-    <select id="get">
-    
-    select * from busan where apartmentname = '썬리치' and dealyearmonth like '2007%'
-    
+       
+    select sigungu , bungi, apartmentname , roadname , count(*) as count from 
+    (select * from ${tableName} where sigungu like #{region_1depth_name}||'%' and sigungu like '%'||#{region_2depth_name}||'%' and dealyearmonth like #{year}||'%') 
+    group by sigungu,bungi,apartmentname,roadname 
+     
     </select>
     
-    <select id="get2">
     
-    select apartmentname , count(apartmentname) as count from busan where dealyearmonth like '2007%' group by apartmentname having count(*) > 0
-    
-    </select>
-    
-</mapper>
+</mapper>	
