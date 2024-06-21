@@ -12,4 +12,6 @@ public interface AptMapper {
 
 	List<NameCountDto> get(Map<String, String> map);
 	
+	List<NameCountDto> get2(Map<String, String> map);
+	
 }
