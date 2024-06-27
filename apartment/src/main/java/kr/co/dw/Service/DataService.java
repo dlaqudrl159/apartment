@@ -11,7 +11,7 @@ import kr.co.dw.Domain.NameCountDto;
 
 public interface DataService {
 
-	void LatLngInsert() throws MalformedURLException, IOException, ParseException;
+	void LatLngInsert(String tableName) throws MalformedURLException, IOException, ParseException;
 
 	List<NameCountDto> getLatLng(List<NameCountDto> list, String tableName) throws IOException, ParseException;
 

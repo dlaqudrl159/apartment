@@ -129,7 +129,7 @@ public class AptServiceImpl implements AptService{
 				list.addAll(AptMapper.get2(map));
 			
 		}
-		
+		System.out.println(list);
 		return list;
 	}
 }

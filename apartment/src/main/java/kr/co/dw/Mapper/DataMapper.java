@@ -9,8 +9,10 @@ import kr.co.dw.Domain.NameCountDto;
 @Mapper
 public interface DataMapper {
 
-	List<NameCountDto> get(String tableName);
-
 	void insert(NameCountDto nameCountDto);
+
+	List<NameCountDto> getList(String tableName);
+
+	NameCountDto get(NameCountDto nameCountDto);
 
 }

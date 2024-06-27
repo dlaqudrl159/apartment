@@ -16,4 +16,6 @@ public class NameCountDto {
 	private String COUNT;
 	private String LAT;
 	private String LNG;
+	
+	
 }
