@@ -4,14 +4,27 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.co.dw.Mapper.DataMapper">
     
+    <resultMap type="NameCountDto" id="newNameCountDto">
+  	<!-- 1:1로 DTO의 멤버변수를 매핑-->
+  	<result column="sigungu" property="SIGUNGU"/>
+  	<result column="bungi" property="BUNGI"/>
+  	<result column="apartmentname" property="APARTMENTNAME"/>
+  	<result column="roadname" property="ROADNAME"/>
+  	<result column="lat" property="LAT"/>
+  	<result column="lng" property="LNG"/>
+	</resultMap>   
     
-    <select id="get">
+    <select id="getList">
     
     select sigungu,bungi,roadname,apartmentname,count(*) from ${tableName} group by sigungu,bungi,roadname,apartmentname order by sigungu desc
     
     </select>
     
+    <select id = "get" parameterType="NameCountDto">
     
+    select * from latlng where SIGUNGU = #{SIGUNGU} and BUNGI = #{BUNGI} and LAT = #{LAT} and LNG = #{LNG} and ROADNAME = #{ROADNAME} and APARTMENTNAME = #{APARTMENTNAME}
+    
+    </select>
     
     
     <insert id="insert" parameterType="NameCountDto">

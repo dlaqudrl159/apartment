@@ -1,19 +1,10 @@
 package kr.co.dw.Controller;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,10 +12,7 @@ import org.springframework.test.context.ContextConfiguration;
 
 import kr.co.dw.ApartmentApplication;
 import kr.co.dw.Domain.NameCountDto;
-import kr.co.dw.Mapper.AptMapper;
 import kr.co.dw.Service.AptService;
-import kr.co.dw.Service.AptServiceImpl;
-import lombok.RequiredArgsConstructor;
 
 @SpringBootTest
 @ContextConfiguration(classes = ApartmentApplication.class)
@@ -39,7 +27,28 @@ public class AptControllerTest {
 		AptService = aptService;
 	}
 
-
+	@Test
+	void test2() {
+		NameCountDto dto = new NameCountDto();
+		dto.setSIGUNGU("충청북도 충주시 호암동");
+		dto.setBUNGI("906");
+		dto.setROADNAME("형설로 32");
+		dto.setAPARTMENTNAME("세영더-조은");
+		dto.setLAT("36.95680676244391");
+		dto.setLNG("127.94202223387529");
+		
+		NameCountDto dto2 = new NameCountDto();
+		
+		dto2.setSIGUNGU("충청북도 충주시 호암동");
+		dto2.setBUNGI("906");
+		dto2.setROADNAME("형설로 32");
+		dto2.setAPARTMENTNAME("세영더-조은");
+		dto2.setLAT("36.95680676244391");
+		dto2.setLNG("127.94202223387529");
+		
+		System.out.println(dto.equals(dto2));
+		
+	}
 
 	@Test
 	void test() {

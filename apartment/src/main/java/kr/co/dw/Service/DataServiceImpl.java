@@ -28,17 +28,15 @@ public class DataServiceImpl implements DataService{
 	
 	@Transactional
 	@Override
-	public void LatLngInsert() throws MalformedURLException, IOException, ParseException {
+	public void LatLngInsert(String tableName) throws MalformedURLException, IOException, ParseException {
 		
-		String[] arr = {"SEOUL","BUSAN","DAEGU","INCHEON","GWANGJU","DAEJEON","ULSAN","SEJONG","GYEONGGIDO","CHUNGCHEONGBUKDO","CHUNGCHEONGNAMDO","JEOLLANAMDO","GYEONGSANGBUKDO","GYEONGSANGNAMDO","JEJU","GANGWONDO","JEOLLABUKDO"};
+		//String[] arr = {"SEOUL","BUSAN","DAEGU","INCHEON","GWANGJU","DAEJEON","ULSAN","SEJONG","GYEONGGIDO","CHUNGCHEONGBUKDO","CHUNGCHEONGNAMDO","JEOLLANAMDO","GYEONGSANGBUKDO","GYEONGSANGNAMDO","JEJU","GANGWONDO","JEOLLABUKDO"};
 		//5.10 
 		
 		List<NameCountDto> list = new ArrayList<>();
 		
-		String tableName = "JEOLLABUKDO";
-		list = DataMapper.get(tableName);
+		list = DataMapper.getList(tableName);
 			
-		
 		getLatLng(list, tableName);
 		
 	}
@@ -221,6 +219,7 @@ public class DataServiceImpl implements DataService{
 
 	}
 	
+	
 	@Override
 	public List<NameCountDto> getLatLng(List<NameCountDto> list, String tableName) throws IOException, ParseException {
 		// TODO Auto-generated method stub
@@ -253,7 +252,25 @@ public class DataServiceImpl implements DataService{
 				}
 			}
 			System.out.println(i + "번째 " + NameCountDto);
-		    DataMapper.insert(NameCountDto);
+			NameCountDto checkNameCountDto = new NameCountDto();
+			checkNameCountDto = DataMapper.get(NameCountDto);
+			System.out.println(NameCountDto);
+			System.out.println(checkNameCountDto);
+			System.out.println(NameCountDto.equals(checkNameCountDto));
+			if(NameCountDto.equals(checkNameCountDto)) {
+				System.out.println("중복입니다 넘어갑니다");
+				System.out.println("------------------------------------");
+			}else {
+				DataMapper.insert(NameCountDto);
+				
+				System.out.println(checkNameCountDto.toString());
+				System.out.println(NameCountDto.toString());
+				System.out.println("------------------------------------");
+			}
+			/*6.27 여기까지 좌표 소수점 아래 5자리까지는 똑같음 그 이상 넘어가면 매번 달라지는듯(아마?) 테스트 해볼 것
+			0번째 NameCountDto(SIGUNGU=제주특별자치도 제주시 화북일동, BUNGI=10-1, APARTMENTNAME=화북주공1단지, ROADNAME=동화로1길 11, COUNT=null, LAT=33.520187700904884, LNG=126.57492021931401)
+			db에 있는 좌표와 소수점 아래 5자리 이후부터 다름*/
+		    
 		}
 		System.out.println("끝");
 		return list;
