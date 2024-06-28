@@ -1,17 +1,13 @@
 package kr.co.dw.Controller;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.List;
 
-import org.json.simple.parser.ParseException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import kr.co.dw.Domain.NameCountDto;
 import kr.co.dw.Service.AptService;
-import kr.co.dw.Utils.DataUtils;
 import lombok.RequiredArgsConstructor;
 
 @RestController
