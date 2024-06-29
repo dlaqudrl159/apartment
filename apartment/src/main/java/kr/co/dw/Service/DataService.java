@@ -11,9 +11,9 @@ import kr.co.dw.Domain.NameCountDto;
 
 public interface DataService {
 
-	void LatLngInsert(String tableName) throws MalformedURLException, IOException, ParseException;
+	void LatLngInsert(String tableName) throws MalformedURLException, IOException, ParseException, InterruptedException;
 
-	List<NameCountDto> getLatLng(List<NameCountDto> list, String tableName) throws IOException, ParseException;
+	List<NameCountDto> getLatLng(List<NameCountDto> list, String tableName) throws IOException, ParseException, InterruptedException;
 
 	JSONObject geocodersearchaddress(String searchAddr, String searchType) throws IOException, ParseException;
 

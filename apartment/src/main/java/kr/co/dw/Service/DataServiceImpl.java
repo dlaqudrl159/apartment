@@ -1,8 +1,11 @@
 package kr.co.dw.Service;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -28,11 +31,11 @@ public class DataServiceImpl implements DataService{
 	
 	@Transactional
 	@Override
-	public void LatLngInsert(String tableName) throws MalformedURLException, IOException, ParseException {
+	public void LatLngInsert(String tableName) throws MalformedURLException, IOException, ParseException, InterruptedException {
 		
 		//String[] arr = {"SEOUL","BUSAN","DAEGU","INCHEON","GWANGJU","DAEJEON","ULSAN","SEJONG","GYEONGGIDO","CHUNGCHEONGBUKDO","CHUNGCHEONGNAMDO","JEOLLANAMDO","GYEONGSANGBUKDO","GYEONGSANGNAMDO","JEJU","GANGWONDO","JEOLLABUKDO"};
 		//5.10 
-		
+		//세종 제주 전라남도 
 		List<NameCountDto> list = new ArrayList<>();
 		
 		list = DataMapper.getList(tableName);
@@ -221,51 +224,106 @@ public class DataServiceImpl implements DataService{
 	
 	
 	@Override
-	public List<NameCountDto> getLatLng(List<NameCountDto> list, String tableName) throws IOException, ParseException {
+	public List<NameCountDto> getLatLng(List<NameCountDto> list, String tableName) throws IOException, ParseException, InterruptedException {
 		// TODO Auto-generated method stub
-		
+		PrintWriter pw = new PrintWriter(new FileWriter("C:/Users/qkfka/OneDrive/바탕 화면/아파트데이터/서울/javatest.txt",true));
 		JSONObject jsrs = null;
 		
 		for(int i = 0 ; i < list.size() ; i++) {
-			
+			//Thread.sleep(500);
 			NameCountDto NameCountDto = list.get(i);
 			
-			jsrs  = getparcel(NameCountDto,tableName);	
-			
+				
+			try {
+				jsrs  = getparcel(NameCountDto,tableName);	
+			} catch (Exception e) {
+				pw.write(e.getMessage()+"\r\n");
+				System.out.println(e.getMessage()); 
+				// TODO: handle exception
+				System.out.println(i+"\r\n");
+				pw.write(i);
+				i--;
+				System.out.println(i+"\r\n");
+				pw.write(i+"\r\n");
+				pw.write("에러발생" + "\r\n");
+				continue;
+			}
 			if(jsrs.get("status").equals("OK")) {
+				System.out.println(jsrs.get("status"));
+				pw.write(jsrs.get("status").toString()+"\r\n");
 				JSONObject jsResult = (JSONObject) jsrs.get("result");
 			    JSONObject jspoint = (JSONObject) jsResult.get("point");
-			    NameCountDto.setLAT((String) jspoint.get("y"));
-			    NameCountDto.setLNG((String) jspoint.get("x"));			    
+			    String lat = (String) jspoint.get("y");
+			    int latidx =lat.indexOf(".");
+			    
+			    String lng = (String) jspoint.get("x");
+			    int lngidx = lng.indexOf(".");
+			    NameCountDto.setLAT(((String) jspoint.get("y")).substring(0, latidx+6));
+			    NameCountDto.setLNG(((String) jspoint.get("x")).substring(0, lngidx+6));			    
 			}else {
+				System.out.println(jsrs.get("status"));
+				pw.write(jsrs.get("status").toString()+"\r\n");
 				
-				jsrs = getroadname(NameCountDto,tableName);
+				try {
+					jsrs = getroadname(NameCountDto,tableName);
+				} catch (Exception e) {
+					// TODO: handle exception
+					pw.write(e.getMessage()+"\r\n");
+					System.out.println(e.getMessage()); 
+					// TODO: handle exception
+					System.out.println(i+"\r\n");
+					pw.write(i);
+					i--;
+					System.out.println(i+"\r\n");
+					pw.write(i+"\r\n");
+					pw.write("에러발생" + "\r\n");
+					continue;
+				}
 				
 				if(jsrs.get("status").equals("OK")) {
 					JSONObject jsResult = (JSONObject) jsrs.get("result");
 				    JSONObject jspoint = (JSONObject) jsResult.get("point");
-				    NameCountDto.setLAT((String) jspoint.get("y"));
-				    NameCountDto.setLNG((String) jspoint.get("x"));			    
+				    String lat = (String) jspoint.get("y");
+				    int latidx =lat.indexOf(".");
+				    
+				    String lng = (String) jspoint.get("x");
+				    int lngidx = lng.indexOf(".");
+				    NameCountDto.setLAT(((String) jspoint.get("y")).substring(0, latidx+6));
+				    NameCountDto.setLNG(((String) jspoint.get("x")).substring(0, lngidx+6));			    
 				}else {
+					System.out.println(jsrs.get("status"));
+					pw.write(jsrs.get("status").toString()+"\r\n");
 					NameCountDto.setLAT("자료없음");
 				    NameCountDto.setLNG("자료없음");		
 				}
 			}
 			System.out.println(i + "번째 " + NameCountDto);
+			pw.write(i + "번째 " + NameCountDto+"\r\n");
 			NameCountDto checkNameCountDto = new NameCountDto();
 			checkNameCountDto = DataMapper.get(NameCountDto);
-			System.out.println(NameCountDto);
-			System.out.println(checkNameCountDto);
+			System.out.println(NameCountDto);			
+			System.out.println(checkNameCountDto);			
 			System.out.println(NameCountDto.equals(checkNameCountDto));
+			
 			if(NameCountDto.equals(checkNameCountDto)) {
 				System.out.println("중복입니다 넘어갑니다");
+				pw.write("중복입니다 넘어갑니다"+"\r\n");
 				System.out.println("------------------------------------");
+				pw.write("------------------------------------"+"\r\n");
 			}else {
 				DataMapper.insert(NameCountDto);
 				
-				System.out.println(checkNameCountDto.toString());
-				System.out.println(NameCountDto.toString());
+				System.out.println(checkNameCountDto);
+				if(checkNameCountDto == null || "".equals(checkNameCountDto)) {
+					pw.write("null"+"\r\n");
+				}else {
+					pw.write(checkNameCountDto.toString()+"\r\n");
+				}				
+				System.out.println(NameCountDto);
+				pw.write(NameCountDto.toString()+"\r\n");
 				System.out.println("------------------------------------");
+				pw.write("------------------------------------"+"\r\n");
+				
 			}
 			/*6.27 여기까지 좌표 소수점 아래 5자리까지는 똑같음 그 이상 넘어가면 매번 달라지는듯(아마?) 테스트 해볼 것
 			0번째 NameCountDto(SIGUNGU=제주특별자치도 제주시 화북일동, BUNGI=10-1, APARTMENTNAME=화북주공1단지, ROADNAME=동화로1길 11, COUNT=null, LAT=33.520187700904884, LNG=126.57492021931401)
@@ -273,6 +331,7 @@ public class DataServiceImpl implements DataService{
 		    
 		}
 		System.out.println("끝");
+		pw.write("끝");
 		return list;
 	}
 	
