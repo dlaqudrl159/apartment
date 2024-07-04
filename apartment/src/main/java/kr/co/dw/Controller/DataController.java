@@ -24,5 +24,6 @@ public class DataController {
 		System.out.println(tableName);
 		DataService.LatLngInsert(tableName);
 		System.out.println("좌표 저장 완료");
+		
 	}
 }

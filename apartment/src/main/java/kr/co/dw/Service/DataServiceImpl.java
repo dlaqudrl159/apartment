@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import kr.co.dw.Domain.NameCountDto;
 import kr.co.dw.Mapper.DataMapper;
+import kr.co.dw.Utils.AptUtils;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -35,7 +36,7 @@ public class DataServiceImpl implements DataService{
 		
 		//String[] arr = {"SEOUL","BUSAN","DAEGU","INCHEON","GWANGJU","DAEJEON","ULSAN","SEJONG","GYEONGGIDO","CHUNGCHEONGBUKDO","CHUNGCHEONGNAMDO","JEOLLANAMDO","GYEONGSANGBUKDO","GYEONGSANGNAMDO","JEJU","GANGWONDO","JEOLLABUKDO"};
 		//5.10 
-		//세종 제주 전라남도 
+		//서울 제주 세종 부산 대구
 		List<NameCountDto> list = new ArrayList<>();
 		
 		list = DataMapper.getList(tableName);
@@ -226,7 +227,17 @@ public class DataServiceImpl implements DataService{
 	@Override
 	public List<NameCountDto> getLatLng(List<NameCountDto> list, String tableName) throws IOException, ParseException, InterruptedException {
 		// TODO Auto-generated method stub
-		PrintWriter pw = new PrintWriter(new FileWriter("C:/Users/qkfka/OneDrive/바탕 화면/아파트데이터/서울/javatest.txt",true));
+		
+		AptUtils AptUtils = new AptUtils();
+		System.out.println(tableName);
+		
+		String fileRegionName = AptUtils.MappingRegionReverse(tableName);
+		System.out.println(fileRegionName);
+		File file = new File("C:/Users/qkfka/OneDrive/바탕 화면/아파트데이터/" + fileRegionName + "/javatest.txt");
+		
+		
+		PrintWriter pw = new PrintWriter(new FileWriter(file,true));
+		
 		JSONObject jsrs = null;
 		
 		for(int i = 0 ; i < list.size() ; i++) {
@@ -241,7 +252,7 @@ public class DataServiceImpl implements DataService{
 				System.out.println(e.getMessage()); 
 				// TODO: handle exception
 				System.out.println(i+"\r\n");
-				pw.write(i);
+				pw.write(i+"\r\n");
 				i--;
 				System.out.println(i+"\r\n");
 				pw.write(i+"\r\n");
@@ -332,6 +343,7 @@ public class DataServiceImpl implements DataService{
 		}
 		System.out.println("끝");
 		pw.write("끝");
+		pw.close();
 		return list;
 	}
 	

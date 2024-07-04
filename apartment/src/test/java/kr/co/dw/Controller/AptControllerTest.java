@@ -1,7 +1,11 @@
 package kr.co.dw.Controller;
 
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 
@@ -27,6 +31,36 @@ public class AptControllerTest {
 		AptService = aptService;
 	}
 
+	@Test
+	void test3() {
+		
+		String[] arr = {"seoul","jeju","sejong"};
+		String[] arr2 = {"서울","제주도","세종특별자치시"};
+		Calendar cal = Calendar.getInstance();
+		for(int i = 0 ; i < arr.length ; i++) {
+			File file = new File("C:/Users/qkfka/OneDrive/바탕 화면/아파트데이터/"+ arr2[Arrays.asList(arr).indexOf(arr[i])]  +"/데이터");
+			if(file.exists() == false) {
+				file.mkdir();
+			}
+			String uploadFath = file.getPath();
+			file = new File(uploadFath, String.valueOf(cal.get(Calendar.MONTH)+1));
+			if(file.exists() == false) {
+				file.mkdir();
+			}
+			uploadFath = file.getPath();
+			file = new File(uploadFath, String.valueOf(cal.get(Calendar.DATE)));
+			if(file.exists() == false) {
+				file.mkdir();
+			}
+		}
+		
+		
+		
+		
+		
+		
+	}
+	
 	@Test
 	void test2() {
 		NameCountDto dto = new NameCountDto();
