@@ -6,6 +6,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -13,30 +14,89 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.xml.sax.SAXException;
 
 import kr.co.dw.Domain.NameCountDto;
 import kr.co.dw.Mapper.DataMapper;
 import kr.co.dw.Utils.AptUtils;
+import kr.co.dw.Utils.DataUtils;
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class DataServiceImpl implements DataService{
 
+	private String[] region = {"SEOUL","BUSAN","DAEGU","INCHEON","GWANGJU","DAEJEON","ULSAN","SEJONG","GYEONGGIDO","GANGWONDO",
+			"CHUNGCHEONGBUKDO","CHUNGCHEONGNAMDO","JEOLLABUKDO","JEOLLANAMDO","GYEONGSANGBUKDO","GYEONGSANGNAMDO","JEJU"};
+	
+	private String[][] region2 = {
+			/*서울*/
+			{ "11110", "11140", "11170", "11200", "11215", "11230", "11260", "11290", "11305", "11320", "11350",
+					"11380", "11410", "11440", "11470", "11500", "11530", "11545", "11560", "11590", "11620",
+					"11650", "11680", "11710", "11740" },
+			/*부산*/
+			{ "26110", "26140", "26170", "26200", "26230", "26260", "26290", "26320", "26350", "26380", "26410",
+					"26440", "26470", "26500", "26530", "26710" },
+			/*대구*/
+			{ "27110", "27140", "27170", "27200", "27230", "27260", "27290", "27710" },
+			/*인천*/
+			{ "28110", "28140", "28177", "28185", "28200", "28237", "28245", "28260", "28710", "28720" },
+			/*광주*/
+			{ "29110", "29140", "29155", "29170", "29200" },
+			/*대전*/
+			{ "30110", "30140", "30170", "30200", "30230" },
+			/*울산*/
+			{ "31110", "31140", "31170", "31200", "31710" },
+			/*세종특별자치시*/
+			{ "36110" },
+			/*경기도*/
+			{ "41111", "41113", "41115", "41117", "41131", "41133", "41135", "41150", "41171", "41173", "41190",
+					"41210", "41220", "41250", "41271", "41273", "41281", "41285", "41287", "41290", "41310",
+					"41360", "41370", "41390", "41410", "41430", "41450", "41461", "41463", "41465", "41480",
+					"41500", "41550", "41570", "41590", "41610", "41630", "41650", "41670", "41800", "41820",
+					"41830" },
+			/*강원도*/
+			{ "51110", "51130", "51150", "51170", "51190", "51210", "51230", "51720", "51730", "51750", "51760",
+					"51770", "51780", "51790", "51800", "51810", "51820", "51830" },
+			/*충청북도*/
+			{ "42830", "43111", "43112", "43113", "43114", "43130", "43150", "43720", "43730", "43740", "43745",
+					"43750", "43760", "43770", "43800" },
+			/*충청남도*/
+			{ "44131", "44133", "44150", "44180", "44200", "44210", "44230", "44250", "44270", "44710", "44760",
+					"44790", "44800", "44810", "44825" },
+			/*전라북도*/
+			{ "52111", "52113", "52130", "52140", "52180", "52190", "52210", "52710", "52720", "52730", "52740",
+					"52750", "52770", "52790", "52800" },
+			/*전라남도*/
+			{ "46110", "46130", "46150", "46170", "46230", "46710", "46720", "46730", "46770", "46780", "46790",
+					"46800", "46810", "46820", "46830", "46840", "46860", "46870", "46880", "46890", "46900",
+					"46910" },
+			/*경상북도*/
+			{ "47111", "47113", "47130", "47150", "47170", "47190", "47210", "47230", "47250", "47280", "47290",
+					"47720", "47730", "47750", "47760", "47770", "47820", "47830", "47840", "47850", "47900",
+					"47920", "47930", "47940" },
+			/*경상남도*/
+			{ "48121", "48123", "48125", "48127", "48129", "48170", "48220", "48240", "48250", "48270", "48310",
+					"48330", "48720", "48730", "48740", "48820", "48840", "48850", "48860", "48870", "48880",
+					"48890" },
+			/*제주도*/
+			{ "50110", "50130" } };
+	
 	private final DataMapper DataMapper;
 	
 	@Transactional
 	@Override
 	public void LatLngInsert(String tableName) throws MalformedURLException, IOException, ParseException, InterruptedException {
 		
-		//String[] arr = {"SEOUL","BUSAN","DAEGU","INCHEON","GWANGJU","DAEJEON","ULSAN","SEJONG","GYEONGGIDO","CHUNGCHEONGBUKDO","CHUNGCHEONGNAMDO","JEOLLANAMDO","GYEONGSANGBUKDO","GYEONGSANGNAMDO","JEJU","GANGWONDO","JEOLLABUKDO"};
-		//5.10 
-		//서울 제주 세종 부산 대구
+		//String[] arr = {"SEOUL","BUSAN","DAEGU","INCHEON","GWANGJU","DAEJEON","ULSAN","SEJONG","GYEONGGIDO","CHUNGCHEONGBUKDO","CHUNGCHEONGNAMDO","JEOLLANAMDO","GYEONGSANGBUKDO","GYEONGSANGNAMDO","JEJU","GANGWONDO","JEOLLABUKDO"}; 
+		//세종 서울 부산 대구 인천 광주 대전 울산 세종 경기도 충청북도 충청남도 전라남도 경상북도 경상남도 제주 강원도 전라북도
 		List<NameCountDto> list = new ArrayList<>();
 		
 		list = DataMapper.getList(tableName);
@@ -229,12 +289,16 @@ public class DataServiceImpl implements DataService{
 		// TODO Auto-generated method stub
 		
 		AptUtils AptUtils = new AptUtils();
-		System.out.println(tableName);
+		
 		
 		String fileRegionName = AptUtils.MappingRegionReverse(tableName);
-		System.out.println(fileRegionName);
-		File file = new File("C:/Users/qkfka/OneDrive/바탕 화면/아파트데이터/" + fileRegionName + "/javatest.txt");
 		
+		File file = null;
+		if(System.getProperty("os.name").equals("Windows 10")) {
+			file = new File("C:/Users/qkfka/OneDrive/바탕 화면/아파트데이터/" + fileRegionName + "/javatest.txt");
+		}else if(System.getProperty("os.name").equals("Linux")) {
+			file = new File(File.separator + "home" + File.separator + "ubuntu" + File.separator + "아파트데이터" + File.separator + fileRegionName + File.separator +"javatest.txt");
+		}
 		
 		PrintWriter pw = new PrintWriter(new FileWriter(file,true));
 		
@@ -243,105 +307,82 @@ public class DataServiceImpl implements DataService{
 		for(int i = 0 ; i < list.size() ; i++) {
 			//Thread.sleep(500);
 			NameCountDto NameCountDto = list.get(i);
-			
-				
 			try {
 				jsrs  = getparcel(NameCountDto,tableName);	
 			} catch (Exception e) {
-				pw.write(e.getMessage()+"\r\n");
-				System.out.println(e.getMessage()); 
 				// TODO: handle exception
-				System.out.println(i+"\r\n");
+					
+				pw.write("에러발생" + e.getMessage()+"\r\n");	
 				pw.write(i+"\r\n");
-				i--;
-				System.out.println(i+"\r\n");
+				i--;	
 				pw.write(i+"\r\n");
-				pw.write("에러발생" + "\r\n");
 				continue;
 			}
 			if(jsrs.get("status").equals("OK")) {
-				System.out.println(jsrs.get("status"));
+				
 				pw.write(jsrs.get("status").toString()+"\r\n");
+				
 				JSONObject jsResult = (JSONObject) jsrs.get("result");
 			    JSONObject jspoint = (JSONObject) jsResult.get("point");
+			    
 			    String lat = (String) jspoint.get("y");
 			    int latidx =lat.indexOf(".");
-			    
 			    String lng = (String) jspoint.get("x");
 			    int lngidx = lng.indexOf(".");
+			    
 			    NameCountDto.setLAT(((String) jspoint.get("y")).substring(0, latidx+6));
 			    NameCountDto.setLNG(((String) jspoint.get("x")).substring(0, lngidx+6));			    
 			}else {
-				System.out.println(jsrs.get("status"));
+				
 				pw.write(jsrs.get("status").toString()+"\r\n");
 				
 				try {
 					jsrs = getroadname(NameCountDto,tableName);
 				} catch (Exception e) {
 					// TODO: handle exception
-					pw.write(e.getMessage()+"\r\n");
-					System.out.println(e.getMessage()); 
-					// TODO: handle exception
-					System.out.println(i+"\r\n");
-					pw.write(i);
-					i--;
-					System.out.println(i+"\r\n");
+					pw.write("에러발생" + e.getMessage()+"\r\n");	
 					pw.write(i+"\r\n");
-					pw.write("에러발생" + "\r\n");
+					i--;	
+					pw.write(i+"\r\n");
 					continue;
 				}
 				
 				if(jsrs.get("status").equals("OK")) {
 					JSONObject jsResult = (JSONObject) jsrs.get("result");
 				    JSONObject jspoint = (JSONObject) jsResult.get("point");
+				    
 				    String lat = (String) jspoint.get("y");
 				    int latidx =lat.indexOf(".");
-				    
 				    String lng = (String) jspoint.get("x");
 				    int lngidx = lng.indexOf(".");
+				    
 				    NameCountDto.setLAT(((String) jspoint.get("y")).substring(0, latidx+6));
 				    NameCountDto.setLNG(((String) jspoint.get("x")).substring(0, lngidx+6));			    
 				}else {
-					System.out.println(jsrs.get("status"));
 					pw.write(jsrs.get("status").toString()+"\r\n");
 					NameCountDto.setLAT("자료없음");
 				    NameCountDto.setLNG("자료없음");		
 				}
 			}
-			System.out.println(i + "번째 " + NameCountDto);
+			
 			pw.write(i + "번째 " + NameCountDto+"\r\n");
 			NameCountDto checkNameCountDto = new NameCountDto();
 			checkNameCountDto = DataMapper.get(NameCountDto);
-			System.out.println(NameCountDto);			
-			System.out.println(checkNameCountDto);			
-			System.out.println(NameCountDto.equals(checkNameCountDto));
 			
 			if(NameCountDto.equals(checkNameCountDto)) {
-				System.out.println("중복입니다 넘어갑니다");
 				pw.write("중복입니다 넘어갑니다"+"\r\n");
-				System.out.println("------------------------------------");
 				pw.write("------------------------------------"+"\r\n");
 			}else {
 				DataMapper.insert(NameCountDto);
-				
-				System.out.println(checkNameCountDto);
 				if(checkNameCountDto == null || "".equals(checkNameCountDto)) {
 					pw.write("null"+"\r\n");
 				}else {
 					pw.write(checkNameCountDto.toString()+"\r\n");
 				}				
-				System.out.println(NameCountDto);
 				pw.write(NameCountDto.toString()+"\r\n");
-				System.out.println("------------------------------------");
 				pw.write("------------------------------------"+"\r\n");
-				
 			}
-			/*6.27 여기까지 좌표 소수점 아래 5자리까지는 똑같음 그 이상 넘어가면 매번 달라지는듯(아마?) 테스트 해볼 것
-			0번째 NameCountDto(SIGUNGU=제주특별자치도 제주시 화북일동, BUNGI=10-1, APARTMENTNAME=화북주공1단지, ROADNAME=동화로1길 11, COUNT=null, LAT=33.520187700904884, LNG=126.57492021931401)
-			db에 있는 좌표와 소수점 아래 5자리 이후부터 다름*/
-		    
 		}
-		System.out.println("끝");
 		pw.write("끝");
 		pw.close();
 		return list;
@@ -394,20 +435,6 @@ public class DataServiceImpl implements DataService{
 		
 		String roadname = NameCountDto.getROADNAME();
 		String searchAddr = Sigungu + " " + roadname;
-		/*StringBuilder sb = new StringBuilder("https://api.vworld.kr/req/address");
-		sb.append("?service=address");
-		sb.append("&request=getCoord");
-		sb.append("&format=json");
-		sb.append("&crs=" + epsg);
-		sb.append("&key=" + apikey);
-		sb.append("&type=" + searchType);
-		sb.append("&address=" + URLEncoder.encode(searchAddr, StandardCharsets.UTF_8));
-		
-		URL url = new URL(sb.toString());
-		BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream(),StandardCharsets.UTF_8));
-		JSONParser jspa = new JSONParser();
-		JSONObject jsob = (JSONObject) jspa.parse(br);
-		JSONObject jsrs = (JSONObject) jsob.get("response");*/
 		
 		return geocodersearchaddress(searchAddr, searchType);
 		
@@ -435,92 +462,48 @@ public class DataServiceImpl implements DataService{
 		
 		String Bungi = NameCountDto.getBUNGI();		
 		String searchAddr = Sigungu + " " + Bungi;
-		/*StringBuilder sb = new StringBuilder("https://api.vworld.kr/req/address");
-		sb.append("?service=address");
-		sb.append("&request=getCoord");
-		sb.append("&format=json");
-		sb.append("&crs=" + epsg);
-		sb.append("&key=" + apikey);
-		sb.append("&type=" + searchType);
-		sb.append("&address=" + URLEncoder.encode(searchAddr, StandardCharsets.UTF_8));
-		
-		URL url = new URL(sb.toString());
-		BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream(),StandardCharsets.UTF_8));
-		JSONParser jspa = new JSONParser();
-		JSONObject jsob = (JSONObject) jspa.parse(br);
-		JSONObject jsrs = (JSONObject) jsob.get("response");*/
 		
 		return geocodersearchaddress(searchAddr, searchType);
 		
 	}
-	
-	/*@Override
-	public List<NameCountDto> getLatLng(List<NameCountDto> list, String tableName) throws IOException, ParseException {
+
+	@Override
+	public String test() throws IOException, ParserConfigurationException, SAXException {
 		// TODO Auto-generated method stub
 		
-		String apikey = "F0DBB350-67A6-39BB-A8BB-9237BB06612C";
-		String searchType = "parcel";
-		String searchType2 = "road";
-		String epsg = "epsg:4326";
 		
-		for(int i = 0 ; i < list.size() ; i++) {
-			String searchAddr = list.get(i).getSIGUNGU() + " " + list.get(i).getBUNGI();
-			StringBuilder sb = new StringBuilder("https://api.vworld.kr/req/address");
-			sb.append("?service=address");
-			sb.append("&request=getCoord");
-			sb.append("&format=json");
-			sb.append("&crs=" + epsg);
-			sb.append("&key=" + apikey);
-			sb.append("&type=" + searchType);
-			sb.append("&address=" + URLEncoder.encode(searchAddr, StandardCharsets.UTF_8));
-			
-			
-				URL url = new URL(sb.toString());
-				BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream(),StandardCharsets.UTF_8));
-				JSONParser jspa = new JSONParser();
-				JSONObject jsob = (JSONObject) jspa.parse(br);
-				JSONObject jsrs = (JSONObject) jsob.get("response");
-				if(jsrs.get("status").equals("OK")) {
-					JSONObject jsResult = (JSONObject) jsrs.get("result");
-				    JSONObject jspoint = (JSONObject) jsResult.get("point");
-				    list.get(i).setLAT((String) jspoint.get("y"));
-				    list.get(i).setLNG((String) jspoint.get("x"));
-				    
-				}else {			
-					String searchAddr2 = list.get(i).getSIGUNGU() + " " + list.get(i).getROADNAME();
-					StringBuilder sb2 = new StringBuilder("https://api.vworld.kr/req/address");
-					sb2.append("?service=address");
-					sb2.append("&request=getCoord");
-					sb2.append("&format=json");
-					sb2.append("&crs=" + epsg);
-					sb2.append("&key=" + apikey);
-					sb2.append("&type=" + searchType2);
-					sb2.append("&address=" + URLEncoder.encode(searchAddr2, StandardCharsets.UTF_8));
-					
-					URL url2 = new URL(sb2.toString());
-					BufferedReader br2 = new BufferedReader(new InputStreamReader(url2.openStream(),StandardCharsets.UTF_8));
-					JSONParser jspa2 = new JSONParser();
-					JSONObject jsob2 = (JSONObject) jspa2.parse(br2);
-					JSONObject jsrs2 = (JSONObject) jsob2.get("response");
-					
-					if(jsrs2.get("status").equals("OK")) {
-						JSONObject jsResult2 = (JSONObject) jsrs2.get("result");
-					    JSONObject jspoint2 = (JSONObject) jsResult2.get("point");
-					    
-					    list.get(i).setLAT((String) jspoint2.get("y"));
-					    list.get(i).setLNG((String) jspoint2.get("x"));
-					    
-					}else {
-						System.out.println("에휴 씨발");
-						list.get(i).setLAT("자료없음");
-					    list.get(i).setLNG("자료없음");
-					}								
-				}
-				System.out.println(i + "번째 " + list.get(i));
-			    DataMapper.insert(list.get(i));
-		}
-		System.out.println("끝");
-		return list;
-	}*/
+		
+		StringBuilder urlBuilder = new StringBuilder("http://openapi.molit.go.kr:8081/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcAptTrade"); /*URL*/
+        urlBuilder.append("?" + URLEncoder.encode("serviceKey","UTF-8") + "=f4Ed1eAJYzb%2BQ%2BtpQx4G%2BQvFuO0ZJJMZIInJGo%2FpG889YetxgnnGE9umfvGSe8TPyZ88bAUWw%2Bn7ETYTooeF5A%3D%3D"); /*Service Key*/
+        urlBuilder.append("&" + URLEncoder.encode("LAWD_CD","UTF-8") + "=" + URLEncoder.encode("11110", "UTF-8")); /*각 지역별 코드*/
+        urlBuilder.append("&" + URLEncoder.encode("DEAL_YMD","UTF-8") + "=" + URLEncoder.encode("202407", "UTF-8")); /*월 단위 신고자료*/
+        URL url = new URL(urlBuilder.toString());
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestMethod("GET");
+        conn.setRequestProperty("Content-type", "application/json");
+        System.out.println("Response code: " + conn.getResponseCode());
+        BufferedReader rd;
+        if(conn.getResponseCode() >= 200 && conn.getResponseCode() <= 300) {
+            rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+        } else {
+            rd = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
+            System.out.println("에러");
+        }
+        StringBuilder sb = new StringBuilder();
+        String line;
+        while ((line = rd.readLine()) != null) {
+            sb.append(line);
+        }
+        rd.close();
+        conn.disconnect();
+        System.out.println(sb.toString());
+        DataUtils DataUtils = new DataUtils();
+        DataUtils.test(sb.toString());
+		return sb.toString();
+        
+    }
+	}
 	
-}
+	
+	
+

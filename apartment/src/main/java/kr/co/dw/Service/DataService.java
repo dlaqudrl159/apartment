@@ -1,11 +1,16 @@
 package kr.co.dw.Service;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.util.List;
+
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
+import org.xml.sax.SAXException;
 
 import kr.co.dw.Domain.NameCountDto;
 
@@ -32,6 +37,8 @@ public interface DataService {
 	String CHUNGCHEONGNAMDO(NameCountDto NameCountDto);
 
 	String GYEONGGIDO(NameCountDto NameCountDto);
+
+	String test() throws IOException, ParserConfigurationException, SAXException;
 
 
 

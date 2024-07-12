@@ -25,7 +25,7 @@ public class AptUtils {
 		String[] arr2 = {"서울","부산","대구","인천","광주","대전","울산","세종특별자치시","경기도","충청북도","충청남도","전라남도","경상북도","경상남도","제주도","강원특별자치도","전북특별자치도"};
 		
 		for(int i = 0 ; i < arr.length ; i++) {
-			if(fileReginonName.equals(arr[i])) {
+			if(fileReginonName.toUpperCase().equals(arr[i])) {
 				fileReginonName = arr2[i];
 			}
 		}

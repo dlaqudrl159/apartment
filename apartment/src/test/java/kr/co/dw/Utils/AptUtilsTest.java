@@ -133,17 +133,4 @@ public class AptUtilsTest {
 		address = temp.trim();
 		System.out.println(address);
 	}
-	
-	/*@Test
-	void 테스트() {
-		NameCountDto dto = new NameCountDto("서울특별시", null, null, null, null, null, null);
-		System.out.println(dto.getSIGUNGU());
-		테스트2(dto);
-		System.out.println(dto.getSIGUNGU());
-	}
-	void 테스트2(NameCountDto dto) {
-		if(dto.getSIGUNGU().equals("서울특별시")) {
-			dto.setSIGUNGU("광주광역시");
-		}
-	}*/
 }

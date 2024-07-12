@@ -1,10 +1,6 @@
 package kr.co.dw.Domain;
 
-import java.util.Map;
-
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 
 @Data
 public class NameCountDto {

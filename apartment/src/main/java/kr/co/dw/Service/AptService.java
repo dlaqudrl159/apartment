@@ -10,8 +10,6 @@ import kr.co.dw.Domain.NameCountDto;
 
 public interface AptService {
 
-	List<NameCountDto> get(List<String> arr, String year);
-
 	List<NameCountDto> get2(List<String> arr, String year);
 
 	

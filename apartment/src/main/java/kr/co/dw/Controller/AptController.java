@@ -16,13 +16,6 @@ public class AptController {
 
 	private final AptService AptService;
 	
-	@GetMapping("/api/get")
-	private List<NameCountDto> get(@RequestParam("arr")  List<String> arr,
-					   @RequestParam("year") String year) {
-						
-		return AptService.get(arr,year);
-	}
-	
 	@GetMapping("/api/get2")
 	private List<NameCountDto> get2(@RequestParam("arr")  List<String> arr,
 					   @RequestParam("year") String year) {
@@ -32,8 +25,9 @@ public class AptController {
 	
 	@GetMapping("/api/hello")
 	private String hello() {
-		System.out.println("hello");
-		return "hello";
+		System.out.println(System.getProperty("os.name"));
+		String os = System.getProperty("os.name");
+		return os;
 	}
 	
 }
