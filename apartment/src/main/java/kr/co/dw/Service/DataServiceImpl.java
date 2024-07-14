@@ -581,7 +581,7 @@ public class DataServiceImpl implements DataService{
 	        conn.disconnect();
 	        System.out.println(sb.toString());
 	        DataUtils DataUtils = new DataUtils();
-	        DataUtils.test(sb.toString(),englishregion[i],koreanregion[i],region2[i][j]);
+	        DataUtils.test(sb.toString(),englishregion[i],koreanregion[i],region3[i][j]);
 	        try {
 				Thread.sleep(10000);
 			} catch (InterruptedException e) {

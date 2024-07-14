@@ -144,4 +144,21 @@ public class AptUtilsTest {
 		System.out.println(month);
 		
 	}
+	@Test
+	void test2() {
+		//가-53-1
+		//산74-10
+		//산54
+		//가-131
+		//가- cleanAddresssplit[0].equals("") 하면 true 나옴
+		String address = "가-";
+		
+		String cleanAddress = address.replaceAll("[^0-9-]", "");
+		System.out.println(cleanAddress);
+		cleanAddress = (cleanAddress.replaceAll("-", " ").trim());
+		System.out.println(cleanAddress);
+		String[] cleanAddresssplit = cleanAddress.split(" ");
+		System.out.println(Arrays.toString(cleanAddresssplit)); 
+		System.out.println(cleanAddresssplit[0].equals(""));
+	}
 }

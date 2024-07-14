@@ -145,13 +145,45 @@ public class DataUtils {
 				sb.append(Floor + " ");
 				sb.append(CancleDealDay + " ");
 				sb.append(CancleDealType);
-				sb.append(System.lineSeparator());
 				System.out.println(sb.toString());
-				
 				ApiDto ApiDto = new ApiDto();
 				ApiDto.setSIGUNGU(sigungu + " " + sigungu2 + " " +  Dong);
 				ApiDto.setBUNGI(Jibun);
-				
+				String bonbun = "";
+				String bubun = "";
+				String cleanAddress = Jibun.replaceAll("[^0-9-]", "");
+				cleanAddress = (cleanAddress.replaceAll("-", " ").trim());
+				String[] cleanAddresssplit = cleanAddress.split(" ");
+				if(cleanAddresssplit.length == 1) {
+					if(cleanAddresssplit[0].equals("")) {
+						bonbun = "0000";
+						bubun = "0000";
+					}else {
+						bonbun = String.format("%04d", Integer.parseInt(cleanAddresssplit[0]));
+						bubun = "0000";
+					}
+				}else if(cleanAddresssplit.length == 2) {
+					bonbun = String.format("%04d", Integer.parseInt(cleanAddresssplit[0]));
+					bubun = String.format("%04d", Integer.parseInt(cleanAddresssplit[1]));
+				}
+				ApiDto.setBONBUN(bonbun);
+				ApiDto.setBUBUN(bubun);
+				ApiDto.setAPARTMENTNAME(ApartmentName);
+				ApiDto.setAREAFOREXCLUSIVEUSE(AreaforExcusiveUse);
+				ApiDto.setDEALYEARMONTH(DealYear + String.format("%02d", Integer.parseInt(DealMonth)));
+				ApiDto.setDEALDAY(DealDay);
+				ApiDto.setDEALAMOUNT(DealAmount);
+				ApiDto.setAPARTMENTDONG(ApartmentDong);
+				ApiDto.setFLOOR(Floor);
+				ApiDto.setBUYERGBN(BuyerGBN);
+				ApiDto.setSELLERGBN(SellerGBN);
+				ApiDto.setBUILDYEAR(BuildYear);
+				//ApiDto.setROADNAME(road);
+				ApiDto.setCANCLEDEALDAY(CancleDealDay);
+				ApiDto.setREQGBN(ReqgbN);
+				ApiDto.setRDEALERLAWDNM(RdealerLawdnm);
+				ApiDto.setREGISTRATIONDATE(RegistartionDate);
+				System.out.println(ApiDto.toString());
 			}
 		}
 		
