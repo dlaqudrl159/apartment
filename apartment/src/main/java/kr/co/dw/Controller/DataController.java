@@ -33,7 +33,12 @@ public class DataController {
 	@GetMapping("/api/test")
 	private String test2() throws IOException, ParserConfigurationException, SAXException {
 		
-		return DataService.test();
+		String[] region = {"SEOUL","BUSAN","DAEGU","INCHEON","GWANGJU","DAEJEON","ULSAN","SEJONG","GYEONGGIDO","GANGWONDO",
+				"CHUNGCHEONGBUKDO","CHUNGCHEONGNAMDO","JEOLLABUKDO","JEOLLANAMDO","GYEONGSANGBUKDO","GYEONGSANGNAMDO","JEJU"};
+		for(int i = 0 ; i < region.length ; i++) {
+			DataService.test(region[i],i);
+		}
+		return "success";
 	}
 	
 }

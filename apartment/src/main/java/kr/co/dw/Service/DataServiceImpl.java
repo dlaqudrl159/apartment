@@ -11,7 +11,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -33,8 +35,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class DataServiceImpl implements DataService{
 
-	private String[] region = {"SEOUL","BUSAN","DAEGU","INCHEON","GWANGJU","DAEJEON","ULSAN","SEJONG","GYEONGGIDO","GANGWONDO",
+	private String[] englishregion = {"SEOUL","BUSAN","DAEGU","INCHEON","GWANGJU","DAEJEON","ULSAN","SEJONG","GYEONGGIDO","GANGWONDO",
 			"CHUNGCHEONGBUKDO","CHUNGCHEONGNAMDO","JEOLLABUKDO","JEOLLANAMDO","GYEONGSANGBUKDO","GYEONGSANGNAMDO","JEJU"};
+	
+	private String[] koreanregion = {"서울특별시","부산광역시","대구광역시","인천광역시","광주광역시","대전광역시","울산광역시","세종특별자치시","경기도","강원특별자치도",
+			"충청북도","충청남도","전북특별자치도","전라남도","경상북도","경상남도","제주특별자치도"};
 	
 	private String[][] region2 = {
 			/*서울*/
@@ -88,7 +93,35 @@ public class DataServiceImpl implements DataService{
 					"48890" },
 			/*제주도*/
 			{ "50110", "50130" } };
-	
+	private String[][] region3 = {
+			{ "종로구", "중구", "용산구", "성동구", "광진구", "동대문구", "중랑구", "성북구", "강북구", "도봉구", "노원구", "은평구", "서대문구", "마포구", "양천구",
+					"강서구", "구로구", "금천구", "영등포구", "동작구", "관악구", "서초구", "강남구", "송파구", "강동구" },
+			{ "중구", "서구", "동구", "영도구", "부산진구", "동래구", "남구", "북구", "해운대구", "사하구", "금정구", "강서구", "연제구", "수영구", "사상구",
+					"기장군" },
+			{ "중구", "동구", "서구", "남구", "북구", "수성구", "달서구", "달성군" },
+			{ "중구", "동구", "미추홀구", "연수구", "남동구", "부평구", "계양구", "서구", "강화군", "옹진구" }, { "동구", "서구", "남구", "북구", "광산구" },
+			{ "동구", "중구", "서구", "유성구", "대덕구" }, { "중구", "남구", "동구", "북구", "울주군" },
+			{ "" },
+			{ "수원시 장안구", "수원시 권선구", "수원시 팔달구", "수원시 영통구", "성남시 수정구", "성남시 중원구", "성남시 분당구", "의정부시", "안양시 만안구", "안양시 동안구",
+					"부천시", "광명시", "평택시", "동두천시", "안산시 상록구", "안산시 단원구", "고양시 덕양구", "고양시 일산동구", "고양시 일산서구", "과천시", "구리시",
+					"남양주시", "오산시", "시흥시", "군포시", "의왕시", "하남시", "용인시 처인구", "용인시 기흥구", "용인시 수지구", "파주시", "이천시", "안성시",
+					"김포시", "화성시", "광주시", "양주시", "포천시", "여주시", "연천군", "가평군", "양평군" },
+			{ "춘천시", "원주시", "강릉시", "동해시", "태백시", "속초시", "삼척시", "홍천군", "횡성군", "영월군", "평창군", "정선군", "철원군", "화천군", "양구군",
+					"인제군", "고성군", "양양군" },
+			{ "청주시 상당구", "청주시 서원구", "청주시 흥덕구", "청주시 청원구", "충주시", "제천시", "보은군", "옥천군", "영동군", "증평군", "진천군", "괴산군", "음성군",
+					"단양군" },
+			{ "천안시 동남구", "천안시 서북구", "공주시", "보령시", "아산시", "서산시", "논산시", "계룡시", "당진시", "금산군", "부여군", "서천군", "청양군", "홍성군",
+					"예산군", "태안군" },
+			{ "전주시 완산구", "전주시 덕진구", "군산시", "익산시", "정읍시", "남원시", "김제시", "완주군", "진안군", "무주군", "장수군", "임실군", "순창군", "고창군",
+					"부안군" },
+			{ "목포시", "여수시", "순천시", "나주시", "광양시", "담양군", "곡성군", "구례군", "고흥군", "보성군", "화순군", "장흥군", "강진군", "해남군", "영남군",
+					"무안군", "함평군", "영광군", "장성군", "완도군", "진도군", "신안군" },
+			{ "포항시 남구", "포항시 북구", "경주시", "김천시", "안동시", "구미시", "영주시", "영천시", "상주시", "문경시", "경산시", "군위군", "의성군", "청송군",
+					"영양군", "영덕군", "청도군", "고령군", "성주군", "칠곡군", "예천군", "봉화군", "울진군", "울릉군" },
+			{ "창원시 의상구", "창원시 성산구", "창원시 마산합포구", "창원시 마산회원구", "창원시 진해구", "진주시", "통영시", "사천시", "김해시", "밀양시", "거제시",
+					"양산시", "의령군", "함얀군", "창녕군", "고성군", "남해군", "하동군", "산청군", "함양군", "거창군", "합천군" },
+			{ "제주시", "서귀포시" }
+			};
 	private final DataMapper DataMapper;
 	
 	@Transactional
@@ -467,7 +500,7 @@ public class DataServiceImpl implements DataService{
 		
 	}
 
-	@Override
+	//@Override
 	public String test() throws IOException, ParserConfigurationException, SAXException {
 		// TODO Auto-generated method stub
 		
@@ -502,6 +535,63 @@ public class DataServiceImpl implements DataService{
 		return sb.toString();
         
     }
+
+	@Override
+	public String test(String region, int i) throws IOException, ParserConfigurationException, SAXException {
+		// TODO Auto-generated method stub
+		StringBuilder sb = null;
+		Calendar today = Calendar.getInstance();
+		String year = String.valueOf(today.get(Calendar.YEAR));
+		int Calendarmonth = (today.get(Calendar.MONTH)+1);
+		String month = String.format("%02d", Calendarmonth);
+		
+		
+		
+		for(int j = 0 ; j < region2[i].length;j++) {
+			
+			String DEAL_YMD = year + month;
+			String LAWD_CD = region2[i][j];
+			System.out.println(englishregion[i]);
+			System.out.println(koreanregion[i]);
+			System.out.println(region3[i][j]);
+			System.out.println(DEAL_YMD);
+			System.out.println(LAWD_CD);
+			StringBuilder urlBuilder = new StringBuilder("http://openapi.molit.go.kr:8081/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcAptTrade"); /*URL*/
+	        urlBuilder.append("?" + URLEncoder.encode("serviceKey","UTF-8") + "=f4Ed1eAJYzb%2BQ%2BtpQx4G%2BQvFuO0ZJJMZIInJGo%2FpG889YetxgnnGE9umfvGSe8TPyZ88bAUWw%2Bn7ETYTooeF5A%3D%3D"); /*Service Key*/
+	        urlBuilder.append("&" + URLEncoder.encode("LAWD_CD","UTF-8") + "=" + URLEncoder.encode(LAWD_CD, "UTF-8")); /*각 지역별 코드*/
+	        urlBuilder.append("&" + URLEncoder.encode("DEAL_YMD","UTF-8") + "=" + URLEncoder.encode(DEAL_YMD, "UTF-8")); /*월 단위 신고자료*/
+	        URL url = new URL(urlBuilder.toString());
+	        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+	        conn.setRequestMethod("GET");
+	        conn.setRequestProperty("Content-type", "application/json");
+	        System.out.println("Response code: " + conn.getResponseCode());
+	        BufferedReader rd;
+	        if(conn.getResponseCode() >= 200 && conn.getResponseCode() <= 300) {
+	            rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+	        } else {
+	            rd = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
+	            System.out.println("에러");
+	        }
+	        sb = new StringBuilder();
+	        String line;
+	        while ((line = rd.readLine()) != null) {
+	            sb.append(line);
+	        }
+	        rd.close();
+	        conn.disconnect();
+	        System.out.println(sb.toString());
+	        DataUtils DataUtils = new DataUtils();
+	        DataUtils.test(sb.toString(),englishregion[i],koreanregion[i],region2[i][j]);
+	        try {
+				Thread.sleep(10000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return "success";
+	}
 	}
 	
 	

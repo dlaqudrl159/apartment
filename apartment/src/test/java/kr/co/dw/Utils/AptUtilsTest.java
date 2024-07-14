@@ -7,6 +7,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.Calendar;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -132,5 +133,15 @@ public class AptUtilsTest {
 		}
 		address = temp.trim();
 		System.out.println(address);
+	}
+	@Test
+	void test() {
+		Calendar today = Calendar.getInstance();
+		String year = String.valueOf(today.get(Calendar.YEAR));
+		int Calendarmonth = (today.get(Calendar.MONTH)+1);
+		String month = String.format("%02d", Calendarmonth);
+		System.out.println(year);
+		System.out.println(month);
+		
 	}
 }
