@@ -588,6 +588,7 @@ public class DataServiceImpl implements DataService{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+	        Thread.interrupted();
 		}
 		
 		return "success";

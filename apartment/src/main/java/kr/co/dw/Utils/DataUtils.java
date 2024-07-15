@@ -2,6 +2,8 @@ package kr.co.dw.Utils;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -149,25 +151,11 @@ public class DataUtils {
 				ApiDto ApiDto = new ApiDto();
 				ApiDto.setSIGUNGU(sigungu + " " + sigungu2 + " " +  Dong);
 				ApiDto.setBUNGI(Jibun);
-				String bonbun = "";
-				String bubun = "";
-				String cleanAddress = Jibun.replaceAll("[^0-9-]", "");
-				cleanAddress = (cleanAddress.replaceAll("-", " ").trim());
-				String[] cleanAddresssplit = cleanAddress.split(" ");
-				if(cleanAddresssplit.length == 1) {
-					if(cleanAddresssplit[0].equals("")) {
-						bonbun = "0000";
-						bubun = "0000";
-					}else {
-						bonbun = String.format("%04d", Integer.parseInt(cleanAddresssplit[0]));
-						bubun = "0000";
-					}
-				}else if(cleanAddresssplit.length == 2) {
-					bonbun = String.format("%04d", Integer.parseInt(cleanAddresssplit[0]));
-					bubun = String.format("%04d", Integer.parseInt(cleanAddresssplit[1]));
-				}
-				ApiDto.setBONBUN(bonbun);
-				ApiDto.setBUBUN(bubun);
+				
+				Map<String, String> map =  makebonbunbubun(Jibun);
+				ApiDto.setBONBUN(map.get("bonbun"));
+				ApiDto.setBUBUN(map.get("bubun"));
+				
 				ApiDto.setAPARTMENTNAME(ApartmentName);
 				ApiDto.setAREAFOREXCLUSIVEUSE(AreaforExcusiveUse);
 				ApiDto.setDEALYEARMONTH(DealYear + String.format("%02d", Integer.parseInt(DealMonth)));
@@ -189,7 +177,30 @@ public class DataUtils {
 		
 	}
 	
-	
+	public Map<String, String> makebonbunbubun(String Jibun) {
+		Map<String, String> map = new HashMap<>();
+		String bonbun = "";
+		String bubun = "";
+		String cleanAddress = Jibun.replaceAll("[^0-9-]", "");
+		cleanAddress = (cleanAddress.replaceAll("-", " ").trim());
+		String[] cleanAddresssplit = cleanAddress.split(" ");
+		if(cleanAddresssplit.length == 1) {
+			if(cleanAddresssplit[0].equals("")) {
+				bonbun = "0000";
+				bubun = "0000";
+			}else {
+				bonbun = String.format("%04d", Integer.parseInt(cleanAddresssplit[0]));
+				bubun = "0000";
+			}
+		}else if(cleanAddresssplit.length == 2) {
+			bonbun = String.format("%04d", Integer.parseInt(cleanAddresssplit[0]));
+			bubun = String.format("%04d", Integer.parseInt(cleanAddresssplit[1]));
+		}
+		map.put("bonbun", bonbun);
+		map.put("bubun", bubun);
+		return map;
+		
+	}
 	
 	
 }
