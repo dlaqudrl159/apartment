@@ -500,96 +500,53 @@ public class DataServiceImpl implements DataService{
 		
 	}
 
-	//@Override
-	public String test() throws IOException, ParserConfigurationException, SAXException {
-		// TODO Auto-generated method stub
-		
-		
-		
-		StringBuilder urlBuilder = new StringBuilder("http://openapi.molit.go.kr:8081/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcAptTrade"); /*URL*/
-        urlBuilder.append("?" + URLEncoder.encode("serviceKey","UTF-8") + "=f4Ed1eAJYzb%2BQ%2BtpQx4G%2BQvFuO0ZJJMZIInJGo%2FpG889YetxgnnGE9umfvGSe8TPyZ88bAUWw%2Bn7ETYTooeF5A%3D%3D"); /*Service Key*/
-        urlBuilder.append("&" + URLEncoder.encode("LAWD_CD","UTF-8") + "=" + URLEncoder.encode("11110", "UTF-8")); /*각 지역별 코드*/
-        urlBuilder.append("&" + URLEncoder.encode("DEAL_YMD","UTF-8") + "=" + URLEncoder.encode("202407", "UTF-8")); /*월 단위 신고자료*/
-        URL url = new URL(urlBuilder.toString());
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        conn.setRequestMethod("GET");
-        conn.setRequestProperty("Content-type", "application/json");
-        System.out.println("Response code: " + conn.getResponseCode());
-        BufferedReader rd;
-        if(conn.getResponseCode() >= 200 && conn.getResponseCode() <= 300) {
-            rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-        } else {
-            rd = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
-            System.out.println("에러");
-        }
-        StringBuilder sb = new StringBuilder();
-        String line;
-        while ((line = rd.readLine()) != null) {
-            sb.append(line);
-        }
-        rd.close();
-        conn.disconnect();
-        System.out.println(sb.toString());
-        DataUtils DataUtils = new DataUtils();
-        DataUtils.test(sb.toString());
-		return sb.toString();
-        
-    }
-
 	@Override
-	public String test(String region, int i) throws IOException, ParserConfigurationException, SAXException {
+	public String test() throws IOException, ParserConfigurationException, SAXException {
 		// TODO Auto-generated method stub
 		StringBuilder sb = null;
 		Calendar today = Calendar.getInstance();
 		String year = String.valueOf(today.get(Calendar.YEAR));
 		int Calendarmonth = (today.get(Calendar.MONTH)+1);
 		String month = String.format("%02d", Calendarmonth);
-		
-		
-		
-		for(int j = 0 ; j < region2[i].length;j++) {
+		String DEAL_YMD = year + month;
+		for(int i = 0 ; i < 1/*englishregion.length*/; i++) {
 			
-			String DEAL_YMD = year + month;
-			String LAWD_CD = region2[i][j];
-			System.out.println(englishregion[i]);
-			System.out.println(koreanregion[i]);
-			System.out.println(region3[i][j]);
-			System.out.println(DEAL_YMD);
-			System.out.println(LAWD_CD);
-			StringBuilder urlBuilder = new StringBuilder("http://openapi.molit.go.kr:8081/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcAptTrade"); /*URL*/
-	        urlBuilder.append("?" + URLEncoder.encode("serviceKey","UTF-8") + "=f4Ed1eAJYzb%2BQ%2BtpQx4G%2BQvFuO0ZJJMZIInJGo%2FpG889YetxgnnGE9umfvGSe8TPyZ88bAUWw%2Bn7ETYTooeF5A%3D%3D"); /*Service Key*/
-	        urlBuilder.append("&" + URLEncoder.encode("LAWD_CD","UTF-8") + "=" + URLEncoder.encode(LAWD_CD, "UTF-8")); /*각 지역별 코드*/
-	        urlBuilder.append("&" + URLEncoder.encode("DEAL_YMD","UTF-8") + "=" + URLEncoder.encode(DEAL_YMD, "UTF-8")); /*월 단위 신고자료*/
-	        URL url = new URL(urlBuilder.toString());
-	        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-	        conn.setRequestMethod("GET");
-	        conn.setRequestProperty("Content-type", "application/json");
-	        System.out.println("Response code: " + conn.getResponseCode());
-	        BufferedReader rd;
-	        if(conn.getResponseCode() >= 200 && conn.getResponseCode() <= 300) {
-	            rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-	        } else {
-	            rd = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
-	            System.out.println("에러");
-	        }
-	        sb = new StringBuilder();
-	        String line;
-	        while ((line = rd.readLine()) != null) {
-	            sb.append(line);
-	        }
-	        rd.close();
-	        conn.disconnect();
-	        System.out.println(sb.toString());
-	        DataUtils DataUtils = new DataUtils();
-	        DataUtils.test(sb.toString(),englishregion[i],koreanregion[i],region3[i][j]);
-	        try {
-				Thread.sleep(10000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			for(int j = 0 ; j < 1/*region2[i].length*/; j++) {
+				
+				String LAWD_CD = region2[i][j];
+				StringBuilder urlBuilder = new StringBuilder("http://openapi.molit.go.kr/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcAptTradeDev"); /*URL*/
+		        urlBuilder.append("?" + URLEncoder.encode("serviceKey","UTF-8") + "=f4Ed1eAJYzb%2BQ%2BtpQx4G%2BQvFuO0ZJJMZIInJGo%2FpG889YetxgnnGE9umfvGSe8TPyZ88bAUWw%2Bn7ETYTooeF5A%3D%3D"); /*Service Key*/
+		        urlBuilder.append("&" + URLEncoder.encode("LAWD_CD","UTF-8") + "=" + URLEncoder.encode(LAWD_CD, "UTF-8")); /*각 지역별 코드*/
+		        urlBuilder.append("&" + URLEncoder.encode("DEAL_YMD","UTF-8") + "=" + URLEncoder.encode(DEAL_YMD, "UTF-8")); /*월 단위 신고자료*/
+		        urlBuilder.append("&" + URLEncoder.encode("pageNo","UTF-8") + "=" + URLEncoder.encode("1", "UTF-8")); /*페이지번호*/
+		        urlBuilder.append("&" + URLEncoder.encode("numOfRows","UTF-8") + "=" + URLEncoder.encode("10000", "UTF-8")); /*한 페이지 결과 수*/
+		        URL url = new URL(urlBuilder.toString());
+		        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+		        conn.setRequestMethod("GET");
+		        conn.setRequestProperty("Content-type", "application/json");
+
+		        BufferedReader rd;
+		        if(conn.getResponseCode() >= 200 && conn.getResponseCode() <= 300) {
+		            rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+		        } else {
+		            rd = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
+		            System.out.println("에러");
+		        }
+		        sb = new StringBuilder();
+		        String line;
+		        while ((line = rd.readLine()) != null) {
+		            sb.append(line);
+		        }
+		        rd.close();
+		        conn.disconnect();
+		        System.out.println(sb.toString());
+		        DataUtils DataUtils = new DataUtils();
+		        
+		        DataUtils.test(sb.toString(),englishregion[i],koreanregion[i],region3[i][j]);
+		        
 			}
-	        Thread.interrupted();
 		}
+		
 		
 		return "success";
 	}

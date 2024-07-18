@@ -38,7 +38,7 @@ public interface DataService {
 
 	String GYEONGGIDO(NameCountDto NameCountDto);
 
-	String test(String region, int i) throws IOException, ParserConfigurationException, SAXException;
+	String test() throws IOException, ParserConfigurationException, SAXException;
 
 
 

@@ -6,6 +6,9 @@ import java.net.MalformedURLException;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.json.simple.parser.ParseException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,14 +34,13 @@ public class DataController {
 	}
 	
 	@GetMapping("/api/test")
-	private String test2() throws IOException, ParserConfigurationException, SAXException {
+	private ResponseEntity<String> test2() throws IOException, ParserConfigurationException, SAXException {
 		
-		String[] region = {"SEOUL","BUSAN","DAEGU","INCHEON","GWANGJU","DAEJEON","ULSAN","SEJONG","GYEONGGIDO","GANGWONDO",
-				"CHUNGCHEONGBUKDO","CHUNGCHEONGNAMDO","JEOLLABUKDO","JEOLLANAMDO","GYEONGSANGBUKDO","GYEONGSANGNAMDO","JEJU"};
-		for(int i = 0 ; i < region.length ; i++) {
-			DataService.test(region[i],i);
-		}
-		return "success";
+		ResponseEntity<String> entity = new ResponseEntity<String>("OK",HttpStatus.OK);
+		
+			DataService.test();
+		
+		return entity;
 	}
 	
 }
