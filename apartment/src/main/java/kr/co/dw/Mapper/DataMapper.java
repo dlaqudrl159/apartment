@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import kr.co.dw.Domain.ApiDto;
 import kr.co.dw.Domain.NameCountDto;
 
 @Mapper
@@ -14,5 +15,7 @@ public interface DataMapper {
 	List<NameCountDto> getList(String tableName);
 
 	NameCountDto get(NameCountDto nameCountDto);
+
+	void DataInsert(List<ApiDto> list);
 
 }

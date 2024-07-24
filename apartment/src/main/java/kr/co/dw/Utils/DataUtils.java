@@ -2,7 +2,9 @@ package kr.co.dw.Utils;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -91,7 +93,7 @@ public class DataUtils {
 		
 	}
 
-	public ApiDto test(String dataxml, String tableName, String sigungu, String sigungu2) throws ParserConfigurationException, SAXException, IOException  {
+	public List<ApiDto> test(String dataxml, String tableName, String sigungu, String sigungu2) throws ParserConfigurationException, SAXException, IOException  {
 		// TODO Auto-generated method stub
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder builder = factory.newDocumentBuilder();
@@ -100,10 +102,10 @@ public class DataUtils {
 		document.getDocumentElement().normalize();
 		NodeList nList = document.getElementsByTagName("item");
 		Element root = document.getDocumentElement();
-		ApiDto ApiDto = new ApiDto();
+		List<ApiDto> list = new ArrayList<>();
 		for(int i = 0 ; i < nList.getLength(); i++) {
 			Node nNode = nList.item(i);
-			
+			ApiDto ApiDto = new ApiDto();
 			if(nNode.getNodeType() == Node.ELEMENT_NODE) {
 				Element eElement = (Element) nNode;
 				
@@ -129,6 +131,9 @@ public class DataUtils {
 				String RoadName = eElement.getElementsByTagName("도로명").item(0) == null ? "-" : eElement.getElementsByTagName("도로명").item(0).getTextContent().replaceAll("\"", "").trim().equals("") ? "-" : eElement.getElementsByTagName("도로명").item(0).getTextContent().replaceAll("\"", "").trim();  
 				String Bonbun = eElement.getElementsByTagName("법정동본번코드").item(0) == null ? "-" : eElement.getElementsByTagName("법정동본번코드").item(0).getTextContent().replaceAll("\"", "").trim().equals("") ? "-" : eElement.getElementsByTagName("법정동본번코드").item(0).getTextContent().replaceAll("\"", "").trim();  
 				String Bubun = eElement.getElementsByTagName("법정동부번코드").item(0) == null ? "-" : eElement.getElementsByTagName("법정동부번코드").item(0).getTextContent().replaceAll("\"", "").trim().equals("") ? "-" : eElement.getElementsByTagName("법정동부번코드").item(0).getTextContent().replaceAll("\"", "").trim();  
+				String RoadNameBonbun = eElement.getElementsByTagName("도로명건물본번호코드").item(0) == null ? "-" : eElement.getElementsByTagName("도로명건물본번호코드").item(0).getTextContent().replaceAll("\"", "").trim().equals("") ? "-" : eElement.getElementsByTagName("도로명건물본번호코드").item(0).getTextContent().replaceAll("\"", "").trim();  
+				String RoadNameBubun = eElement.getElementsByTagName("도로명건물부번호코드").item(0) == null ? "-" : eElement.getElementsByTagName("도로명건물부번호코드").item(0).getTextContent().replaceAll("\"", "").trim().equals("") ? "-" : eElement.getElementsByTagName("도로명건물부번호코드").item(0).getTextContent().replaceAll("\"", "").trim();  
+				
 				
 				StringBuilder sb = new StringBuilder();
 				sb.append(DealAmount + " ");
@@ -149,8 +154,11 @@ public class DataUtils {
 				sb.append(RegionalCode + " ");
 				sb.append(Floor + " ");
 				sb.append(CancleDealDay + " ");
-				sb.append(CancleDealType);
-				System.out.println(sb.toString());
+				sb.append(CancleDealType + " ");
+				sb.append(RoadName);
+				sb.append(RoadNameBonbun + " ");
+				sb.append(RoadNameBubun+ " ");
+				//System.out.println(sb.toString());
 				
 				ApiDto.setSIGUNGU(sigungu + " " + sigungu2 + " " +  Dong);
 				ApiDto.setBUNGI(Jibun);				
@@ -166,18 +174,32 @@ public class DataUtils {
 				ApiDto.setBUYERGBN(BuyerGBN);
 				ApiDto.setSELLERGBN(SellerGBN);
 				ApiDto.setBUILDYEAR(BuildYear);
-				ApiDto.setROADNAME(RoadName);
+				ApiDto.setROADNAME(makeroadname(RoadName, RoadNameBonbun, RoadNameBubun));
 				ApiDto.setCANCLEDEALDAY(CancleDealDay);
 				ApiDto.setREQGBN(ReqgbN);
 				ApiDto.setRDEALERLAWDNM(RdealerLawdnm);
 				ApiDto.setREGISTRATIONDATE(RegistartionDate);
-				System.out.println(ApiDto.toString());
-			}
+				//System.out.println(ApiDto.toString());
+				list.add(ApiDto);			}
 		}
-		return ApiDto;
+		return list;
 		
 	}
-	
+	public String makeroadname(String RoadName, String RoadNameBonbun, String RoadNameBubun) {
+		RoadNameBonbun = RoadNameBonbun + "!";
+		RoadNameBubun = RoadNameBubun + "!";
+		RoadNameBonbun = RoadNameBonbun.replace("0", " ").trim().replace(" ", "0").replace("!", "");
+		
+		RoadNameBubun = RoadNameBubun.replace("0", " ").trim().replace(" ", "0").replace("!", "");
+		if(RoadNameBonbun.length() !=0 ) {
+			RoadName = RoadName + " " + RoadNameBonbun;
+			if(RoadNameBubun.length() != 0) {
+				RoadName = RoadName + "-" + RoadNameBubun;
+			}
+		}
+		return RoadName;
+		
+	}
 	/*public Map<String, String> makebonbunbubun(String Jibun) {
 		Map<String, String> map = new HashMap<>();
 		String bonbun = "";

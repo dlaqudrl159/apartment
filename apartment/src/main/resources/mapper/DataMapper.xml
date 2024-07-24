@@ -32,5 +32,33 @@
     insert into LATLNG (SIGUNGU, BUNGI, LAT,LNG,ROADNAME,APARTMENTNAME) values (#{SIGUNGU},#{BUNGI},#{LAT},#{LNG},#{ROADNAME},#{APARTMENTNAME})
     
     </insert>
+    <insert id="DataInsert" parameterType="java.util.List">
     
+    
+    <foreach collection="list" item="ApiDto" separator=" " open="INSERT ALL" close="SELECT 1 FROM DUAL">
+    into dummy (SIGUNGU, BUNGI, BONBUN, BUBUN, APARTMENTNAME,AREAFOREXCLUSIVEUSE,DEALYEARMONTH,DEALDAY,DEALAMOUNT,APARTMENTDONG,FLOOR,BUYERGBN,SELLERGBN,BUILDYEAR,ROADNAME,CANCLEDEALDAY,REQGBN,RDEALERLAWDNM,REGISTRATIONDATE) 
+    VALUES 
+    (
+    #{ApiDto.SIGUNGU},
+    #{ApiDto.BUNGI},
+    #{ApiDto.BONBUN},
+    #{ApiDto.BUBUN},
+    #{ApiDto.APARTMENTNAME},
+    #{ApiDto.AREAFOREXCLUSIVEUSE},
+    #{ApiDto.DEALYEARMONTH},
+    #{ApiDto.DEALDAY},
+    #{ApiDto.DEALAMOUNT},
+    #{ApiDto.APARTMENTDONG},
+    #{ApiDto.FLOOR},
+    #{ApiDto.BUYERGBN},
+    #{ApiDto.SELLERGBN},
+    #{ApiDto.BUILDYEAR},
+    #{ApiDto.ROADNAME},
+    #{ApiDto.CANCLEDEALDAY},
+    #{ApiDto.REQGBN},
+    #{ApiDto.RDEALERLAWDNM},
+    #{ApiDto.REGISTRATIONDATE}
+    )
+    </foreach>
+    </insert>
 </mapper>	

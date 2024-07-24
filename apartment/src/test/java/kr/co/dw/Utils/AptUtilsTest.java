@@ -178,7 +178,25 @@ public class AptUtilsTest {
 	}
 	
 	@Test
-	void test3() throws UnsupportedEncodingException, MalformedURLException, IOException, ParserConfigurationException, SAXException {
+	void test3() {
+		String roadname = "사직로9길";
+		String roadnamebonbun = "04001";
+		String roadnamebubun = "00101";
+		DataUtils DataUtils = new DataUtils();
+		roadname = DataUtils.makeroadname(roadname, roadnamebonbun, roadnamebubun);
+		
+		System.out.println(roadname);
+		
+		/*roadnamebonbun = roadnamebonbun.replace("0", " ").trim().replace(" ", "0");
+		System.out.println(roadnamebonbun);
+		roadnamebubun = roadnamebubun.replace("0", " ").trim().replace(" ", "0");
+		System.out.println(roadnamebubun.length());*/
+		
+		
+	}
+	
+	@Test
+	void test4() throws UnsupportedEncodingException, MalformedURLException, IOException, ParserConfigurationException, SAXException {
 		StringBuilder urlBuilder = new StringBuilder("http://openapi.molit.go.kr/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcAptTradeDev"); /*URL*/
         urlBuilder.append("?" + URLEncoder.encode("serviceKey","UTF-8") + "=f4Ed1eAJYzb%2BQ%2BtpQx4G%2BQvFuO0ZJJMZIInJGo%2FpG889YetxgnnGE9umfvGSe8TPyZ88bAUWw%2Bn7ETYTooeF5A%3D%3D"); /*Service Key*/
         urlBuilder.append("&" + URLEncoder.encode("pageNo","UTF-8") + "=" + URLEncoder.encode("1", "UTF-8")); /*페이지번호*/
