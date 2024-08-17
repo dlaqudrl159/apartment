@@ -12,31 +12,33 @@
   	<result column="roadname" property="ROADNAME"/>
   	<result column="lat" property="LAT"/>
   	<result column="lng" property="LNG"/>
+  	<result column="count" property="COUNT"/>
 	</resultMap>   
     
     <select id="getList">
     
-    select sigungu,bungi,roadname,apartmentname,count(*) from ${tableName} group by sigungu,bungi,roadname,apartmentname order by sigungu desc
+    select SIGUNGU,BUNGI,ROADNAME,APARTMENTNAME from ${tableName} group by SIGUNGU,BUNGI,ROADNAME,APARTMENTNAME order by SIGUNGU DESC
     
     </select>
     
     <select id = "get" parameterType="NameCountDto">
     
-    select * from latlng where SIGUNGU = #{SIGUNGU} and BUNGI = #{BUNGI} and LAT = #{LAT} and LNG = #{LNG} and ROADNAME = #{ROADNAME} and APARTMENTNAME = #{APARTMENTNAME}
+    select * from LATLNG2 where SIGUNGU = #{SIGUNGU} and BUNGI = #{BUNGI} and ROADNAME = #{ROADNAME} and APARTMENTNAME = #{APARTMENTNAME}
+   
     
     </select>
     
     
     <insert id="insert" parameterType="NameCountDto">
     
-    insert into LATLNG (SIGUNGU, BUNGI, LAT,LNG,ROADNAME,APARTMENTNAME) values (#{SIGUNGU},#{BUNGI},#{LAT},#{LNG},#{ROADNAME},#{APARTMENTNAME})
+    insert into LATLNG2 (SIGUNGU, BUNGI, LAT,LNG,ROADNAME,APARTMENTNAME) values (#{SIGUNGU},#{BUNGI},#{LAT},#{LNG},#{ROADNAME},#{APARTMENTNAME})
     
     </insert>
     <insert id="DataInsert" parameterType="java.util.List">
     
     
     <foreach collection="list" item="ApiDto" separator=" " open="INSERT ALL" close="SELECT 1 FROM DUAL">
-    into dummy (SIGUNGU, BUNGI, BONBUN, BUBUN, APARTMENTNAME,AREAFOREXCLUSIVEUSE,DEALYEARMONTH,DEALDAY,DEALAMOUNT,APARTMENTDONG,FLOOR,BUYERGBN,SELLERGBN,BUILDYEAR,ROADNAME,CANCLEDEALDAY,REQGBN,RDEALERLAWDNM,REGISTRATIONDATE) 
+    into ${tableName} (SIGUNGU, BUNGI, BONBUN, BUBUN, APARTMENTNAME,AREAFOREXCLUSIVEUSE,DEALYEARMONTH,DEALDAY,DEALAMOUNT,APARTMENTDONG,FLOOR,BUYERGBN,SELLERGBN,BUILDYEAR,ROADNAME,CANCLEDEALDAY,REQGBN,RDEALERLAWDNM,REGISTRATIONDATE) 
     VALUES 
     (
     #{ApiDto.SIGUNGU},

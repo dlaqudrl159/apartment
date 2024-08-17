@@ -11,8 +11,10 @@ import java.net.ProtocolException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -30,6 +32,8 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import kr.co.dw.Domain.NameCountDto;
+import kr.co.dw.Service.DataService;
+import kr.co.dw.Service.DataServiceImpl;
 
 public class AptUtilsTest {
 
@@ -48,9 +52,9 @@ public class AptUtilsTest {
 	@Test
 	void getlatlng() throws IOException, ParseException {
 		
-		String sigungu = "충청북도 청주시 서원구 사창동";
-		String bungi = "369-1";
-		String roadname = "창직로 1";
+		String sigungu = "서울특별시 강서구 방화동 마곡청구아파트";
+		String bungi = "859";
+		String roadname = "양천로26길 103";
 		
 		String apikey = "F0DBB350-67A6-39BB-A8BB-9237BB06612C";
 		String searchType = "parcel";
@@ -179,9 +183,9 @@ public class AptUtilsTest {
 	
 	@Test
 	void test3() {
-		String roadname = "사직로9길";
-		String roadnamebonbun = "04001";
-		String roadnamebubun = "00101";
+		String roadname = "22";
+		String roadnamebonbun = "00000";
+		String roadnamebubun = "00000";
 		DataUtils DataUtils = new DataUtils();
 		roadname = DataUtils.makeroadname(roadname, roadnamebonbun, roadnamebubun);
 		
@@ -197,12 +201,12 @@ public class AptUtilsTest {
 	
 	@Test
 	void test4() throws UnsupportedEncodingException, MalformedURLException, IOException, ParserConfigurationException, SAXException {
-		StringBuilder urlBuilder = new StringBuilder("http://openapi.molit.go.kr/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcAptTradeDev"); /*URL*/
+		StringBuilder urlBuilder = new StringBuilder("http://apis.data.go.kr/1613000/RTMSDataSvcAptTradeDev/getRTMSDataSvcAptTradeDev"); /*URL*/
         urlBuilder.append("?" + URLEncoder.encode("serviceKey","UTF-8") + "=f4Ed1eAJYzb%2BQ%2BtpQx4G%2BQvFuO0ZJJMZIInJGo%2FpG889YetxgnnGE9umfvGSe8TPyZ88bAUWw%2Bn7ETYTooeF5A%3D%3D"); /*Service Key*/
         urlBuilder.append("&" + URLEncoder.encode("pageNo","UTF-8") + "=" + URLEncoder.encode("1", "UTF-8")); /*페이지번호*/
-        urlBuilder.append("&" + URLEncoder.encode("numOfRows","UTF-8") + "=" + URLEncoder.encode("1000", "UTF-8")); /*한 페이지 결과 수*/
+        urlBuilder.append("&" + URLEncoder.encode("numOfRows","UTF-8") + "=" + URLEncoder.encode("10", "UTF-8")); /*한 페이지 결과 수*/
         urlBuilder.append("&" + URLEncoder.encode("LAWD_CD","UTF-8") + "=" + URLEncoder.encode("11140", "UTF-8")); /*지역코드*/
-        urlBuilder.append("&" + URLEncoder.encode("DEAL_YMD","UTF-8") + "=" + URLEncoder.encode("202406", "UTF-8")); /*계약월*/
+        urlBuilder.append("&" + URLEncoder.encode("DEAL_YMD","UTF-8") + "=" + URLEncoder.encode("202407", "UTF-8")); /*계약월*/
         URL url = new URL(urlBuilder.toString());
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestMethod("GET");
@@ -237,77 +241,120 @@ public class AptUtilsTest {
         	
         	if(nNode.getNodeType() == Node.ELEMENT_NODE) {
         		Element eElement = (Element) nNode;
-        		String DealAmount2 = eElement.getElementsByTagName("거래금액").item(0) == null ? "자료없음" : eElement.getElementsByTagName("거래금액").item(0).getTextContent().trim().equals("") ? "자료없음" : eElement.getElementsByTagName("거래금액").item(0).getTextContent().trim();  
-        		String BuildYear2 = eElement.getElementsByTagName("건축년도").item(0) == null ? "자료없음" : eElement.getElementsByTagName("건축년도").item(0).getTextContent().trim().equals("") ? "자료없음" : eElement.getElementsByTagName("건축년도").item(0).getTextContent().trim();  
-        		String DealYear2 = eElement.getElementsByTagName("년").item(0) == null ? "자료없음" : eElement.getElementsByTagName("년").item(0).getTextContent().trim().equals("") ? "자료없음" : eElement.getElementsByTagName("년").item(0).getTextContent().trim();  
-        		String RoadName2 = eElement.getElementsByTagName("도로명").item(0) == null ? "자료없음" : eElement.getElementsByTagName("도로명").item(0).getTextContent().trim().equals("") ? "자료없음" : eElement.getElementsByTagName("도로명").item(0).getTextContent().trim();  
-        		String RoadNameBonbun2 = eElement.getElementsByTagName("도로명건물본번호코드").item(0) == null ? "자료없음" : eElement.getElementsByTagName("도로명건물본번호코드").item(0).getTextContent().trim().equals("") ? "자료없음" : eElement.getElementsByTagName("도로명건물본번호코드").item(0).getTextContent().trim();  
-        		String RoadNameBubun2 = eElement.getElementsByTagName("도로명건물부번호코드").item(0) == null ? "자료없음" : eElement.getElementsByTagName("도로명건물부번호코드").item(0).getTextContent().trim().equals("") ? "자료없음" : eElement.getElementsByTagName("도로명건물부번호코드").item(0).getTextContent().trim();  
-        		String RoadNameSigunguCode2 = eElement.getElementsByTagName("도로명시군구코드").item(0) == null ? "자료없음" : eElement.getElementsByTagName("도로명시군구코드").item(0).getTextContent().trim().equals("") ? "자료없음" : eElement.getElementsByTagName("도로명시군구코드").item(0).getTextContent().trim();  
-        		String RoadNameSeq2 = eElement.getElementsByTagName("도로명일련번호코드").item(0) == null ? "자료없음" : eElement.getElementsByTagName("도로명일련번호코드").item(0).getTextContent().trim().equals("") ? "자료없음" : eElement.getElementsByTagName("도로명일련번호코드").item(0).getTextContent().trim();  
-        		String RoadNameBasementCode2 = eElement.getElementsByTagName("도로명지상지하코드").item(0) == null ? "자료없음" : eElement.getElementsByTagName("도로명지상지하코드").item(0).getTextContent().trim().equals("") ? "자료없음" : eElement.getElementsByTagName("도로명지상지하코드").item(0).getTextContent().trim();  
-        		String RoadNameCode2 = eElement.getElementsByTagName("도로명코드").item(0) == null ? "자료없음" : eElement.getElementsByTagName("도로명코드").item(0).getTextContent().trim().equals("") ? "자료없음" : eElement.getElementsByTagName("도로명코드").item(0).getTextContent().trim();  
-        		String Dong2 = eElement.getElementsByTagName("법정동").item(0) == null ? "자료없음" : eElement.getElementsByTagName("법정동").item(0).getTextContent().trim().equals("") ? "자료없음" : eElement.getElementsByTagName("법정동").item(0).getTextContent().trim();  
-        		String Bonbun2 = eElement.getElementsByTagName("법정동본번코드").item(0) == null ? "자료없음" : eElement.getElementsByTagName("법정동본번코드").item(0).getTextContent().trim().equals("") ? "자료없음" : eElement.getElementsByTagName("법정동본번코드").item(0).getTextContent().trim();  
-        		String Bubun2 = eElement.getElementsByTagName("법정동부번코드").item(0) == null ? "자료없음" : eElement.getElementsByTagName("법정동부번코드").item(0).getTextContent().trim().equals("") ? "자료없음" : eElement.getElementsByTagName("법정동부번코드").item(0).getTextContent().trim();  
-        		String SigunguCode2 = eElement.getElementsByTagName("법정동시군구코드").item(0) == null ? "자료없음" : eElement.getElementsByTagName("법정동시군구코드").item(0).getTextContent().trim().equals("") ? "자료없음" : eElement.getElementsByTagName("법정동시군구코드").item(0).getTextContent().trim();  
-        		String EubyundongCode2 = eElement.getElementsByTagName("법정동읍면동코드").item(0) == null ? "자료없음" : eElement.getElementsByTagName("법정동읍면동코드").item(0).getTextContent().trim().equals("") ? "자료없음" : eElement.getElementsByTagName("법정동읍면동코드").item(0).getTextContent().trim();  
-        		String LandCode2 = eElement.getElementsByTagName("법정동지번코드").item(0) == null ? "자료없음" : eElement.getElementsByTagName("법정동지번코드").item(0).getTextContent().trim().equals("") ? "자료없음" : eElement.getElementsByTagName("법정동지번코드").item(0).getTextContent().trim();  
-        		String ApartmentName2 = eElement.getElementsByTagName("아파트").item(0) == null ? "자료없음" : eElement.getElementsByTagName("아파트").item(0).getTextContent().trim().equals("") ? "자료없음" : eElement.getElementsByTagName("아파트").item(0).getTextContent().trim();  
-        		String DealMonth2 = eElement.getElementsByTagName("월").item(0) == null ? "자료없음" : eElement.getElementsByTagName("월").item(0).getTextContent().trim().equals("") ? "자료없음" : eElement.getElementsByTagName("월").item(0).getTextContent().trim();  
-        		String DealDay2 = eElement.getElementsByTagName("일").item(0) == null ? "자료없음" : eElement.getElementsByTagName("일").item(0).getTextContent().trim().equals("") ? "자료없음" : eElement.getElementsByTagName("일").item(0).getTextContent().trim();  
-        		String SerialNumber2 = eElement.getElementsByTagName("일련번호").item(0) == null ? "자료없음" : eElement.getElementsByTagName("일련번호").item(0).getTextContent().trim().equals("") ? "자료없음" : eElement.getElementsByTagName("일련번호").item(0).getTextContent().trim();  
-        		String AreaforExcusiveUse2 = eElement.getElementsByTagName("전용면적").item(0) == null ? "자료없음" : eElement.getElementsByTagName("전용면적").item(0).getTextContent().trim().equals("") ? "자료없음" : eElement.getElementsByTagName("전용면적").item(0).getTextContent().trim();  
-        		String Jibun2 = eElement.getElementsByTagName("지번").item(0) == null ? "자료없음" : eElement.getElementsByTagName("지번").item(0).getTextContent().trim().equals("") ? "자료없음" : eElement.getElementsByTagName("지번").item(0).getTextContent().trim();  
-        		String RegionalCode2 = eElement.getElementsByTagName("지역코드").item(0) == null ? "자료없음" : eElement.getElementsByTagName("지역코드").item(0).getTextContent().trim().equals("") ? "자료없음" : eElement.getElementsByTagName("지역코드").item(0).getTextContent().trim();  
-        		String Floor2 = eElement.getElementsByTagName("층").item(0) == null ? "자료없음" : eElement.getElementsByTagName("층").item(0).getTextContent().trim().equals("") ? "자료없음" : eElement.getElementsByTagName("층").item(0).getTextContent().trim();  
-        		String CancleDealType2 = eElement.getElementsByTagName("해제여부").item(0) == null ? "자료없음" : eElement.getElementsByTagName("해제여부").item(0).getTextContent().trim().equals("") ? "자료없음" : eElement.getElementsByTagName("해제여부").item(0).getTextContent().trim();  
-        		String CancleDealDay2 = eElement.getElementsByTagName("해제사유발생일").item(0) == null ? "자료없음" : eElement.getElementsByTagName("해제사유발생일").item(0).getTextContent().trim().equals("") ? "자료없음" : eElement.getElementsByTagName("해제사유발생일").item(0).getTextContent().trim();  
-        		String REQGBN2 = eElement.getElementsByTagName("거래유형").item(0) == null ? "자료없음" : eElement.getElementsByTagName("거래유형").item(0).getTextContent().trim().equals("") ? "자료없음" : eElement.getElementsByTagName("거래유형").item(0).getTextContent().trim();  
-        		String RdealerLawdnm2 = eElement.getElementsByTagName("중개사소재지").item(0) == null ? "자료없음" : eElement.getElementsByTagName("중개사소재지").item(0).getTextContent().trim().equals("") ? "자료없음" : eElement.getElementsByTagName("중개사소재지").item(0).getTextContent().trim();  
-        		String RegistartionDate2 = eElement.getElementsByTagName("등기일자").item(0) == null ? "자료없음" : eElement.getElementsByTagName("등기일자").item(0).getTextContent().trim().equals("") ? "자료없음" : eElement.getElementsByTagName("등기일자").item(0).getTextContent().trim();  
-        		String SellerGBN2 = eElement.getElementsByTagName("매도자").item(0) == null ? "자료없음" : eElement.getElementsByTagName("매도자").item(0).getTextContent().trim().equals("") ? "자료없음" : eElement.getElementsByTagName("매도자").item(0).getTextContent().trim();  
-        		String BuyerGBN2 = eElement.getElementsByTagName("매수자").item(0) == null ? "자료없음" : eElement.getElementsByTagName("매수자").item(0).getTextContent().trim().equals("") ? "자료없음" : eElement.getElementsByTagName("매수자").item(0).getTextContent().trim();  
-        		String ApartmentDong2 = eElement.getElementsByTagName("동").item(0) == null ? "자료없음" : eElement.getElementsByTagName("동").item(0).getTextContent().trim().equals("") ? "자료없음" : eElement.getElementsByTagName("동").item(0).getTextContent().trim();  
+        		
+        		String DealAmount = eElement.getElementsByTagName("dealAmount").item(0) == null ? "-" : eElement.getElementsByTagName("dealAmount").item(0).getTextContent().replaceAll("\"", "").trim().equals("") ? "-" : eElement.getElementsByTagName("dealAmount").item(0).getTextContent().replaceAll("\"", "").trim();  
+				String ReqgbN = eElement.getElementsByTagName("dealingGbn").item(0) == null ? "-" : eElement.getElementsByTagName("dealingGbn").item(0).getTextContent().replaceAll("\"", "").trim().equals("") ? "-" : eElement.getElementsByTagName("dealingGbn").item(0).getTextContent().replaceAll("\"", "").trim();  
+				String BuildYear = eElement.getElementsByTagName("buildYear").item(0) == null ? "-" : eElement.getElementsByTagName("buildYear").item(0).getTextContent().replaceAll("\"", "").trim().equals("") ? "-" : eElement.getElementsByTagName("buildYear").item(0).getTextContent().replaceAll("\"", "").trim();  
+				String DealYear = eElement.getElementsByTagName("dealYear").item(0) == null ? "-" : eElement.getElementsByTagName("dealYear").item(0).getTextContent().replaceAll("\"", "").trim().equals("") ? "-" : eElement.getElementsByTagName("dealYear").item(0).getTextContent().replaceAll("\"", "").trim();  
+				String ApartmentDong = eElement.getElementsByTagName("aptDong").item(0) == null ? "-" : eElement.getElementsByTagName("aptDong").item(0).getTextContent().replaceAll("\"", "").trim().equals("") ? "-" : eElement.getElementsByTagName("aptDong").item(0).getTextContent().replaceAll("\"", "").trim();  
+				String RegistartionDate = eElement.getElementsByTagName("rgstDate").item(0) == null ? "-" : eElement.getElementsByTagName("rgstDate").item(0).getTextContent().replaceAll("\"", "").trim().equals("") ? "-" : eElement.getElementsByTagName("rgstDate").item(0).getTextContent().replaceAll("\"", "").trim();  
+				String SellerGBN = eElement.getElementsByTagName("slerGbn").item(0) == null ? "-" : eElement.getElementsByTagName("slerGbn").item(0).getTextContent().replaceAll("\"", "").trim().equals("") ? "-" : eElement.getElementsByTagName("slerGbn").item(0).getTextContent().replaceAll("\"", "").trim();  
+				String BuyerGBN = eElement.getElementsByTagName("buyerGbn").item(0) == null ? "-" : eElement.getElementsByTagName("buyerGbn").item(0).getTextContent().replaceAll("\"", "").trim().equals("") ? "-" : eElement.getElementsByTagName("buyerGbn").item(0).getTextContent().replaceAll("\"", "").trim();  
+				String Dong = eElement.getElementsByTagName("umdNm").item(0) == null ? "-" : eElement.getElementsByTagName("umdNm").item(0).getTextContent().replaceAll("\"", "").trim().equals("") ? "-" : eElement.getElementsByTagName("umdNm").item(0).getTextContent().replaceAll("\"", "").trim();  
+				String ApartmentName = eElement.getElementsByTagName("aptNm").item(0) == null ? "-" : eElement.getElementsByTagName("aptNm").item(0).getTextContent().replaceAll("\"", "").trim().equals("") ? "-" : eElement.getElementsByTagName("aptNm").item(0).getTextContent().replaceAll("\"", "").trim();  
+				String DealMonth = eElement.getElementsByTagName("dealMonth").item(0) == null ? "-" : eElement.getElementsByTagName("dealMonth").item(0).getTextContent().replaceAll("\"", "").trim().equals("") ? "-" : eElement.getElementsByTagName("dealMonth").item(0).getTextContent().replaceAll("\"", "").trim();  
+				String DealDay = eElement.getElementsByTagName("dealDay").item(0) == null ? "-" : eElement.getElementsByTagName("dealDay").item(0).getTextContent().replaceAll("\"", "").trim().equals("") ? "-" : eElement.getElementsByTagName("dealDay").item(0).getTextContent().replaceAll("\"", "").trim();  
+				String AreaforExcusiveUse = eElement.getElementsByTagName("excluUseAr").item(0) == null ? "-" : eElement.getElementsByTagName("excluUseAr").item(0).getTextContent().replaceAll("\"", "").trim().equals("") ? "-" : eElement.getElementsByTagName("excluUseAr").item(0).getTextContent().replaceAll("\"", "").trim();  
+				String RdealerLawdnm = eElement.getElementsByTagName("estateAgentSggNm").item(0) == null ? "-" : eElement.getElementsByTagName("estateAgentSggNm").item(0).getTextContent().replaceAll("\"", "").trim().equals("") ? "-" : eElement.getElementsByTagName("estateAgentSggNm").item(0).getTextContent().replaceAll("\"", "").trim();  
+				String Jibun = eElement.getElementsByTagName("jibun").item(0) == null ? "-" : eElement.getElementsByTagName("jibun").item(0).getTextContent().replaceAll("\"", "").trim().equals("") ? "-" : eElement.getElementsByTagName("jibun").item(0).getTextContent().replaceAll("\"", "").trim();  
+				String RegionalCode = eElement.getElementsByTagName("sggCd").item(0) == null ? "-" : eElement.getElementsByTagName("sggCd").item(0).getTextContent().replaceAll("\"", "").trim().equals("") ? "-" : eElement.getElementsByTagName("sggCd").item(0).getTextContent().replaceAll("\"", "").trim();  
+				String Floor = eElement.getElementsByTagName("floor").item(0) == null ? "-" : eElement.getElementsByTagName("floor").item(0).getTextContent().replaceAll("\"", "").trim().equals("") ? "-" : eElement.getElementsByTagName("floor").item(0).getTextContent().replaceAll("\"", "").trim();  
+				String CancleDealDay = eElement.getElementsByTagName("cdealDay").item(0) == null ? "-" : eElement.getElementsByTagName("cdealDay").item(0).getTextContent().replaceAll("\"", "").trim().equals("") ? "-" : eElement.getElementsByTagName("cdealDay").item(0).getTextContent().replaceAll("\"", "").trim();  
+				String CancleDealType = eElement.getElementsByTagName("cdealType").item(0) == null ? "-" : eElement.getElementsByTagName("cdealType").item(0).getTextContent().replaceAll("\"", "").trim().equals("") ? "-" : eElement.getElementsByTagName("cdealType").item(0).getTextContent().replaceAll("\"", "").trim();  
+				String RoadName = eElement.getElementsByTagName("roadNm").item(0) == null ? "-" : eElement.getElementsByTagName("roadNm").item(0).getTextContent().replaceAll("\"", "").trim().equals("") ? "-" : eElement.getElementsByTagName("roadNm").item(0).getTextContent().replaceAll("\"", "").trim();  
+				String Bonbun = eElement.getElementsByTagName("bonbun").item(0) == null ? "-" : eElement.getElementsByTagName("bonbun").item(0).getTextContent().replaceAll("\"", "").trim().equals("") ? "-" : eElement.getElementsByTagName("bonbun").item(0).getTextContent().replaceAll("\"", "").trim();  
+				String Bubun = eElement.getElementsByTagName("bubun").item(0) == null ? "-" : eElement.getElementsByTagName("bubun").item(0).getTextContent().replaceAll("\"", "").trim().equals("") ? "-" : eElement.getElementsByTagName("bubun").item(0).getTextContent().replaceAll("\"", "").trim();  
+				String RoadNameBonbun = eElement.getElementsByTagName("roadNmBonbun").item(0) == null ? "-" : eElement.getElementsByTagName("roadNmBonbun").item(0).getTextContent().replaceAll("\"", "").trim().equals("") ? "-" : eElement.getElementsByTagName("roadNmBonbun").item(0).getTextContent().replaceAll("\"", "").trim();  
+				String RoadNameBubun = eElement.getElementsByTagName("roadNmBubun").item(0) == null ? "-" : eElement.getElementsByTagName("roadNmBubun").item(0).getTextContent().replaceAll("\"", "").trim().equals("") ? "-" : eElement.getElementsByTagName("roadNmBubun").item(0).getTextContent().replaceAll("\"", "").trim();  
         		
         		StringBuilder sb2 = new StringBuilder();
-            	sb2.append(DealAmount2 + " ");
-            	sb2.append(BuildYear2 + " ");
-            	sb2.append(DealYear2 + " ");
-            	sb2.append(RoadName2 + " ");
-            	sb2.append(RoadNameBonbun2 + " ");
-            	sb2.append(RoadNameBubun2 + " ");
-            	sb2.append(RoadNameSigunguCode2 + " ");
-            	sb2.append(RoadNameSeq2 + " ");
-            	sb2.append(RoadNameBasementCode2 + " ");
-            	sb2.append(RoadNameCode2 + " ");
-            	sb2.append(Dong2 + " ");
-            	sb2.append(Bonbun2 + " ");
-            	sb2.append(Bubun2 + " ");
-            	sb2.append(SigunguCode2 + " ");
-            	sb2.append(EubyundongCode2 + " ");
-            	sb2.append(LandCode2 + " ");
-            	sb2.append(ApartmentName2 + " ");
-            	sb2.append(DealMonth2 + " ");
-            	sb2.append(DealDay2 + " ");
-            	sb2.append(SerialNumber2 + " ");
-            	sb2.append(AreaforExcusiveUse2 + " ");
-            	sb2.append(Jibun2 + " ");
-            	sb2.append(RegionalCode2 + " ");
-            	sb2.append(Floor2 + " ");
-            	sb2.append(CancleDealType2 + " ");
-            	sb2.append(CancleDealDay2 + " ");
-            	sb2.append(REQGBN2 + " ");
-            	sb2.append(RdealerLawdnm2 + " ");
-            	sb2.append(RegistartionDate2 + " ");
-            	sb2.append(SellerGBN2 + " ");
-            	sb2.append(BuyerGBN2 + " ");
-            	sb2.append(ApartmentDong2 + " "); 	 
+            	sb2.append(DealAmount + " ");
+            	sb2.append(BuildYear + " ");
+            	sb2.append(DealYear + " ");
+            	sb2.append(RoadName + " ");
+            	sb2.append(RoadNameBonbun + " ");
+            	sb2.append(RoadNameBubun + " ");
+            	sb2.append(Dong + " ");
+            	sb2.append(Bonbun + " ");
+            	sb2.append(Bubun + " ");
+            	sb2.append(ApartmentName + " ");
+            	sb2.append(DealMonth + " ");
+            	sb2.append(DealDay + " ");
+            	sb2.append(AreaforExcusiveUse + " ");
+            	sb2.append(Jibun + " ");
+            	sb2.append(RegionalCode + " ");
+            	sb2.append(Floor + " ");
+            	sb2.append(CancleDealType + " ");
+            	sb2.append(CancleDealDay + " ");
+            	sb2.append(RdealerLawdnm + " ");
+            	sb2.append(RegistartionDate + " ");
+            	sb2.append(SellerGBN + " ");
+            	sb2.append(BuyerGBN + " ");
+            	sb2.append(ApartmentDong + " "); 	 
             	System.out.println(sb2.toString());
         	}
         	
         }
         
 	}
+	@Test
+	void test6() {
+		String lat = "123.78955456456";
+		int latidx = lat.indexOf(".");
+		String strlatidx = lat.substring(0,latidx+6);
+		System.out.println(latidx);
+		System.out.println(strlatidx);
+	}
 	
+	@Test
+	void test7() {
+		
+		NameCountDto dto = new NameCountDto();
+		NameCountDto dto2 = new NameCountDto();
+		
+		String Sigungu = "서울특별시 중랑구 망우동";
+		String Bungi = "435-2";
+		String Roadname = "용마산로 100길";
+		String Apartmentname = "상봉듀오트리스";
+		
+		dto.setSIGUNGU(Sigungu);
+		dto.setBUNGI(Bungi);
+		dto.setROADNAME(Roadname);
+		dto.setAPARTMENTNAME(Apartmentname);
+		
+		dto2.setSIGUNGU(Sigungu);
+		dto2.setBUNGI(Bungi);
+		dto2.setROADNAME(Roadname);
+		dto2.setAPARTMENTNAME(Apartmentname);
+		
+		dto.setLAT("123.12345");
+		dto.setLNG("123.12345");
+		
+		dto2.setLAT("456.789");
+		dto2.setLAT("456.789");
+		
+		boolean test = dto.equals(dto2);
+		
+		System.out.println(test);
+		
+		
+		
+		
+	}
+	@Test
+	void test8() throws IOException, ParseException, InterruptedException {
+		DataServiceImpl DataServiceimpl = new DataServiceImpl(null);
+		List<NameCountDto> list = new ArrayList<>();
+		
+		NameCountDto NameCountDto = new NameCountDto();
+		NameCountDto.setSIGUNGU("강원특별자치도 고성군 토성면 천진리");
+		NameCountDto.setBUNGI("476");
+		NameCountDto.setROADNAME("29");
+		NameCountDto.setAPARTMENTNAME("고성천진한신더휴");
+		DataServiceimpl.getparcel(NameCountDto, "DUMMY");
+		DataServiceimpl.getroadname(NameCountDto, "DUMMY");
+		list.add(NameCountDto);
+		//DataServiceimpl.getLatLng(list, "DUMMY");
+		
+	}
 }

@@ -31,7 +31,7 @@ public class AptServiceImpl implements AptService{
 	private final AptMapper AptMapper;
 
 	@Override
-	public List<NameCountDto> get2(List<String> arr, String year) {
+	public List<NameCountDto> get(List<String> arr, String year) {
 		// TODO Auto-generated method stub
 		
 		arr = arr.stream().distinct().collect(Collectors.toList());	
@@ -75,15 +75,10 @@ public class AptServiceImpl implements AptService{
 				Map<String, String> map = new HashMap<>();
 				map.put("tableName", tableName);
 				map.put("region_1depth_name", region_1depth_name);
-				if(region_2depth_name.equals("청주시")) {
-					map.put("region_2depth_name", "청주");
-				}else {
-					map.put("region_2depth_name", region_2depth_name);
-				}
-				
-				
+				map.put("region_2depth_name", region_2depth_name);
 				map.put("year", year);
-				list.addAll(AptMapper.get2(map));
+				
+				list.addAll(AptMapper.get(map));
 			
 		}
 		

@@ -51,7 +51,8 @@ public class DataServiceImpl implements DataService{
 			{ "26110", "26140", "26170", "26200", "26230", "26260", "26290", "26320", "26350", "26380", "26410",
 					"26440", "26470", "26500", "26530", "26710" },
 			/*대구*/
-			{ "27110", "27140", "27170", "27200", "27230", "27260", "27290", "27710" },
+			{ "27110", "27140", "27170", "27200", "27230", "27260", "27290", "27710", "27720"},
+			
 			/*인천*/
 			{ "28110", "28140", "28177", "28185", "28200", "28237", "28245", "28260", "28710", "28720" },
 			/*광주*/
@@ -63,20 +64,25 @@ public class DataServiceImpl implements DataService{
 			/*세종특별자치시*/
 			{ "36110" },
 			/*경기도*/
-			{ "41111", "41113", "41115", "41117", "41131", "41133", "41135", "41150", "41171", "41173", "41190",
-					"41210", "41220", "41250", "41271", "41273", "41281", "41285", "41287", "41290", "41310",
-					"41360", "41370", "41390", "41410", "41430", "41450", "41461", "41463", "41465", "41480",
-					"41500", "41550", "41570", "41590", "41610", "41630", "41650", "41670", "41800", "41820",
-					"41830" },
+			{ "41111", "41113", "41115", "41117", "41131", 
+			  "41133", "41135", "41150", "41171", "41173" ,
+			  "41194", "41196", "41192", "41210", "41220", 
+			  "41250", "41271", "41273", "41281", "41285", 
+			  "41287", "41290", "41310","41360", "41370", 
+			  "41390", "41410", "41430", "41450", "41461", 
+			  "41463", "41465", "41480", "41500", "41550", 
+			  "41570", "41590", "41610", "41630", "41650", 
+			  "41670", "41800", "41820", "41830" },
+			
 			/*강원도*/
 			{ "51110", "51130", "51150", "51170", "51190", "51210", "51230", "51720", "51730", "51750", "51760",
 					"51770", "51780", "51790", "51800", "51810", "51820", "51830" },
 			/*충청북도*/
-			{ "42830", "43111", "43112", "43113", "43114", "43130", "43150", "43720", "43730", "43740", "43745",
+			{ "43111", "43112", "43113", "43114", "43130", "43150", "43720", "43730", "43740", "43745",
 					"43750", "43760", "43770", "43800" },
 			/*충청남도*/
 			{ "44131", "44133", "44150", "44180", "44200", "44210", "44230", "44250", "44270", "44710", "44760",
-					"44790", "44800", "44810", "44825" },
+					"44770" ,"44790", "44800", "44810", "44825" },
 			/*전라북도*/
 			{ "52111", "52113", "52130", "52140", "52180", "52190", "52210", "52710", "52720", "52730", "52740",
 					"52750", "52770", "52790", "52800" },
@@ -86,7 +92,7 @@ public class DataServiceImpl implements DataService{
 					"46910" },
 			/*경상북도*/
 			{ "47111", "47113", "47130", "47150", "47170", "47190", "47210", "47230", "47250", "47280", "47290",
-					"47720", "47730", "47750", "47760", "47770", "47820", "47830", "47840", "47850", "47900",
+					"47730", "47750", "47760", "47770", "47820", "47830", "47840", "47850", "47900",
 					"47920", "47930", "47940" },
 			/*경상남도*/
 			{ "48121", "48123", "48125", "48127", "48129", "48170", "48220", "48240", "48250", "48270", "48310",
@@ -102,9 +108,9 @@ public class DataServiceImpl implements DataService{
 			{ "중구", "서구", "동구", "영도구", "부산진구", "동래구", "남구", "북구", "해운대구", "사하구", "금정구", "강서구", "연제구", "수영구", "사상구",
 					"기장군" },
 			//대구
-			{ "중구", "동구", "서구", "남구", "북구", "수성구", "달서구", "달성군" },
+			{ "중구", "동구", "서구", "남구","북구", "수성구", "달서구", "달성군", "군위군"},
 			//인천
-			{ "중구", "동구", "미추홀구", "연수구", "남동구", "부평구", "계양구", "서구", "강화군", "옹진구" }, 
+			{ "중구", "동구", "미추홀구", "연수구", "남동구", "부평구", "계양구", "서구", "강화군", "옹진군" }, 
 			//광주
 			{ "동구", "서구", "남구", "북구", "광산구" },
 			//대전
@@ -112,17 +118,22 @@ public class DataServiceImpl implements DataService{
 			//울산
 			{ "중구", "남구", "동구", "북구", "울주군" },
 			//세종
-			{ "" },
+			{""},
 			//경기도
-			{ "수원시 장안구", "수원시 권선구", "수원시 팔달구", "수원시 영통구", "성남시 수정구", "성남시 중원구", "성남시 분당구", "의정부시", "안양시 만안구", "안양시 동안구",
-					"부천시", "광명시", "평택시", "동두천시", "안산시 상록구", "안산시 단원구", "고양시 덕양구", "고양시 일산동구", "고양시 일산서구", "과천시", "구리시",
-					"남양주시", "오산시", "시흥시", "군포시", "의왕시", "하남시", "용인시 처인구", "용인시 기흥구", "용인시 수지구", "파주시", "이천시", "안성시",
-					"김포시", "화성시", "광주시", "양주시", "포천시", "여주시", "연천군", "가평군", "양평군" },
+			{ "수원시 장안구", "수원시 권선구", "수원시 팔달구", "수원시 영통구", "성남시 수정구",
+				"성남시 중원구", "성남시 분당구", "의정부시", "안양시 만안구", "안양시 동안구",
+				"부천시 소사구","부천시 오정구" ,"부천시 원미구","광명시", "평택시",
+				"동두천시", "안산시 상록구", "안산시 단원구", "고양시 덕양구", "고양시 일산동구", 
+				"고양시 일산서구", "과천시", "구리시","남양주시", "오산시", 
+				"시흥시", "군포시", "의왕시", "하남시", "용인시 처인구", 
+				"용인시 기흥구", "용인시 수지구", "파주시", "이천시", "안성시",
+				"김포시", "화성시", "광주시", "양주시", "포천시", 
+				"여주시", "연천군", "가평군", "양평군" },
 			//강원도
 			{ "춘천시", "원주시", "강릉시", "동해시", "태백시", "속초시", "삼척시", "홍천군", "횡성군", "영월군", "평창군", "정선군", "철원군", "화천군", "양구군",
 					"인제군", "고성군", "양양군" },
 			//충청북도
-			{ "청주시 상당+구", "청주시 서원구", "청주시 흥덕구", "청주시 청원구", "충주시", "제천시", "보은군", "옥천군", "영동군", "증평군", "진천군", "괴산군", "음성군",
+			{ "청주시 상당구", "청주시 서원구", "청주시 흥덕구", "청주시 청원구", "충주시", "제천시", "보은군", "옥천군", "영동군", "증평군", "진천군", "괴산군", "음성군",
 					"단양군" },
 			//충청남도
 			{ "천안시 동남구", "천안시 서북구", "공주시", "보령시", "아산시", "서산시", "논산시", "계룡시", "당진시", "금산군", "부여군", "서천군", "청양군", "홍성군",
@@ -134,11 +145,11 @@ public class DataServiceImpl implements DataService{
 			{ "목포시", "여수시", "순천시", "나주시", "광양시", "담양군", "곡성군", "구례군", "고흥군", "보성군", "화순군", "장흥군", "강진군", "해남군", "영남군",
 					"무안군", "함평군", "영광군", "장성군", "완도군", "진도군", "신안군" },
 			//경상북도
-			{ "포항시 남구", "포항시 북구", "경주시", "김천시", "안동시", "구미시", "영주시", "영천시", "상주시", "문경시", "경산시", "군위군", "의성군", "청송군",
+			{ "포항시 남구", "포항시 북구", "경주시", "김천시", "안동시", "구미시", "영주시", "영천시", "상주시", "문경시", "경산시", "의성군", "청송군",
 					"영양군", "영덕군", "청도군", "고령군", "성주군", "칠곡군", "예천군", "봉화군", "울진군", "울릉군" },
 			//경상남도
-			{ "창원시 의상구", "창원시 성산구", "창원시 마산합포구", "창원시 마산회원구", "창원시 진해구", "진주시", "통영시", "사천시", "김해시", "밀양시", "거제시",
-					"양산시", "의령군", "함얀군", "창녕군", "고성군", "남해군", "하동군", "산청군", "함양군", "거창군", "합천군" },
+			{ "창원시 의창구", "창원시 성산구", "창원시 마산합포구", "창원시 마산회원구", "창원시 진해구", "진주시", "통영시", "사천시", "김해시", "밀양시", "거제시",
+					"양산시", "의령군", "함안군", "창녕군", "고성군", "남해군", "하동군", "산청군", "함양군", "거창군", "합천군" },
 			//제주도
 			{ "제주시", "서귀포시" }
 			};
@@ -194,10 +205,10 @@ public class DataServiceImpl implements DataService{
 			arr[1] = "안산시 단원구";
 		} else if (address2.equals("안산시상록구")) {
 			arr[1] = "안산시 상록구";
-		} else if (address2.equals("안산시동안구")) {
-			arr[1] = "안산시 동안구";
-		} else if (address2.equals("안산시만안구")) {
-			arr[1] = "안산시 만안구";
+		} else if (address2.equals("안양시동안구")) {
+			arr[1] = "안양시 동안구";
+		} else if (address2.equals("안양시만안구")) {
+			arr[1] = "안양시 만안구";
 		} else if (address2.equals("용인시기흥구")) {
 			arr[1] = "용인시 기흥구";
 		} else if (address2.equals("용인시수지구")) {
@@ -339,67 +350,26 @@ public class DataServiceImpl implements DataService{
 	
 	@Override
 	public List<NameCountDto> getLatLng(List<NameCountDto> list, String tableName) throws IOException, ParseException, InterruptedException {
-		// TODO Auto-generated method stub
-		
-		AptUtils AptUtils = new AptUtils();
-		
-		
-		String fileRegionName = AptUtils.MappingRegionReverse(tableName);
-		
-		File file = null;
-		if(System.getProperty("os.name").equals("Windows 10")) {
-			file = new File("C:/Users/qkfka/OneDrive/바탕 화면/아파트데이터/" + fileRegionName + "/javatest.txt");
-		}else if(System.getProperty("os.name").equals("Linux")) {
-			file = new File(File.separator + "home" + File.separator + "ubuntu" + File.separator + "아파트데이터" + File.separator + fileRegionName + File.separator +"javatest.txt");
-		}
-		
-		PrintWriter pw = new PrintWriter(new FileWriter(file,true));
-		
+			
 		JSONObject jsrs = null;
 		
 		for(int i = 0 ; i < list.size() ; i++) {
-			//Thread.sleep(500);
+			
 			NameCountDto NameCountDto = list.get(i);
-			try {
-				jsrs  = getparcel(NameCountDto,tableName);	
-			} catch (Exception e) {
-				// TODO: handle exception
-					
-				pw.write("에러발생" + e.getMessage()+"\r\n");	
-				pw.write(i+"\r\n");
-				i--;	
-				pw.write(i+"\r\n");
-				continue;
-			}
-			if(jsrs.get("status").equals("OK")) {
-				
-				pw.write(jsrs.get("status").toString()+"\r\n");
-				
-				JSONObject jsResult = (JSONObject) jsrs.get("result");
-			    JSONObject jspoint = (JSONObject) jsResult.get("point");
-			    
-			    String lat = (String) jspoint.get("y");
-			    int latidx =lat.indexOf(".");
-			    String lng = (String) jspoint.get("x");
-			    int lngidx = lng.indexOf(".");
-			    
-			    NameCountDto.setLAT(((String) jspoint.get("y")).substring(0, latidx+6));
-			    NameCountDto.setLNG(((String) jspoint.get("x")).substring(0, lngidx+6));			    
+			NameCountDto checkNameCountDto = new NameCountDto();
+			checkNameCountDto = DataMapper.get(NameCountDto);
+			
+			if(NameCountDto.equals(checkNameCountDto)) {
+				System.out.println("중복");
 			}else {
-				
-				pw.write(jsrs.get("status").toString()+"\r\n");
+				System.out.println("중복아닙니다");
 				
 				try {
-					jsrs = getroadname(NameCountDto,tableName);
+					jsrs  = getparcel(NameCountDto,tableName);	
 				} catch (Exception e) {
-					// TODO: handle exception
-					pw.write("에러발생" + e.getMessage()+"\r\n");	
-					pw.write(i+"\r\n");
 					i--;	
-					pw.write(i+"\r\n");
 					continue;
 				}
-				
 				if(jsrs.get("status").equals("OK")) {
 					JSONObject jsResult = (JSONObject) jsrs.get("result");
 				    JSONObject jspoint = (JSONObject) jsResult.get("point");
@@ -412,32 +382,40 @@ public class DataServiceImpl implements DataService{
 				    NameCountDto.setLAT(((String) jspoint.get("y")).substring(0, latidx+6));
 				    NameCountDto.setLNG(((String) jspoint.get("x")).substring(0, lngidx+6));			    
 				}else {
-					pw.write(jsrs.get("status").toString()+"\r\n");
-					NameCountDto.setLAT("자료없음");
-				    NameCountDto.setLNG("자료없음");		
+					try {
+						jsrs = getroadname(NameCountDto,tableName);
+					} catch (Exception e) {
+						i--;	
+						continue;
+					}
+					if(jsrs.get("status").equals("OK")) {
+						JSONObject jsResult = (JSONObject) jsrs.get("result");
+					    JSONObject jspoint = (JSONObject) jsResult.get("point");
+					    
+					    String lat = (String) jspoint.get("y");
+					    int latidx =lat.indexOf(".");
+					    String lng = (String) jspoint.get("x");
+					    int lngidx = lng.indexOf(".");
+					    
+					    NameCountDto.setLAT(((String) jspoint.get("y")).substring(0, latidx+6));
+					    NameCountDto.setLNG(((String) jspoint.get("x")).substring(0, lngidx+6));			    
+					}else {
+						NameCountDto.setLAT("자료없음");
+					    NameCountDto.setLNG("자료없음");		
+					}
 				}
-			}
-			
-			pw.write(i + "번째 " + NameCountDto+"\r\n");
-			NameCountDto checkNameCountDto = new NameCountDto();
-			checkNameCountDto = DataMapper.get(NameCountDto);
-			
-			if(NameCountDto.equals(checkNameCountDto)) {
-				pw.write("중복입니다 넘어갑니다"+"\r\n");
-				pw.write("------------------------------------"+"\r\n");
-			}else {
+				System.out.println(checkNameCountDto);
+				System.out.println(NameCountDto);
 				DataMapper.insert(NameCountDto);
-				if(checkNameCountDto == null || "".equals(checkNameCountDto)) {
-					pw.write("null"+"\r\n");
-				}else {
-					pw.write(checkNameCountDto.toString()+"\r\n");
-				}				
-				pw.write(NameCountDto.toString()+"\r\n");
-				pw.write("------------------------------------"+"\r\n");
 			}
+			
+			
+			
+			
+			
+			
 		}
-		pw.write("끝");
-		pw.close();
+	
 		return list;
 	}
 	
@@ -488,7 +466,6 @@ public class DataServiceImpl implements DataService{
 		
 		String roadname = NameCountDto.getROADNAME();
 		String searchAddr = Sigungu + " " + roadname;
-		
 		return geocodersearchaddress(searchAddr, searchType);
 		
 	}
@@ -515,12 +492,12 @@ public class DataServiceImpl implements DataService{
 		
 		String Bungi = NameCountDto.getBUNGI();		
 		String searchAddr = Sigungu + " " + Bungi;
-		
 		return geocodersearchaddress(searchAddr, searchType);
 		
 	}
 
 	@Override
+	@Transactional
 	public String test() throws IOException, ParserConfigurationException, SAXException {
 		// TODO Auto-generated method stub
 		StringBuilder sb = null;
@@ -529,15 +506,15 @@ public class DataServiceImpl implements DataService{
 		int Calendarmonth = (today.get(Calendar.MONTH)+1);
 		String month = String.format("%02d", Calendarmonth);
 		String DEAL_YMD = year + month;
-		for(int i = 8 ; i < englishregion.length; i++) {
+		for(int i = 0 ; i < englishregion.length; i++) {
 			
 			for(int j = 0 ; j < region2[i].length; j++) {
 				
 				String LAWD_CD = region2[i][j];
-				StringBuilder urlBuilder = new StringBuilder("http://openapi.molit.go.kr/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcAptTradeDev"); /*URL*/
+				StringBuilder urlBuilder = new StringBuilder("http://apis.data.go.kr/1613000/RTMSDataSvcAptTradeDev/getRTMSDataSvcAptTradeDev"); /*URL*/
 		        urlBuilder.append("?" + URLEncoder.encode("serviceKey","UTF-8") + "=f4Ed1eAJYzb%2BQ%2BtpQx4G%2BQvFuO0ZJJMZIInJGo%2FpG889YetxgnnGE9umfvGSe8TPyZ88bAUWw%2Bn7ETYTooeF5A%3D%3D"); /*Service Key*/
 		        urlBuilder.append("&" + URLEncoder.encode("LAWD_CD","UTF-8") + "=" + URLEncoder.encode(LAWD_CD, "UTF-8")); /*각 지역별 코드*/
-		        urlBuilder.append("&" + URLEncoder.encode("DEAL_YMD","UTF-8") + "=" + URLEncoder.encode(DEAL_YMD, "UTF-8")); /*월 단위 신고자료*/
+		        urlBuilder.append("&" + URLEncoder.encode("DEAL_YMD","UTF-8") + "=" + URLEncoder.encode("202401"/*DEAL_YMD*/, "UTF-8")); /*월 단위 신고자료*/
 		        urlBuilder.append("&" + URLEncoder.encode("pageNo","UTF-8") + "=" + URLEncoder.encode("1", "UTF-8")); /*페이지번호*/
 		        urlBuilder.append("&" + URLEncoder.encode("numOfRows","UTF-8") + "=" + URLEncoder.encode("10000", "UTF-8")); /*한 페이지 결과 수*/
 		        URL url = new URL(urlBuilder.toString());
@@ -559,29 +536,32 @@ public class DataServiceImpl implements DataService{
 		        }
 		        rd.close();
 		        conn.disconnect();
-		        
+		       
 		        DataUtils DataUtils = new DataUtils();
 		        List<ApiDto> list = new ArrayList<>();
 		        list = DataUtils.test(sb.toString(),englishregion[i],koreanregion[i],region3[i][j]);
 		        try {
 		        	if(list.size() > 0) {
-		        		Thread.sleep(2000);
-		        		System.out.println(region2[i].toString());
 		        		System.out.println(region2[i][j]);
 		        		System.out.println(region3[i][j]);
-		        		DataMapper.DataInsert(list);
+		        		System.out.println(englishregion[i]);
+		        		DataMapper.DataInsert(list,englishregion[i]);
+		        		getLatLng(DataUtils.makeNameCountDto(list), englishregion[i]);
 		        	}
 				} catch (Exception e) {
 					// TODO: handle exception
-					System.out.println(e.getMessage() + "에러발생");
+					System.out.println(e.getMessage() + "에러발생++++++++++++++++++++");
 				}
-		        
+		       
 			}
 		}
 		
 		
 		return "success";
 	}
+	
+	
+	
 	}
 	
 	

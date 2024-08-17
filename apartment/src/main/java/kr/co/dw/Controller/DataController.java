@@ -27,7 +27,7 @@ public class DataController {
 	
 	@GetMapping("/api/datainsert/{tableName}")
 	private void test(@PathVariable("tableName") String tableName) throws MalformedURLException, IOException, ParseException, InterruptedException {
-		
+		//서울 부산 경기도 충청북도 충청남도 대구 대전 강원도 광주 경상북도 인천 *여기까지 4만정도
 		DataService.LatLngInsert(tableName);
 		System.out.println("좌표 저장 완료");
 		

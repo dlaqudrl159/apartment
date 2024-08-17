@@ -16,11 +16,11 @@ public class AptController {
 
 	private final AptService AptService;
 	
-	@GetMapping("/api/get2")
-	private List<NameCountDto> get2(@RequestParam("arr")  List<String> arr,
+	@GetMapping("/api/get")
+	private List<NameCountDto> get(@RequestParam("arr")  List<String> arr,
 					   @RequestParam("year") String year) {
 						
-		return AptService.get2(arr,year);
+		return AptService.get(arr,year);
 	}
 	
 	@GetMapping("/api/hello")
