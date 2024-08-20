@@ -360,7 +360,8 @@ public class DataServiceImpl implements DataService{
 			checkNameCountDto = DataMapper.get(NameCountDto);
 			
 			if(NameCountDto.equals(checkNameCountDto)) {
-				System.out.println("중복");
+				//System.out.println("중복");
+				continue;
 			}else {
 				System.out.println("중복아닙니다");
 				
@@ -404,8 +405,8 @@ public class DataServiceImpl implements DataService{
 					    NameCountDto.setLNG("자료없음");		
 					}
 				}
-				System.out.println(checkNameCountDto);
-				System.out.println(NameCountDto);
+				//System.out.println(checkNameCountDto);
+				//System.out.println(NameCountDto);
 				DataMapper.insert(NameCountDto);
 			}
 			
@@ -514,9 +515,9 @@ public class DataServiceImpl implements DataService{
 				StringBuilder urlBuilder = new StringBuilder("http://apis.data.go.kr/1613000/RTMSDataSvcAptTradeDev/getRTMSDataSvcAptTradeDev"); /*URL*/
 		        urlBuilder.append("?" + URLEncoder.encode("serviceKey","UTF-8") + "=f4Ed1eAJYzb%2BQ%2BtpQx4G%2BQvFuO0ZJJMZIInJGo%2FpG889YetxgnnGE9umfvGSe8TPyZ88bAUWw%2Bn7ETYTooeF5A%3D%3D"); /*Service Key*/
 		        urlBuilder.append("&" + URLEncoder.encode("LAWD_CD","UTF-8") + "=" + URLEncoder.encode(LAWD_CD, "UTF-8")); /*각 지역별 코드*/
-		        urlBuilder.append("&" + URLEncoder.encode("DEAL_YMD","UTF-8") + "=" + URLEncoder.encode("202401"/*DEAL_YMD*/, "UTF-8")); /*월 단위 신고자료*/
+		        urlBuilder.append("&" + URLEncoder.encode("DEAL_YMD","UTF-8") + "=" + URLEncoder.encode("200604"/*DEAL_YMD*/, "UTF-8")); /*월 단위 신고자료*/
 		        urlBuilder.append("&" + URLEncoder.encode("pageNo","UTF-8") + "=" + URLEncoder.encode("1", "UTF-8")); /*페이지번호*/
-		        urlBuilder.append("&" + URLEncoder.encode("numOfRows","UTF-8") + "=" + URLEncoder.encode("10000", "UTF-8")); /*한 페이지 결과 수*/
+		        urlBuilder.append("&" + URLEncoder.encode("numOfRows","UTF-8") + "=" + URLEncoder.encode("100000", "UTF-8")); /*한 페이지 결과 수*/
 		        URL url = new URL(urlBuilder.toString());
 		        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 		        conn.setRequestMethod("GET");

@@ -38,6 +38,12 @@ public class DataUtils {
 		String resultCode = root.getElementsByTagName("resultCode").item(0).getTextContent();
 		System.out.println(resultMsg);
 		System.out.println(resultCode);
+		if(!resultCode.equals("000")) {
+			System.out.println(resultMsg);
+			System.out.println(resultCode);
+			System.out.println(dataxml);
+			return null;
+		}
 		List<ApiDto> list = new ArrayList<>();
 		for(int i = 0 ; i < nList.getLength(); i++) {
 			Node nNode = nList.item(i);
