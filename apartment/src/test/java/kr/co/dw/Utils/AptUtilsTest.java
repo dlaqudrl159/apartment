@@ -1,7 +1,5 @@
 package kr.co.dw.Utils;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -13,11 +11,9 @@ import java.net.ProtocolException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -35,7 +31,6 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import kr.co.dw.Domain.ApiDto;
 import kr.co.dw.Domain.NameCountDto;
 import kr.co.dw.Service.DataService;
 import kr.co.dw.Service.DataServiceImpl;
@@ -159,22 +154,13 @@ public class AptUtilsTest {
 		System.out.println(address);
 	}
 	@Test
-	void test() throws java.text.ParseException {
+	void test() {
 		Calendar today = Calendar.getInstance();
-		String date = "202408";
-		SimpleDateFormat dtFormat = new SimpleDateFormat("yyyyMM");
-		int Calendarmonth = (today.get(Calendar.MONTH)+1);
-		System.out.println(Calendarmonth);
-		Date dt = dtFormat.parse(date);
-		today.setTime(dt);
-		
-		
 		String year = String.valueOf(today.get(Calendar.YEAR));
-		String minusyear = String.valueOf(today.get(Calendar.YEAR)-1);
+		int Calendarmonth = (today.get(Calendar.MONTH)+1);
 		String month = String.format("%02d", Calendarmonth);
 		System.out.println(year);
-		today.add(Calendar.MONTH, -9);
-		System.out.println(dtFormat.format(today.getTime()));
+		System.out.println(month);
 		
 	}
 	@Test
@@ -215,22 +201,12 @@ public class AptUtilsTest {
 	
 	@Test
 	void test4() throws UnsupportedEncodingException, MalformedURLException, IOException, ParserConfigurationException, SAXException {
-		
-		/*인천*/
-		String[] GYEONGSANGNAMDO = { "48121", "48123", "48125", "48127", "48129", "48170", "48220", "48240", "48250", "48270", "48310",
-				"48330", "48720", "48730", "48740", "48820", "48840", "48850", "48860", "48870", "48880",
-				"48890" };
-		int nowtotalCount = 13;
-		int page = ((nowtotalCount-1)/10)+1;
-		String strPage = String.valueOf(page);
-		System.out.println(page);
-		System.out.println(strPage);
 		StringBuilder urlBuilder = new StringBuilder("http://apis.data.go.kr/1613000/RTMSDataSvcAptTradeDev/getRTMSDataSvcAptTradeDev"); /*URL*/
         urlBuilder.append("?" + URLEncoder.encode("serviceKey","UTF-8") + "=f4Ed1eAJYzb%2BQ%2BtpQx4G%2BQvFuO0ZJJMZIInJGo%2FpG889YetxgnnGE9umfvGSe8TPyZ88bAUWw%2Bn7ETYTooeF5A%3D%3D"); /*Service Key*/
-        urlBuilder.append("&" + URLEncoder.encode("pageNo","UTF-8") + "=" + URLEncoder.encode("2", "UTF-8")); /*페이지번호*/
-        urlBuilder.append("&" + URLEncoder.encode("numOfRows","UTF-8") + "=" + URLEncoder.encode("10000", "UTF-8")); /*한 페이지 결과 수*/
+        urlBuilder.append("&" + URLEncoder.encode("pageNo","UTF-8") + "=" + URLEncoder.encode("1", "UTF-8")); /*페이지번호*/
+        urlBuilder.append("&" + URLEncoder.encode("numOfRows","UTF-8") + "=" + URLEncoder.encode("10", "UTF-8")); /*한 페이지 결과 수*/
         urlBuilder.append("&" + URLEncoder.encode("LAWD_CD","UTF-8") + "=" + URLEncoder.encode("11140", "UTF-8")); /*지역코드*/
-        urlBuilder.append("&" + URLEncoder.encode("DEAL_YMD","UTF-8") + "=" + URLEncoder.encode("202401", "UTF-8")); /*계약월*/
+        urlBuilder.append("&" + URLEncoder.encode("DEAL_YMD","UTF-8") + "=" + URLEncoder.encode("202407", "UTF-8")); /*계약월*/
         URL url = new URL(urlBuilder.toString());
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestMethod("GET");
@@ -250,6 +226,7 @@ public class AptUtilsTest {
         rd.close();
         conn.disconnect();
         System.out.println(sb.toString());
+        
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
         Document document = builder.parse(new InputSource(new StringReader(sb.toString())));
@@ -258,21 +235,10 @@ public class AptUtilsTest {
         NodeList nList = document.getElementsByTagName("item");
         
         Element root = document.getDocumentElement();
-        String resultMsg = root.getElementsByTagName("resultMsg").item(0) == null ? "-" : root.getElementsByTagName("resultMsg").item(0).getTextContent();
-		String resultCode = root.getElementsByTagName("resultCode").item(0) == null ? "-" : root.getElementsByTagName("resultCode").item(0).getTextContent();
-		String totalCount = root.getElementsByTagName("totalCount").item(0) == null ? "-" : root.getElementsByTagName("totalCount").item(0).getTextContent();
-		System.out.println(resultMsg);
-		System.out.println(resultCode);
-		System.out.println(totalCount);
-		int a = Integer.parseInt(totalCount) - nowtotalCount;
-		System.out.println(a);
-        List<ApiDto> list = new ArrayList<>();
-        System.out.println(nList.getLength());
         
-        for(int i = nList.getLength()-1 ; i > a ; i--) {
-        	System.out.println(i);
+        for(int i = 0 ; i < nList.getLength() ; i++) {
         	Node nNode = nList.item(i);
-        	ApiDto ApiDto = new ApiDto();
+        	
         	if(nNode.getNodeType() == Node.ELEMENT_NODE) {
         		Element eElement = (Element) nNode;
         		
@@ -291,7 +257,7 @@ public class AptUtilsTest {
 				String AreaforExcusiveUse = eElement.getElementsByTagName("excluUseAr").item(0) == null ? "-" : eElement.getElementsByTagName("excluUseAr").item(0).getTextContent().replaceAll("\"", "").trim().equals("") ? "-" : eElement.getElementsByTagName("excluUseAr").item(0).getTextContent().replaceAll("\"", "").trim();  
 				String RdealerLawdnm = eElement.getElementsByTagName("estateAgentSggNm").item(0) == null ? "-" : eElement.getElementsByTagName("estateAgentSggNm").item(0).getTextContent().replaceAll("\"", "").trim().equals("") ? "-" : eElement.getElementsByTagName("estateAgentSggNm").item(0).getTextContent().replaceAll("\"", "").trim();  
 				String Jibun = eElement.getElementsByTagName("jibun").item(0) == null ? "-" : eElement.getElementsByTagName("jibun").item(0).getTextContent().replaceAll("\"", "").trim().equals("") ? "-" : eElement.getElementsByTagName("jibun").item(0).getTextContent().replaceAll("\"", "").trim();  
-				String RegionalCode = eElement.getElementsByTagName("landCd").item(0) == null ? "-" : eElement.getElementsByTagName("landCd").item(0).getTextContent().replaceAll("\"", "").trim().equals("") ? "-" : eElement.getElementsByTagName("landCd").item(0).getTextContent().replaceAll("\"", "").trim();  
+				String RegionalCode = eElement.getElementsByTagName("sggCd").item(0) == null ? "-" : eElement.getElementsByTagName("sggCd").item(0).getTextContent().replaceAll("\"", "").trim().equals("") ? "-" : eElement.getElementsByTagName("sggCd").item(0).getTextContent().replaceAll("\"", "").trim();  
 				String Floor = eElement.getElementsByTagName("floor").item(0) == null ? "-" : eElement.getElementsByTagName("floor").item(0).getTextContent().replaceAll("\"", "").trim().equals("") ? "-" : eElement.getElementsByTagName("floor").item(0).getTextContent().replaceAll("\"", "").trim();  
 				String CancleDealDay = eElement.getElementsByTagName("cdealDay").item(0) == null ? "-" : eElement.getElementsByTagName("cdealDay").item(0).getTextContent().replaceAll("\"", "").trim().equals("") ? "-" : eElement.getElementsByTagName("cdealDay").item(0).getTextContent().replaceAll("\"", "").trim();  
 				String CancleDealType = eElement.getElementsByTagName("cdealType").item(0) == null ? "-" : eElement.getElementsByTagName("cdealType").item(0).getTextContent().replaceAll("\"", "").trim().equals("") ? "-" : eElement.getElementsByTagName("cdealType").item(0).getTextContent().replaceAll("\"", "").trim();  
@@ -301,56 +267,35 @@ public class AptUtilsTest {
 				String RoadNameBonbun = eElement.getElementsByTagName("roadNmBonbun").item(0) == null ? "-" : eElement.getElementsByTagName("roadNmBonbun").item(0).getTextContent().replaceAll("\"", "").trim().equals("") ? "-" : eElement.getElementsByTagName("roadNmBonbun").item(0).getTextContent().replaceAll("\"", "").trim();  
 				String RoadNameBubun = eElement.getElementsByTagName("roadNmBubun").item(0) == null ? "-" : eElement.getElementsByTagName("roadNmBubun").item(0).getTextContent().replaceAll("\"", "").trim().equals("") ? "-" : eElement.getElementsByTagName("roadNmBubun").item(0).getTextContent().replaceAll("\"", "").trim();  
         		
-				StringBuilder sb2 = new StringBuilder();
-				sb2.append(DealAmount + " ");
-				sb2.append(ReqgbN + " ");
-				sb2.append(BuildYear + " ");
-				sb2.append(DealYear + " ");
-				sb2.append(ApartmentDong + " ");
-				sb2.append(RegistartionDate + " ");
-				sb2.append(SellerGBN + " ");
-				sb2.append(BuyerGBN + " ");
-				sb2.append(Dong + " ");
-				sb2.append(ApartmentName + " ");
-				sb2.append(DealMonth + " ");
-				sb2.append(DealDay + " ");
-				sb2.append(AreaforExcusiveUse + " ");
-				sb2.append(RdealerLawdnm + " ");
-				sb2.append(Jibun + " ");
-				sb2.append(RegionalCode + " ");
-				sb2.append(Floor + " ");
-				sb2.append(CancleDealDay + " ");
-				sb2.append(CancleDealType + " ");
-				sb2.append(RoadName);
-				sb2.append(RoadNameBonbun + " ");
-				sb2.append(RoadNameBubun+ " ");
-				
-				ApiDto.setBUNGI(Jibun);				
-				ApiDto.setBONBUN(Bonbun);
-				ApiDto.setBUBUN(Bubun);
-				ApiDto.setAPARTMENTNAME(ApartmentName);
-				ApiDto.setAREAFOREXCLUSIVEUSE(AreaforExcusiveUse);
-				ApiDto.setDEALYEARMONTH(DealYear + String.format("%02d", Integer.parseInt(DealMonth)));
-				ApiDto.setDEALDAY(DealDay);
-				ApiDto.setDEALAMOUNT(DealAmount);
-				ApiDto.setAPARTMENTDONG(ApartmentDong);
-				ApiDto.setFLOOR(Floor);
-				ApiDto.setBUYERGBN(BuyerGBN);
-				ApiDto.setSELLERGBN(SellerGBN);
-				ApiDto.setBUILDYEAR(BuildYear);
-				ApiDto.setCANCLEDEALDAY(CancleDealDay);
-				ApiDto.setREQGBN(ReqgbN);
-				ApiDto.setRDEALERLAWDNM(RdealerLawdnm);
-				ApiDto.setREGISTRATIONDATE(RegistartionDate);
-				//System.out.println(ApiDto.toString());
-				list.add(ApiDto);			
-				
+        		StringBuilder sb2 = new StringBuilder();
+            	sb2.append(DealAmount + " ");
+            	sb2.append(BuildYear + " ");
+            	sb2.append(DealYear + " ");
+            	sb2.append(RoadName + " ");
+            	sb2.append(RoadNameBonbun + " ");
+            	sb2.append(RoadNameBubun + " ");
+            	sb2.append(Dong + " ");
+            	sb2.append(Bonbun + " ");
+            	sb2.append(Bubun + " ");
+            	sb2.append(ApartmentName + " ");
+            	sb2.append(DealMonth + " ");
+            	sb2.append(DealDay + " ");
+            	sb2.append(AreaforExcusiveUse + " ");
+            	sb2.append(Jibun + " ");
+            	sb2.append(RegionalCode + " ");
+            	sb2.append(Floor + " ");
+            	sb2.append(CancleDealType + " ");
+            	sb2.append(CancleDealDay + " ");
+            	sb2.append(RdealerLawdnm + " ");
+            	sb2.append(RegistartionDate + " ");
+            	sb2.append(SellerGBN + " ");
+            	sb2.append(BuyerGBN + " ");
+            	sb2.append(ApartmentDong + " "); 	 
+            	System.out.println(sb2.toString());
         	}
         	
         }
         
-        System.out.println(list.size());
-        System.out.println(list.toString());
 	}
 	@Test
 	void test6() {
@@ -412,28 +357,4 @@ public class AptUtilsTest {
 		//DataServiceimpl.getLatLng(list, "DUMMY");
 		
 	}
-	
-	@Test
-	void test9() {
-		System.out.println(((0-1)/10)+1);
-	}
-	
-	@Test
-	void test10() throws InterruptedException {
-		
-			for(int i = 0 ; i < 3 ; i++) {
-				Thread.sleep(1000);
-				System.out.println(i);
-				for(int j = 0 ; j < 10 ; j++) {
-					Thread.sleep(1000);
-					System.out.println(j);
-					if(j == 5) {
-						break;
-					}
-					
-				}
-			}
-		
-	}
-	
 }

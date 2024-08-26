@@ -25,7 +25,9 @@
     
     select * from LATLNG2 where SIGUNGU = #{SIGUNGU} and BUNGI = #{BUNGI} and ROADNAME = #{ROADNAME} and APARTMENTNAME = #{APARTMENTNAME}
    
+    
     </select>
+    
     
     <insert id="insert" parameterType="NameCountDto">
     
@@ -34,7 +36,7 @@
     </insert>
     <insert id="DataInsert" parameterType="java.util.List">
     
-    <!-- ${tableName} -->
+    
     <foreach collection="list" item="ApiDto" separator=" " open="INSERT ALL" close="SELECT 1 FROM DUAL">
     into ${tableName} (SIGUNGU, BUNGI, BONBUN, BUBUN, APARTMENTNAME,AREAFOREXCLUSIVEUSE,DEALYEARMONTH,DEALDAY,DEALAMOUNT,APARTMENTDONG,FLOOR,BUYERGBN,SELLERGBN,BUILDYEAR,ROADNAME,CANCLEDEALDAY,REQGBN,RDEALERLAWDNM,REGISTRATIONDATE) 
     VALUES 
@@ -61,17 +63,4 @@
     )
     </foreach>
     </insert>
-    
-    <select id="getTotalCount" parameterType="hashMap">
-    
-    select ${EnglishMonth} from TOTALCOUNT where REGION = #{REGION} and REGIONCODE = #{REGIONCODE} and YEAR = #{YEAR}
-    
-    </select>
-    
-    <update id="updateTotalCount" parameterType="string">
-    
-    update TOTALCOUNT set ${EnglishMonth} = #{totalCount} where REGION = #{REGION} and REGIONCODE = #{REGIONCODE} and YEAR = #{YEAR}
-    
-    </update>
-    
 </mapper>	

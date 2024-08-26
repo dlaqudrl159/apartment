@@ -1,7 +1,6 @@
 package kr.co.dw.Mapper;
 
 import java.util.List;
-import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -21,10 +20,5 @@ public interface DataMapper {
 	void DataInsert(List<ApiDto> list);
 
 	void DataInsert(@Param("list") List<ApiDto> list, @Param("tableName") String tableName);
-
-	int getTotalCount(Map<String, String> map);
-
-	void updateTotalCount(@Param("REGION")String RegionName, @Param("REGIONCODE")String LAWD_CD, @Param("YEAR")String DEAL_YMD, @Param("EnglishMonth")String EnglishMonth,
-			@Param("totalCount")String totalCount);
 
 }
