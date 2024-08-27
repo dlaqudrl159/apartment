@@ -40,6 +40,8 @@ public interface DataService {
 
 	String test() throws IOException, ParserConfigurationException, SAXException;
 
+	void AutoDataInsert(String RegionName);
+
 
 
 	

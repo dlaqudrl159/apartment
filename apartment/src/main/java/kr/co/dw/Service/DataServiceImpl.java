@@ -6,6 +6,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.io.StringReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -13,9 +14,15 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.json.simple.JSONObject;
@@ -23,6 +30,11 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import kr.co.dw.Domain.ApiDto;
@@ -36,13 +48,13 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class DataServiceImpl implements DataService{
 
-	private String[] englishregion = {"SEOUL","BUSAN","DAEGU","INCHEON","GWANGJU","DAEJEON","ULSAN","SEJONG","GYEONGGIDO","GANGWONDO",
+	private String[] EnglishRegion = {"SEOUL","BUSAN","DAEGU","INCHEON","GWANGJU","DAEJEON","ULSAN","SEJONG","GYEONGGIDO","GANGWONDO",
 			"CHUNGCHEONGBUKDO","CHUNGCHEONGNAMDO","JEOLLABUKDO","JEOLLANAMDO","GYEONGSANGBUKDO","GYEONGSANGNAMDO","JEJU"};
 	
-	private String[] koreanregion = {"서울특별시","부산광역시","대구광역시","인천광역시","광주광역시","대전광역시","울산광역시","세종특별자치시","경기도","강원특별자치도",
+	private String[] KoreaRegion = {"서울특별시","부산광역시","대구광역시","인천광역시","광주광역시","대전광역시","울산광역시","세종특별자치시","경기도","강원특별자치도",
 			"충청북도","충청남도","전북특별자치도","전라남도","경상북도","경상남도","제주특별자치도"};
 	
-	private String[][] region2 = {
+	private String[][] RegionCode = {
 			/*서울*/
 			{ "11110", "11140", "11170", "11200", "11215", "11230", "11260", "11290", "11305", "11320", "11350",
 					"11380", "11410", "11440", "11470", "11500", "11530", "11545", "11560", "11590", "11620",
@@ -100,7 +112,7 @@ public class DataServiceImpl implements DataService{
 					"48890" },
 			/*제주도*/
 			{ "50110", "50130" } };
-	private String[][] region3 = {
+	private String[][] KoreaRegionCode = {
 			//서울
 			{ "종로구", "중구", "용산구", "성동구", "광진구", "동대문구", "중랑구", "성북구", "강북구", "도봉구", "노원구", "은평구", "서대문구", "마포구", "양천구",
 					"강서구", "구로구", "금천구", "영등포구", "동작구", "관악구", "서초구", "강남구", "송파구", "강동구" },
@@ -360,7 +372,7 @@ public class DataServiceImpl implements DataService{
 			checkNameCountDto = DataMapper.get(NameCountDto);
 			
 			if(NameCountDto.equals(checkNameCountDto)) {
-				System.out.println("중복");
+				continue;
 			}else {
 				System.out.println("중복아닙니다");
 				
@@ -506,15 +518,15 @@ public class DataServiceImpl implements DataService{
 		int Calendarmonth = (today.get(Calendar.MONTH)+1);
 		String month = String.format("%02d", Calendarmonth);
 		String DEAL_YMD = year + month;
-		for(int i = 0 ; i < englishregion.length; i++) {
+		for(int i = 0 ; i < 4/*englishregion.length*/; i++) {
 			
-			for(int j = 0 ; j < region2[i].length; j++) {
+			for(int j = 0 ; j < RegionCode[i].length; j++) {
 				
-				String LAWD_CD = region2[i][j];
+				String LAWD_CD = RegionCode[i][j];
 				StringBuilder urlBuilder = new StringBuilder("http://apis.data.go.kr/1613000/RTMSDataSvcAptTradeDev/getRTMSDataSvcAptTradeDev"); /*URL*/
 		        urlBuilder.append("?" + URLEncoder.encode("serviceKey","UTF-8") + "=f4Ed1eAJYzb%2BQ%2BtpQx4G%2BQvFuO0ZJJMZIInJGo%2FpG889YetxgnnGE9umfvGSe8TPyZ88bAUWw%2Bn7ETYTooeF5A%3D%3D"); /*Service Key*/
 		        urlBuilder.append("&" + URLEncoder.encode("LAWD_CD","UTF-8") + "=" + URLEncoder.encode(LAWD_CD, "UTF-8")); /*각 지역별 코드*/
-		        urlBuilder.append("&" + URLEncoder.encode("DEAL_YMD","UTF-8") + "=" + URLEncoder.encode("202401"/*DEAL_YMD*/, "UTF-8")); /*월 단위 신고자료*/
+		        urlBuilder.append("&" + URLEncoder.encode("DEAL_YMD","UTF-8") + "=" + URLEncoder.encode("202407"/*DEAL_YMD*/, "UTF-8")); /*월 단위 신고자료*/
 		        urlBuilder.append("&" + URLEncoder.encode("pageNo","UTF-8") + "=" + URLEncoder.encode("1", "UTF-8")); /*페이지번호*/
 		        urlBuilder.append("&" + URLEncoder.encode("numOfRows","UTF-8") + "=" + URLEncoder.encode("10000", "UTF-8")); /*한 페이지 결과 수*/
 		        URL url = new URL(urlBuilder.toString());
@@ -539,14 +551,14 @@ public class DataServiceImpl implements DataService{
 		       
 		        DataUtils DataUtils = new DataUtils();
 		        List<ApiDto> list = new ArrayList<>();
-		        list = DataUtils.test(sb.toString(),englishregion[i],koreanregion[i],region3[i][j]);
+		        list = DataUtils.test(sb.toString(),EnglishRegion[i],KoreaRegion[i],KoreaRegionCode[i][j]);
 		        try {
 		        	if(list.size() > 0) {
-		        		System.out.println(region2[i][j]);
-		        		System.out.println(region3[i][j]);
-		        		System.out.println(englishregion[i]);
-		        		DataMapper.DataInsert(list,englishregion[i]);
-		        		getLatLng(DataUtils.makeNameCountDto(list), englishregion[i]);
+		        		System.out.println(RegionCode[i][j]);
+		        		System.out.println(KoreaRegionCode[i][j]);
+		        		System.out.println(EnglishRegion[i]);
+		        		DataMapper.DataInsert(list,EnglishRegion[i]);
+		        		getLatLng(DataUtils.makeNameCountDto(list), EnglishRegion[i]);
 		        	}
 				} catch (Exception e) {
 					// TODO: handle exception
@@ -559,8 +571,314 @@ public class DataServiceImpl implements DataService{
 		
 		return "success";
 	}
+
+	@Transactional
+	@Override
+	public void AutoDataInsert(String RegionName) {
+		// TODO Auto-generated method stub
+		
+		int index = Arrays.asList(EnglishRegion).indexOf(RegionName);
+		int RegionCodeIndex = RegionCode[index].length;
+		boolean check = true;
+		
+		for(int i = 0 ; i < RegionCodeIndex && check == true ; i++) {
+			String LAWD_CD = RegionCode[index][i];
+			String KoreaLAWD_CD = KoreaRegionCode[index][i];
+			for(int j = 12 ; j >= 0 ; j--) {
+				String DEAL_YMD = makeDealYearMonth(j);
+				String EnglishMonth = makeEngilshMonth(DEAL_YMD);
+				Map<String, String> map = makeMap(RegionName, LAWD_CD, DEAL_YMD.substring(0, 4), EnglishMonth);
+				int totalCount = DataMapper.getTotalCount(map);
+				try {
+					StringBuilder sb = getRTMSDataSvcAptTradeDev(RegionName, LAWD_CD, DEAL_YMD, totalCount);
+					
+					DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+					DocumentBuilder builder = factory.newDocumentBuilder();
+					Document document = builder.parse(new InputSource(new StringReader(sb.toString())));
+					
+					document.getDocumentElement().normalize();
+					NodeList nList = document.getElementsByTagName("item");
+					Element root = document.getDocumentElement();
+					String resultMsg = root.getElementsByTagName("resultMsg").item(0) == null ? "-" : root.getElementsByTagName("resultMsg").item(0).getTextContent();
+					String resultCode = root.getElementsByTagName("resultCode").item(0) == null ? "-" : root.getElementsByTagName("resultCode").item(0).getTextContent();
+					String resultTotalCount = root.getElementsByTagName("totalCount").item(0) == null ? "-" : root.getElementsByTagName("totalCount").item(0).getTextContent();
+					if(!resultCode.equals("000")) {
+						throw new RuntimeException();
+					}
+					System.out.println("resultMsg= " + resultMsg + " " + "resultCode= " + resultCode + " " + "resultTotalCount= " + resultTotalCount + " " + "totalCount= " + totalCount);
+					
+					List<ApiDto> list = makeApiDto(nList, KoreaRegion[index], KoreaLAWD_CD, totalCount);
+					
+					if(list.size() > 0) {
+						getLatLng(makeNameCountDto(list), RegionName);
+						DataMapper.DataInsert(list, EnglishRegion[index]); 
+						DataMapper.updateTotalCount(RegionName, LAWD_CD, DEAL_YMD.substring(0, 4), EnglishMonth,resultTotalCount);
+						System.out.println("토탈 카운트 업데이터 데이터 추가 " + "날짜 = " + DEAL_YMD + " 지역 = " + LAWD_CD);
+					}
+					
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (ParserConfigurationException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (SAXException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					System.out.println("InterruptedException" + " " + "발생");
+				} catch (RuntimeException e) {
+					// TODO: handle exception
+					System.out.println(RegionCodeIndex);
+					System.out.println(LAWD_CD);
+					System.out.println(KoreaLAWD_CD);
+					check = false;
+					
+				}
+			} 
+		}
+	}
 	
+	public List<ApiDto> makeApiDto(NodeList nList ,String sigungu, String sigungu2, int totalCount) {
+		List<ApiDto> list = new ArrayList<>();
+		for(int i = totalCount ; i < nList.getLength(); i++) {
+			Node nNode = nList.item(i);
+			ApiDto ApiDto = new ApiDto();
+			if(nNode.getNodeType() == Node.ELEMENT_NODE) {
+				Element eElement = (Element) nNode;
+				
+				String DealAmount = eElement.getElementsByTagName("dealAmount").item(0) == null ? "-" : eElement.getElementsByTagName("dealAmount").item(0).getTextContent().replaceAll("\"", "").trim().equals("") ? "-" : eElement.getElementsByTagName("dealAmount").item(0).getTextContent().replaceAll("\"", "").trim();  
+				String ReqgbN = eElement.getElementsByTagName("dealingGbn").item(0) == null ? "-" : eElement.getElementsByTagName("dealingGbn").item(0).getTextContent().replaceAll("\"", "").trim().equals("") ? "-" : eElement.getElementsByTagName("dealingGbn").item(0).getTextContent().replaceAll("\"", "").trim();  
+				String BuildYear = eElement.getElementsByTagName("buildYear").item(0) == null ? "-" : eElement.getElementsByTagName("buildYear").item(0).getTextContent().replaceAll("\"", "").trim().equals("") ? "-" : eElement.getElementsByTagName("buildYear").item(0).getTextContent().replaceAll("\"", "").trim();  
+				String DealYear = eElement.getElementsByTagName("dealYear").item(0) == null ? "-" : eElement.getElementsByTagName("dealYear").item(0).getTextContent().replaceAll("\"", "").trim().equals("") ? "-" : eElement.getElementsByTagName("dealYear").item(0).getTextContent().replaceAll("\"", "").trim();  
+				String ApartmentDong = eElement.getElementsByTagName("aptDong").item(0) == null ? "-" : eElement.getElementsByTagName("aptDong").item(0).getTextContent().replaceAll("\"", "").trim().equals("") ? "-" : eElement.getElementsByTagName("aptDong").item(0).getTextContent().replaceAll("\"", "").trim();  
+				String RegistartionDate = eElement.getElementsByTagName("rgstDate").item(0) == null ? "-" : eElement.getElementsByTagName("rgstDate").item(0).getTextContent().replaceAll("\"", "").trim().equals("") ? "-" : eElement.getElementsByTagName("rgstDate").item(0).getTextContent().replaceAll("\"", "").trim();  
+				String SellerGBN = eElement.getElementsByTagName("slerGbn").item(0) == null ? "-" : eElement.getElementsByTagName("slerGbn").item(0).getTextContent().replaceAll("\"", "").trim().equals("") ? "-" : eElement.getElementsByTagName("slerGbn").item(0).getTextContent().replaceAll("\"", "").trim();  
+				String BuyerGBN = eElement.getElementsByTagName("buyerGbn").item(0) == null ? "-" : eElement.getElementsByTagName("buyerGbn").item(0).getTextContent().replaceAll("\"", "").trim().equals("") ? "-" : eElement.getElementsByTagName("buyerGbn").item(0).getTextContent().replaceAll("\"", "").trim();  
+				String Dong = eElement.getElementsByTagName("umdNm").item(0) == null ? "-" : eElement.getElementsByTagName("umdNm").item(0).getTextContent().replaceAll("\"", "").trim().equals("") ? "-" : eElement.getElementsByTagName("umdNm").item(0).getTextContent().replaceAll("\"", "").trim();  
+				String ApartmentName = eElement.getElementsByTagName("aptNm").item(0) == null ? "-" : eElement.getElementsByTagName("aptNm").item(0).getTextContent().replaceAll("\"", "").trim().equals("") ? "-" : eElement.getElementsByTagName("aptNm").item(0).getTextContent().replaceAll("\"", "").trim();  
+				String DealMonth = eElement.getElementsByTagName("dealMonth").item(0) == null ? "-" : eElement.getElementsByTagName("dealMonth").item(0).getTextContent().replaceAll("\"", "").trim().equals("") ? "-" : eElement.getElementsByTagName("dealMonth").item(0).getTextContent().replaceAll("\"", "").trim();  
+				String DealDay = eElement.getElementsByTagName("dealDay").item(0) == null ? "-" : eElement.getElementsByTagName("dealDay").item(0).getTextContent().replaceAll("\"", "").trim().equals("") ? "-" : eElement.getElementsByTagName("dealDay").item(0).getTextContent().replaceAll("\"", "").trim();  
+				String AreaforExcusiveUse = eElement.getElementsByTagName("excluUseAr").item(0) == null ? "-" : eElement.getElementsByTagName("excluUseAr").item(0).getTextContent().replaceAll("\"", "").trim().equals("") ? "-" : eElement.getElementsByTagName("excluUseAr").item(0).getTextContent().replaceAll("\"", "").trim();  
+				String RdealerLawdnm = eElement.getElementsByTagName("estateAgentSggNm").item(0) == null ? "-" : eElement.getElementsByTagName("estateAgentSggNm").item(0).getTextContent().replaceAll("\"", "").trim().equals("") ? "-" : eElement.getElementsByTagName("estateAgentSggNm").item(0).getTextContent().replaceAll("\"", "").trim();  
+				String Jibun = eElement.getElementsByTagName("jibun").item(0) == null ? "-" : eElement.getElementsByTagName("jibun").item(0).getTextContent().replaceAll("\"", "").trim().equals("") ? "-" : eElement.getElementsByTagName("jibun").item(0).getTextContent().replaceAll("\"", "").trim();  
+				String RegionalCode = eElement.getElementsByTagName("landCd").item(0) == null ? "-" : eElement.getElementsByTagName("landCd").item(0).getTextContent().replaceAll("\"", "").trim().equals("") ? "-" : eElement.getElementsByTagName("landCd").item(0).getTextContent().replaceAll("\"", "").trim();  
+				String Floor = eElement.getElementsByTagName("floor").item(0) == null ? "-" : eElement.getElementsByTagName("floor").item(0).getTextContent().replaceAll("\"", "").trim().equals("") ? "-" : eElement.getElementsByTagName("floor").item(0).getTextContent().replaceAll("\"", "").trim();  
+				String CancleDealDay = eElement.getElementsByTagName("cdealDay").item(0) == null ? "-" : eElement.getElementsByTagName("cdealDay").item(0).getTextContent().replaceAll("\"", "").trim().equals("") ? "-" : eElement.getElementsByTagName("cdealDay").item(0).getTextContent().replaceAll("\"", "").trim();  
+				String CancleDealType = eElement.getElementsByTagName("cdealType").item(0) == null ? "-" : eElement.getElementsByTagName("cdealType").item(0).getTextContent().replaceAll("\"", "").trim().equals("") ? "-" : eElement.getElementsByTagName("cdealType").item(0).getTextContent().replaceAll("\"", "").trim();  
+				String RoadName = eElement.getElementsByTagName("roadNm").item(0) == null ? "-" : eElement.getElementsByTagName("roadNm").item(0).getTextContent().replaceAll("\"", "").trim().equals("") ? "-" : eElement.getElementsByTagName("roadNm").item(0).getTextContent().replaceAll("\"", "").trim();  
+				String Bonbun = eElement.getElementsByTagName("bonbun").item(0) == null ? "-" : eElement.getElementsByTagName("bonbun").item(0).getTextContent().replaceAll("\"", "").trim().equals("") ? "-" : eElement.getElementsByTagName("bonbun").item(0).getTextContent().replaceAll("\"", "").trim();  
+				String Bubun = eElement.getElementsByTagName("bubun").item(0) == null ? "-" : eElement.getElementsByTagName("bubun").item(0).getTextContent().replaceAll("\"", "").trim().equals("") ? "-" : eElement.getElementsByTagName("bubun").item(0).getTextContent().replaceAll("\"", "").trim();  
+				String RoadNameBonbun = eElement.getElementsByTagName("roadNmBonbun").item(0) == null ? "-" : eElement.getElementsByTagName("roadNmBonbun").item(0).getTextContent().replaceAll("\"", "").trim().equals("") ? "-" : eElement.getElementsByTagName("roadNmBonbun").item(0).getTextContent().replaceAll("\"", "").trim();  
+				String RoadNameBubun = eElement.getElementsByTagName("roadNmBubun").item(0) == null ? "-" : eElement.getElementsByTagName("roadNmBubun").item(0).getTextContent().replaceAll("\"", "").trim().equals("") ? "-" : eElement.getElementsByTagName("roadNmBubun").item(0).getTextContent().replaceAll("\"", "").trim();  
+				
+				
+				StringBuilder sb = new StringBuilder();
+				sb.append(DealAmount + " ");
+				sb.append(ReqgbN + " ");
+				sb.append(BuildYear + " ");
+				sb.append(DealYear + " ");
+				sb.append(ApartmentDong + " ");
+				sb.append(RegistartionDate + " ");
+				sb.append(SellerGBN + " ");
+				sb.append(BuyerGBN + " ");
+				sb.append(Dong + " ");
+				sb.append(ApartmentName + " ");
+				sb.append(DealMonth + " ");
+				sb.append(DealDay + " ");
+				sb.append(AreaforExcusiveUse + " ");
+				sb.append(RdealerLawdnm + " ");
+				sb.append(Jibun + " ");
+				sb.append(RegionalCode + " ");
+				sb.append(Floor + " ");
+				sb.append(CancleDealDay + " ");
+				sb.append(CancleDealType + " ");
+				sb.append(RoadName);
+				sb.append(RoadNameBonbun + " ");
+				sb.append(RoadNameBubun+ " ");
+				
+				ApiDto.setSIGUNGU(sigungu + " " + sigungu2 + " " +  Dong);
+				ApiDto.setBUNGI(Jibun);				
+				ApiDto.setBONBUN(Bonbun);
+				ApiDto.setBUBUN(Bubun);
+				ApiDto.setAPARTMENTNAME(ApartmentName);
+				ApiDto.setAREAFOREXCLUSIVEUSE(AreaforExcusiveUse);
+				ApiDto.setDEALYEARMONTH(DealYear + String.format("%02d", Integer.parseInt(DealMonth)));
+				ApiDto.setDEALDAY(DealDay);
+				ApiDto.setDEALAMOUNT(DealAmount);
+				ApiDto.setAPARTMENTDONG(ApartmentDong);
+				ApiDto.setFLOOR(Floor);
+				ApiDto.setBUYERGBN(BuyerGBN);
+				ApiDto.setSELLERGBN(SellerGBN);
+				ApiDto.setBUILDYEAR(BuildYear);
+				ApiDto.setROADNAME(makeRoadName(RoadName, RoadNameBonbun, RoadNameBubun));
+				ApiDto.setCANCLEDEALDAY(CancleDealDay);
+				ApiDto.setREQGBN(ReqgbN);
+				ApiDto.setRDEALERLAWDNM(RdealerLawdnm);
+				ApiDto.setREGISTRATIONDATE(RegistartionDate);
+				
+				list.add(ApiDto);			
+				}
+		}
+		
+		return list;
+	}
 	
+	public List<NameCountDto> makeNameCountDto(List<ApiDto> list) {
+		
+		List<NameCountDto> NameCountDtolist = new ArrayList<>();
+		
+		for(int i = 0 ; i < list.size() ; i++) {
+			NameCountDto NameCountDto = new NameCountDto();
+			String SIGUNGU = list.get(i).getSIGUNGU();
+			String BUNGI = list.get(i).getBUNGI();
+			String APARTMENTNAME = list.get(i).getAPARTMENTNAME();
+			String ROADNAME = list.get(i).getROADNAME();
+			NameCountDto.setSIGUNGU(SIGUNGU);
+			NameCountDto.setBUNGI(BUNGI);
+			NameCountDto.setAPARTMENTNAME(APARTMENTNAME);
+			NameCountDto.setROADNAME(ROADNAME);		
+			NameCountDtolist.add(NameCountDto);
+		}
+		
+		return NameCountDtolist;
+		
+	}
+	
+	public String makeRoadName(String RoadName, String RoadNameBonbun, String RoadNameBubun) {
+		RoadName = RoadName.trim();
+		if(RoadName.equals("-")) {
+			RoadName = "";
+		}
+		if(RoadNameBonbun.equals("-")) {
+			RoadNameBonbun = "";
+		}
+		if(RoadNameBubun.equals("-")) {
+			RoadNameBubun = "";
+		}
+		RoadNameBonbun = RoadNameBonbun + "!";
+		RoadNameBubun = RoadNameBubun + "!";
+		RoadNameBonbun = RoadNameBonbun.replace("0", " ").trim().replace(" ", "0").replace("!", "");
+		
+		RoadNameBubun = RoadNameBubun.replace("0", " ").trim().replace(" ", "0").replace("!", "");
+		if(RoadNameBonbun.length() !=0 ) {
+			RoadName = RoadName + " " + RoadNameBonbun;
+			if(RoadNameBubun.length() != 0) {
+				RoadName = RoadName + "-" + RoadNameBubun;
+			}
+		}else if(RoadNameBonbun.length() ==0 ) {
+			if(RoadNameBubun.length() != 0) {
+				RoadName = RoadName + " " + RoadNameBubun;
+			}
+		}
+		RoadName = RoadName.trim();
+		if(RoadName.equals("")) {
+			RoadName = "-";
+		}
+		return RoadName;
+		
+	}
+	
+	public Map<String, String> makeMap(String RegionName, String LAWD_CD, String DealYear, String EnglishMonth){
+		Map<String, String> map = new HashMap<>();
+		
+		map.put("REGION", RegionName);
+		map.put("REGIONCODE", LAWD_CD);
+		map.put("YEAR", DealYear);
+		map.put("EnglishMonth", EnglishMonth);
+		
+		return map;
+	}
+	
+	public String makeEngilshMonth(String DEAL_YMD) {
+		
+		String month = DEAL_YMD.substring(4, 6);
+		String EnglishMonth = null;
+		if(month.equals("01")) {
+			EnglishMonth = "January";
+		}else if(month.equals("02")) {
+			EnglishMonth = "February";
+		}else if(month.equals("03")) {
+			EnglishMonth = "March";
+		}else if(month.equals("04")) {
+			EnglishMonth = "April";
+		}else if(month.equals("05")) {
+			EnglishMonth = "May";
+		}else if(month.equals("06")) {
+			EnglishMonth = "June";
+		}else if(month.equals("07")) {
+			EnglishMonth = "July";
+		}else if(month.equals("08")) {
+			EnglishMonth = "August";
+		}else if(month.equals("09")) {
+			EnglishMonth = "September";
+		}else if(month.equals("10")) {
+			EnglishMonth = "October";
+		}else if(month.equals("11")) {
+			EnglishMonth = "November";
+		}else if(month.equals("12")) {
+			EnglishMonth = "December";
+		}
+		return EnglishMonth;
+	}
+	
+	public String makeDealYearMonth(int j) {
+		
+		Calendar cal = Calendar.getInstance();
+		String year = String.valueOf(cal.get(Calendar.YEAR));
+		int month = (cal.get(Calendar.MONTH)+1);
+		String strMonth = String.format("%02d", month);
+		String lastMonth = year + strMonth;
+		SimpleDateFormat dtFormat = new SimpleDateFormat("yyyyMM");
+		Date dt = null;
+		try {
+			dt = dtFormat.parse(lastMonth);
+		} catch (java.text.ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		cal.setTime(dt);
+		cal.add(Calendar.MONTH, -j);
+		return dtFormat.format(cal.getTime());
+	}
+	
+	public StringBuilder getRTMSDataSvcAptTradeDev(String RegionName, String LAWD_CD, String DEAL_YMD, int totalCount) throws IOException {
+		
+		StringBuilder sb = null;
+		
+		StringBuilder urlBuilder = new StringBuilder("http://apis.data.go.kr/1613000/RTMSDataSvcAptTradeDev/getRTMSDataSvcAptTradeDev"); /*URL*/
+        urlBuilder.append("?" + URLEncoder.encode("serviceKey","UTF-8") + "=f4Ed1eAJYzb%2BQ%2BtpQx4G%2BQvFuO0ZJJMZIInJGo%2FpG889YetxgnnGE9umfvGSe8TPyZ88bAUWw%2Bn7ETYTooeF5A%3D%3D"); /*Service Key*/
+        urlBuilder.append("&" + URLEncoder.encode("LAWD_CD","UTF-8") + "=" + URLEncoder.encode(LAWD_CD, "UTF-8")); /*각 지역별 코드*/
+        urlBuilder.append("&" + URLEncoder.encode("DEAL_YMD","UTF-8") + "=" + URLEncoder.encode(DEAL_YMD/*DEAL_YMD*/, "UTF-8")); /*월 단위 신고자료*/
+        urlBuilder.append("&" + URLEncoder.encode("pageNo","UTF-8") + "=" + URLEncoder.encode("1", "UTF-8")); /*페이지번호*/
+        urlBuilder.append("&" + URLEncoder.encode("numOfRows","UTF-8") + "=" + URLEncoder.encode("10000", "UTF-8")); /*한 페이지 결과 수*/
+        URL url = new URL(urlBuilder.toString());
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestMethod("GET");
+        conn.setRequestProperty("Content-type", "application/json");
+
+        BufferedReader rd;
+        if(conn.getResponseCode() >= 200 && conn.getResponseCode() <= 300) {
+            rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+        } else {
+            rd = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
+            System.out.println("에러");
+        }
+        sb = new StringBuilder();
+        String line;
+        while ((line = rd.readLine()) != null) {
+            sb.append(line);
+        }
+        rd.close();
+        conn.disconnect();
+		
+		return sb;
+	}
 	
 	}
 	

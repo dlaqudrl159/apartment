@@ -34,8 +34,9 @@ public class DataUtils {
 		document.getDocumentElement().normalize();
 		NodeList nList = document.getElementsByTagName("item");
 		Element root = document.getDocumentElement();
-		String resultMsg = root.getElementsByTagName("resultMsg").item(0).getTextContent();
-		String resultCode = root.getElementsByTagName("resultCode").item(0).getTextContent();
+		String resultMsg = root.getElementsByTagName("resultMsg").item(0) == null ? "-" : root.getElementsByTagName("resultMsg").item(0).getTextContent();
+		String resultCode = root.getElementsByTagName("resultCode").item(0) == null ? "-" : root.getElementsByTagName("resultCode").item(0).getTextContent();
+		String totalCount = root.getElementsByTagName("totalCount").item(0) == null ? "-" : root.getElementsByTagName("totalCount").item(0).getTextContent();
 		System.out.println(resultMsg);
 		System.out.println(resultCode);
 		List<ApiDto> list = new ArrayList<>();
