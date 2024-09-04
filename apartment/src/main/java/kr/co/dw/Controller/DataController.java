@@ -44,15 +44,20 @@ public class DataController {
 		return null;
 	}
 	
-	@GetMapping("/api/test")
-	private ResponseEntity<String> test2() throws IOException, ParserConfigurationException, SAXException {
+	@GetMapping("/api/AutoDataInsert")
+	private ResponseEntity<String> AutoDataInsert2() throws java.text.ParseException{
 		
-		ResponseEntity<String> entity = new ResponseEntity<String>("OK",HttpStatus.OK);
+		String[] EnglishRegion = {"SEOUL","BUSAN","DAEGU","INCHEON","GWANGJU","DAEJEON","ULSAN","SEJONG","GYEONGGIDO","GANGWONDO",
+				"CHUNGCHEONGBUKDO","CHUNGCHEONGNAMDO","JEOLLABUKDO","JEOLLANAMDO","GYEONGSANGBUKDO","GYEONGSANGNAMDO","JEJU"};
 		
-		DataService.test();
+		for(int i = 0 ; i < EnglishRegion.length; i++) {
+			DataService.AutoDataInsert(EnglishRegion[i].toUpperCase());
+			System.out.println("완료");
+		}
 		
-		return entity;
+		return null;
 	}
+	
 	@GetMapping("/api/totalCount/{region}")
 	private void test3(@PathVariable("region") String region) {
 		TotalCountService.insert(region.toUpperCase());

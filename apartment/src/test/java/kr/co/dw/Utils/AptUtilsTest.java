@@ -3,6 +3,8 @@ package kr.co.dw.Utils;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.StringReader;
@@ -17,8 +19,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -216,21 +221,45 @@ public class AptUtilsTest {
 	@Test
 	void test4() throws UnsupportedEncodingException, MalformedURLException, IOException, ParserConfigurationException, SAXException {
 		
+		/*부산*/
+		/*{ "26110", "26140", "26170", "26200", "26230", "26260", "26290", "26320", "26350", "26380", "26410",
+				"26440", "26470", "26500", "26530", "26710" },
+		
+		//부산
+		{ "중구", "서구", "동구", "영도구", "부산진구", "동래구", "남구", "북구", "해운대구", "사하구", "금정구", "강서구", "연제구", "수영구", "사상구",
+				"기장군" },
+		
+		/*서울*/
+		String[] seoul =	{ "11110", "11140", "11170", "11200", "11215", "11230", "11260", "11290", "11305", "11320", "11350",
+					"11380", "11410", "11440", "11470", "11500", "11530", "11545", "11560", "11590", "11620",
+					"11650", "11680", "11710", "11740" } ;
+		
+		//서울
+		String[] seoul2 =	{ "종로구", "중구", "용산구", "성동구", "광진구", "동대문구", "중랑구", "성북구", "강북구", "도봉구", "노원구", "은평구", "서대문구", "마포구", "양천구",
+					"강서구", "구로구", "금천구", "영등포구", "동작구", "관악구", "서초구", "강남구", "송파구", "강동구" } ;
+					
+					
 		/*인천*/
 		String[] GYEONGSANGNAMDO = { "48121", "48123", "48125", "48127", "48129", "48170", "48220", "48240", "48250", "48270", "48310",
 				"48330", "48720", "48730", "48740", "48820", "48840", "48850", "48860", "48870", "48880",
 				"48890" };
-		int nowtotalCount = 13;
-		int page = ((nowtotalCount-1)/10)+1;
-		String strPage = String.valueOf(page);
-		System.out.println(page);
-		System.out.println(strPage);
+		//int nowtotalCount = 13;
+		//int page = ((nowtotalCount-1)/10)+1;
+		//String strPage = String.valueOf(page);
+		//System.out.println(page);
+		//System.out.println(strPage);
+		int index = 2;
+		String code = seoul[index];
+		String koreacode = seoul2[index];
+		String dealyearmonth = "202408";
+		Calendar cal = Calendar.getInstance();
+		int date = cal.get(Calendar.DATE);
 		StringBuilder urlBuilder = new StringBuilder("http://apis.data.go.kr/1613000/RTMSDataSvcAptTradeDev/getRTMSDataSvcAptTradeDev"); /*URL*/
         urlBuilder.append("?" + URLEncoder.encode("serviceKey","UTF-8") + "=f4Ed1eAJYzb%2BQ%2BtpQx4G%2BQvFuO0ZJJMZIInJGo%2FpG889YetxgnnGE9umfvGSe8TPyZ88bAUWw%2Bn7ETYTooeF5A%3D%3D"); /*Service Key*/
-        urlBuilder.append("&" + URLEncoder.encode("pageNo","UTF-8") + "=" + URLEncoder.encode("2", "UTF-8")); /*페이지번호*/
+        urlBuilder.append("&" + URLEncoder.encode("pageNo","UTF-8") + "=" + URLEncoder.encode("1", "UTF-8")); /*페이지번호*/
         urlBuilder.append("&" + URLEncoder.encode("numOfRows","UTF-8") + "=" + URLEncoder.encode("10000", "UTF-8")); /*한 페이지 결과 수*/
-        urlBuilder.append("&" + URLEncoder.encode("LAWD_CD","UTF-8") + "=" + URLEncoder.encode("11140", "UTF-8")); /*지역코드*/
-        urlBuilder.append("&" + URLEncoder.encode("DEAL_YMD","UTF-8") + "=" + URLEncoder.encode("202401", "UTF-8")); /*계약월*/
+        urlBuilder.append("&" + URLEncoder.encode("LAWD_CD","UTF-8") + "=" + URLEncoder.encode("50130", "UTF-8")); /*지역코드*/
+        urlBuilder.append("&" + URLEncoder.encode("DEAL_YMD","UTF-8") + "=" + URLEncoder.encode("202408", "UTF-8")); /*계약월*/
         URL url = new URL(urlBuilder.toString());
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestMethod("GET");
@@ -249,7 +278,6 @@ public class AptUtilsTest {
         }
         rd.close();
         conn.disconnect();
-        System.out.println(sb.toString());
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
         Document document = builder.parse(new InputSource(new StringReader(sb.toString())));
@@ -261,16 +289,19 @@ public class AptUtilsTest {
         String resultMsg = root.getElementsByTagName("resultMsg").item(0) == null ? "-" : root.getElementsByTagName("resultMsg").item(0).getTextContent();
 		String resultCode = root.getElementsByTagName("resultCode").item(0) == null ? "-" : root.getElementsByTagName("resultCode").item(0).getTextContent();
 		String totalCount = root.getElementsByTagName("totalCount").item(0) == null ? "-" : root.getElementsByTagName("totalCount").item(0).getTextContent();
-		System.out.println(resultMsg);
-		System.out.println(resultCode);
-		System.out.println(totalCount);
-		int a = Integer.parseInt(totalCount) - nowtotalCount;
-		System.out.println(a);
+		//System.out.println(resultMsg);
+		//System.out.println(resultCode);
+		//System.out.println(totalCount);
+		//int a = Integer.parseInt(totalCount) - nowtotalCount;
+		//System.out.println(a);
         List<ApiDto> list = new ArrayList<>();
-        System.out.println(nList.getLength());
+       // System.out.println(nList.getLength());
         
-        for(int i = nList.getLength()-1 ; i > a ; i--) {
-        	System.out.println(i);
+		
+		
+		
+        for(int i = 0 ; i < nList.getLength() ; i++) {
+        	
         	Node nNode = nList.item(i);
         	ApiDto ApiDto = new ApiDto();
         	if(nNode.getNodeType() == Node.ELEMENT_NODE) {
@@ -344,13 +375,13 @@ public class AptUtilsTest {
 				ApiDto.setREGISTRATIONDATE(RegistartionDate);
 				//System.out.println(ApiDto.toString());
 				list.add(ApiDto);			
+				System.out.println(ApiDto);
+				
 				
         	}
         	
         }
-        
-        System.out.println(list.size());
-        System.out.println(list.toString());
+        		
 	}
 	@Test
 	void test6() {
@@ -434,6 +465,46 @@ public class AptUtilsTest {
 				}
 			}
 		
+	}
+	@Test
+	void test11() {
+		List<ApiDto> oldList = new ArrayList<>();
+		List<ApiDto> newList = new ArrayList<>();
+		
+		ApiDto dto1 = new ApiDto("부산광역시 동구 초량동", "593", "0593", "0000", "부산역삼정그린코아더시티", "75.2492", "202408", "8", "40,000", "-", "20", "개인", "개인", "2021", "중앙대로179번길 27", "-", "중개거래", "부산 동구", "-", "26170");
+		ApiDto dto2 = new ApiDto("부산광역시 동구 좌천동", "808", "0808", "0000", "동원드림타운", "84.9341", "202408", "11", "32,900", "-", "19", "개인", "개인", "2002", "고관로 173", "-", "중개거래", "부산 동구", "-", "26170");
+		ApiDto dto3 = new ApiDto("부산광역시 동구 수정동", "1352", "1352", "0000", "협성휴포레부산진역오션뷰", "69.5108", "202408", "14", "49,000", "-", "17", "개인", "개인", "2019", "중앙대로 357", "-", "중개거래", "부산 동구", "-", "26170");
+		
+		oldList.add(dto1);
+		oldList.add(dto2);
+		
+		newList.add(dto1);
+		newList.add(dto2);
+		newList.add(dto3);
+		
+		List<ApiDto> newnewList = newList.stream().filter(n -> oldList.stream().noneMatch(Predicate.isEqual(n))).collect(Collectors.toList());
+		System.out.println(newnewList);
+	}
+	
+	@Test
+	void test12() {
+		Calendar cal = Calendar.getInstance();
+		String year = String.valueOf(cal.get(Calendar.YEAR));
+		int month = (cal.get(Calendar.MONTH)+1);
+		String strMonth = String.format("%02d", month);
+		String lastMonth = year + strMonth;
+		SimpleDateFormat dtFormat = new SimpleDateFormat("yyyyMM");
+		Date dt = null;
+		try {
+			dt = dtFormat.parse(lastMonth);
+		} catch (java.text.ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		cal.setTime(dt);
+		cal.add(Calendar.MONTH, -13);
+		dtFormat.format(cal.getTime());
+		System.out.println(dtFormat.format(cal.getTime()));
 	}
 	
 }

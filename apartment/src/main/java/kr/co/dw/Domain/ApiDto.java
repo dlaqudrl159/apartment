@@ -24,31 +24,12 @@ public class ApiDto {
 	private String REQGBN;
 	private String RDEALERLAWDNM;
 	private String REGISTRATIONDATE;
-	/**
-	 * @param sIGUNGU
-	 * @param bUNGI
-	 * @param bONBUN
-	 * @param bUBUN
-	 * @param aPARTMENTNAME
-	 * @param aREAFOREXCLUSIVEUSE
-	 * @param dEALYEARMONTH
-	 * @param dEALDAY
-	 * @param dEALAMOUNT
-	 * @param aPARTMENTDONG
-	 * @param fLOOR
-	 * @param bUYERGBN
-	 * @param sELLERGBN
-	 * @param bUILDYEAR
-	 * @param rOADNAME
-	 * @param cANCLEDEALDAY
-	 * @param rEQGBN
-	 * @param rDEALERLAWDNM
-	 * @param rEGISTRATIONDATE
-	 */
+	private String SGGCD;
+	
 	public ApiDto(String sIGUNGU, String bUNGI, String bONBUN, String bUBUN, String aPARTMENTNAME,
 			String aREAFOREXCLUSIVEUSE, String dEALYEARMONTH, String dEALDAY, String dEALAMOUNT, String aPARTMENTDONG,
 			String fLOOR, String bUYERGBN, String sELLERGBN, String bUILDYEAR, String rOADNAME, String cANCLEDEALDAY,
-			String rEQGBN, String rDEALERLAWDNM, String rEGISTRATIONDATE) {
+			String rEQGBN, String rDEALERLAWDNM, String rEGISTRATIONDATE, String rSGGCD) {
 		
 		SIGUNGU = sIGUNGU;
 		BUNGI = bUNGI;
@@ -69,13 +50,16 @@ public class ApiDto {
 		REQGBN = rEQGBN;
 		RDEALERLAWDNM = rDEALERLAWDNM;
 		REGISTRATIONDATE = rEGISTRATIONDATE;
+		SGGCD = rSGGCD;
 	}
+	
 	/**
 	 * 
 	 */
 	public ApiDto() {
 		
 	}
+	
 	
 	
 	

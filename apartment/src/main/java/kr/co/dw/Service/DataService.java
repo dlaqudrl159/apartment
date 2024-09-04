@@ -38,8 +38,6 @@ public interface DataService {
 
 	String GYEONGGIDO(NameCountDto NameCountDto);
 
-	String test() throws IOException, ParserConfigurationException, SAXException;
-
 	void AutoDataInsert(String RegionName);
 
 
