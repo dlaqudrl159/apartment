@@ -84,4 +84,13 @@ public class AptServiceImpl implements AptService{
 		
 		return list;
 	}
+
+	@Override
+	public List<NameCountDto> getLatLngNameCountDto(String lat, String lng) {
+		// TODO Auto-generated method stub
+		
+		List<NameCountDto> list = AptMapper.getLatLngNameCountDto(lat,lng);
+		
+		return list;
+	}
 }

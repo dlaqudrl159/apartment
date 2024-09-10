@@ -1,11 +1,8 @@
 package kr.co.dw.Service;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.io.StringReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -20,16 +17,18 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.apache.ibatis.session.ExecutorType;
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.w3c.dom.Document;
@@ -42,8 +41,6 @@ import org.xml.sax.SAXException;
 import kr.co.dw.Domain.ApiDto;
 import kr.co.dw.Domain.NameCountDto;
 import kr.co.dw.Mapper.DataMapper;
-import kr.co.dw.Utils.AptUtils;
-import kr.co.dw.Utils.DataUtils;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -169,12 +166,13 @@ public class DataServiceImpl implements DataService{
 			};
 	private final DataMapper DataMapper;
 	
+	@Autowired
+	private SqlSessionFactory sqlSessionFactory;
+	
 	@Transactional
 	@Override
 	public void LatLngInsert(String tableName) throws MalformedURLException, IOException, ParseException, InterruptedException {
 		
-		//String[] arr = {"SEOUL","BUSAN","DAEGU","INCHEON","GWANGJU","DAEJEON","ULSAN","SEJONG","GYEONGGIDO","CHUNGCHEONGBUKDO","CHUNGCHEONGNAMDO","JEOLLANAMDO","GYEONGSANGBUKDO","GYEONGSANGNAMDO","JEJU","GANGWONDO","JEOLLABUKDO"}; 
-		//세종 서울 부산 대구 인천 광주 대전 울산 세종 경기도 충청북도 충청남도 전라남도 경상북도 경상남도 제주 강원도 전라북도
 		List<NameCountDto> list = new ArrayList<>();
 		
 		list = DataMapper.getList(tableName);
@@ -182,185 +180,6 @@ public class DataServiceImpl implements DataService{
 		getLatLng(list, tableName);
 		
 	}
-	
-	@Override
-	public String GYEONGGIDO(NameCountDto NameCountDto) {
-
-		String address = NameCountDto.getSIGUNGU();
-		String[] arr = address.split(" ");
-		String address2 = arr[1];
-		if (address2.equals("고양시덕양구")) {
-			arr[1] = "고양시 덕양구";
-		} else if (address2.equals("고양시일산동구")) {
-			arr[1] = "고양시 일산동구";
-		} else if (address2.equals("고양시일산서구")) {
-			arr[1] = "고양시 일산서구";
-		} else if (address2.equals("부천시소사구")) {
-			arr[1] = "부천시 소사구";
-		} else if (address2.equals("부천시오정구")) {
-			arr[1] = "부천시 오정구";
-		} else if (address2.equals("부천시원미구")) {
-			arr[1] = "부천시 원미구";
-		} else if (address2.equals("성남시분당구")) {
-			arr[1] = "성남시 분당구";
-		} else if (address2.equals("성남시수정구")) {
-			arr[1] = "성남시 수정구";
-		} else if (address2.equals("성남시중원구")) {
-			arr[1] = "성남시 중원구";
-		} else if (address2.equals("수원시권선구")) {
-			arr[1] = "수원시 권선구";
-		} else if (address2.equals("수원시영통구")) {
-			arr[1] = "수원시 영통구";
-		} else if (address2.equals("수원시장안구")) {
-			arr[1] = "수원시 장안구";
-		} else if (address2.equals("수원시팔달구")) {
-			arr[1] = "수원시 팔달구";
-		} else if (address2.equals("안산시단원구")) {
-			arr[1] = "안산시 단원구";
-		} else if (address2.equals("안산시상록구")) {
-			arr[1] = "안산시 상록구";
-		} else if (address2.equals("안양시동안구")) {
-			arr[1] = "안양시 동안구";
-		} else if (address2.equals("안양시만안구")) {
-			arr[1] = "안양시 만안구";
-		} else if (address2.equals("용인시기흥구")) {
-			arr[1] = "용인시 기흥구";
-		} else if (address2.equals("용인시수지구")) {
-			arr[1] = "용인시 수지구";
-		} else if (address2.equals("용인시처인구")) {
-			arr[1] = "용인시 처인구";
-		}
-
-		String temp = "";
-		for (int j = 0; j < arr.length; j++) {
-
-			temp += arr[j] + " ";
-		}
-		address = temp.trim();
-
-		return address;
-	}
-
-	@Override
-	public String CHUNGCHEONGBUKDO(NameCountDto NameCountDto) {
-
-		String address = NameCountDto.getSIGUNGU();
-		String[] arr = address.split(" ");
-		String address2 = arr[1];
-		if (address2.equals("청주서원구")) {
-			arr[1] = "청주시 서원구";
-		} else if (address2.equals("청주시상당구")) {
-			arr[1] = "청주시 상당구";
-		} else if (address2.equals("청주시청원구")) {
-			arr[1] = "청주시 청원구";
-		} else if (address2.equals("청주시흥덕구")) {
-			arr[1] = "청주시 흥덕구";
-		}
-		String temp = "";
-		for (int j = 0; j < arr.length; j++) {
-
-			temp += arr[j] + " ";
-		}
-		address = temp.trim();
-
-		return address;
-
-	}
-
-	@Override
-	public String CHUNGCHEONGNAMDO(NameCountDto NameCountDto) {
-
-		String address = NameCountDto.getSIGUNGU();
-		String[] arr = address.split(" ");
-		String address2 = arr[1];
-		if (address2.equals("천안시동남구")) {
-			arr[1] = "천안시 동남구";
-		} else if (address2.equals("천안시서북구")) {
-			arr[1] = "천안시 서북구";
-		}
-		String temp = "";
-		for (int j = 0; j < arr.length; j++) {
-
-			temp += arr[j] + " ";
-		}
-		address = temp.trim();
-
-		return address;
-
-	}
-
-	@Override
-	public String GYEONGSANGBUKDO(NameCountDto NameCountDto) {
-
-		String address = NameCountDto.getSIGUNGU();
-		String[] arr = address.split(" ");
-		String address2 = arr[1];
-		if (address2.equals("포항시남구")) {
-			arr[1] = "포항시 남구";
-		} else if (address2.equals("포항시북구")) {
-			arr[1] = "포항시 북구";
-		}
-		String temp = "";
-		for (int j = 0; j < arr.length; j++) {
-
-			temp += arr[j] + " ";
-		}
-		address = temp.trim();
-
-		return address;
-
-	}
-
-	@Override
-	public String GYEONGSANGNAMDO(NameCountDto NameCountDto) {
-
-		String address = NameCountDto.getSIGUNGU();
-		String[] arr = address.split(" ");
-		String address2 = arr[1];
-		if (address2.equals("창원시마산합포구")) {
-			arr[1] = "창원시 마산합포구";
-		}else if (address2.equals("창원시마산회원구")) {
-			arr[1] = "창원시 마산회원구";
-		}else if (address2.equals("창원시성산구")) {
-			arr[1] = "창원시 성산구";
-		}else if (address2.equals("창원시의창구")) {
-			arr[1] = "창원시 의창구";
-		}else if (address2.equals("창원시진해구")) {
-			arr[1] = "창원시 진해구";
-		}
-		String temp = "";
-		for (int j = 0; j < arr.length; j++) {
-
-			temp += arr[j] + " ";
-		}
-		address = temp.trim();
-
-		return address;
-
-	}
-	
-	@Override
-	public String JEOLLABUKDO(NameCountDto NameCountDto) {
-
-		String address = NameCountDto.getSIGUNGU();
-		String[] arr = address.split(" ");
-		String address2 = arr[1];
-		if (address2.equals("전주시덕진구")) {
-			arr[1] = "전주시 덕진구";
-		}else if (address2.equals("전주시완산구")) {
-			arr[1] = "전주시 완산구";
-		}
-		String temp = "";
-		for (int j = 0; j < arr.length; j++) {
-
-			temp += arr[j] + " ";
-		}
-		address = temp.trim();
-
-		return address;
-
-	}
-	
 	
 	@Override
 	public List<NameCountDto> getLatLng(List<NameCountDto> list, String tableName) throws IOException, ParseException, InterruptedException {
@@ -423,11 +242,6 @@ public class DataServiceImpl implements DataService{
 				DataMapper.insert(NameCountDto);
 			}
 			
-			
-			
-			
-			
-			
 		}
 	
 		return list;
@@ -461,22 +275,8 @@ public class DataServiceImpl implements DataService{
 	public JSONObject getroadname(NameCountDto NameCountDto, String tableName) throws IOException, ParseException {
 		
 		String searchType = "road";
-		String Sigungu = "";
-		if(tableName.equals("GYEONGGIDO")) {
-			Sigungu = GYEONGGIDO(NameCountDto);
-		}else if(tableName.equals("CHUNGCHEONGBUKDO")) {
-			Sigungu = CHUNGCHEONGBUKDO(NameCountDto);
-		}else if(tableName.equals("CHUNGCHEONGNAMDO")) {
-			Sigungu = CHUNGCHEONGNAMDO(NameCountDto);
-		}else if(tableName.equals("GYEONGSANGBUKDO")) {
-			Sigungu = GYEONGSANGBUKDO(NameCountDto);
-		}else if(tableName.equals("GYEONGSANGNAMDO")) {
-			Sigungu = GYEONGSANGNAMDO(NameCountDto);
-		}else if(tableName.equals("JEOLLABUKDO")) {
-			Sigungu = JEOLLABUKDO(NameCountDto);
-		}else {
-			Sigungu = NameCountDto.getSIGUNGU();
-		}
+		
+		String Sigungu = NameCountDto.getSIGUNGU();
 		
 		String roadname = NameCountDto.getROADNAME();
 		String searchAddr = Sigungu + " " + roadname;
@@ -487,22 +287,7 @@ public class DataServiceImpl implements DataService{
 	public JSONObject getparcel(NameCountDto NameCountDto, String tableName) throws IOException, ParseException {
 		
 		String searchType = "parcel";
-		String Sigungu = "";
-		if(tableName.equals("GYEONGGIDO")) {
-			Sigungu = GYEONGGIDO(NameCountDto);
-		}else if(tableName.equals("CHUNGCHEONGBUKDO")) {
-			Sigungu = CHUNGCHEONGBUKDO(NameCountDto);
-		}else if(tableName.equals("CHUNGCHEONGNAMDO")) {
-			Sigungu = CHUNGCHEONGNAMDO(NameCountDto);
-		}else if(tableName.equals("GYEONGSANGBUKDO")) {
-			Sigungu = GYEONGSANGBUKDO(NameCountDto);
-		}else if(tableName.equals("GYEONGSANGNAMDO")) {
-			Sigungu = GYEONGSANGNAMDO(NameCountDto);
-		}else if(tableName.equals("JEOLLABUKDO")) {
-			Sigungu = JEOLLABUKDO(NameCountDto);
-		}else {
-			Sigungu = NameCountDto.getSIGUNGU();
-		}
+		String Sigungu = NameCountDto.getSIGUNGU();
 		
 		String Bungi = NameCountDto.getBUNGI();		
 		String searchAddr = Sigungu + " " + Bungi;
@@ -514,96 +299,59 @@ public class DataServiceImpl implements DataService{
 	@Override
 	public void AutoDataInsert(String RegionName) {
 		// TODO Auto-generated method stub
-		
-		long before = System.currentTimeMillis();		
+
 		int index = Arrays.asList(EnglishRegion).indexOf(RegionName);
 		int RegionCodeIndex = RegionCode[index].length;
 		boolean check = true;
-		
-		int a = 0;
-		
+
 		String DbYear = makeDealYearMonth(13);
-		DataMapper.deleteRegionYear(RegionName,DbYear);
-		for(int i = 0 ; i < RegionCodeIndex && check == true ; i++) {
+		DataMapper.deleteRegionYear(RegionName, DbYear);
+
+		for (int i = 0; i < RegionCodeIndex && check == true; i++) {
 			String LAWD_CD = RegionCode[index][i];
 			String KoreaLAWD_CD = KoreaRegionCode[index][i];
-			for(int j = 13 ; j >= 0 ; j--) {
+			for (int j = 13; j >= 0; j--) {
 				String DEAL_YMD = makeDealYearMonth(j);
-				//String EnglishMonth = makeEngilshMonth(DEAL_YMD);
-				//Map<String, String> map = makeMap(RegionName, LAWD_CD, DEAL_YMD.substring(0, 4), EnglishMonth);
-				//int totalCount = DataMapper.getTotalCount(map);
 				try {
 					StringBuilder sb = getRTMSDataSvcAptTradeDev(RegionName, LAWD_CD, DEAL_YMD);
-					
+
 					DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 					DocumentBuilder builder = factory.newDocumentBuilder();
 					Document document = builder.parse(new InputSource(new StringReader(sb.toString())));
-					
+
 					document.getDocumentElement().normalize();
 					NodeList nList = document.getElementsByTagName("item");
 					Element root = document.getDocumentElement();
-					String resultMsg = root.getElementsByTagName("resultMsg").item(0) == null ? "-" : root.getElementsByTagName("resultMsg").item(0).getTextContent();
-					String resultCode = root.getElementsByTagName("resultCode").item(0) == null ? "-" : root.getElementsByTagName("resultCode").item(0).getTextContent();
-					String resultTotalCount = root.getElementsByTagName("totalCount").item(0) == null ? "-" : root.getElementsByTagName("totalCount").item(0).getTextContent();
-					if(!resultCode.equals("000")) {
+					String resultMsg = root.getElementsByTagName("resultMsg").item(0) == null ? "-"
+							: root.getElementsByTagName("resultMsg").item(0).getTextContent();
+					String resultCode = root.getElementsByTagName("resultCode").item(0) == null ? "-"
+							: root.getElementsByTagName("resultCode").item(0).getTextContent();
+					String resultTotalCount = root.getElementsByTagName("totalCount").item(0) == null ? "-"
+							: root.getElementsByTagName("totalCount").item(0).getTextContent();
+					if (!resultCode.equals("000")) {
+						System.out.println(resultCode);
 						System.out.println("resultCode가 000이 아닙니다.");
 						throw new RuntimeException();
 					}
-					System.out.println("DEAL_YMD = " + DEAL_YMD + " " + "LAWD_CD = " + LAWD_CD + " " + "resultMsg= " + resultMsg + " " + "resultCode= " + resultCode + " " + "resultTotalCount= " + resultTotalCount);
-					//List<ApiDto> oldList = DataMapper.getOldApiDto(RegionName,DEAL_YMD,LAWD_CD);
+					System.out.println("DEAL_YMD = " + DEAL_YMD + " " + "LAWD_CD = " + LAWD_CD + " " + "resultMsg= "
+							+ resultMsg + " " + "resultCode= " + resultCode + " " + "resultTotalCount= "
+							+ resultTotalCount);
 					List<ApiDto> newlist = makeApiDto(nList, KoreaRegion[index], KoreaLAWD_CD);
-					a = a + newlist.size();
-					/*List<ApiDto> newnewList = newlist.stream().filter(n -> oldList.stream().noneMatch(o -> {return
-							n.getSIGUNGU().equals(o.getSIGUNGU()) 
-							&& n.getBUNGI().equals(o.getBUNGI())
-							&& n.getBONBUN().equals(o.getBONBUN())
-							&& n.getBUBUN().equals(o.getBUBUN())
-							&& n.getAPARTMENTNAME().equals(o.getAPARTMENTNAME())
-							&& n.getAREAFOREXCLUSIVEUSE().equals(o.getAREAFOREXCLUSIVEUSE())
-							&& n.getDEALYEARMONTH().equals(o.getDEALYEARMONTH())
-							&& n.getDEALDAY().equals(o.getDEALDAY())
-							&& n.getDEALAMOUNT().equals(o.getDEALAMOUNT())
-							&& n.getAPARTMENTDONG().equals(o.getAPARTMENTDONG())
-							&& n.getFLOOR().equals(o.getFLOOR())
-							&& n.getBUYERGBN().equals(o.getBUYERGBN())
-							&& n.getSELLERGBN().equals(o.getSELLERGBN())
-							&& n.getBUILDYEAR().equals(o.getBUILDYEAR())
-							&& n.getROADNAME().equals(o.getROADNAME())
-							&& n.getCANCLEDEALDAY().equals(o.getCANCLEDEALDAY())
-							&& n.getREQGBN().equals(o.getREQGBN())
-							&& n.getRDEALERLAWDNM().equals(o.getRDEALERLAWDNM())
-							&& n.getREGISTRATIONDATE().equals(o.getREGISTRATIONDATE())
-							&& n.getSGGCD().equals(o.getSGGCD())
-							;})).collect(Collectors.toList());
-					List<ApiDto> oldoldList = oldList.stream().filter(o -> newlist.stream().noneMatch(n -> {return 
-							o.getSIGUNGU().equals(n.getSIGUNGU()) 
-							&& o.getBUNGI().equals(n.getBUNGI())
-							&& o.getBONBUN().equals(n.getBONBUN())
-							&& o.getBUBUN().equals(n.getBUBUN())
-							&& o.getAPARTMENTNAME().equals(n.getAPARTMENTNAME())
-							&& o.getAREAFOREXCLUSIVEUSE().equals(n.getAREAFOREXCLUSIVEUSE())
-							&& o.getDEALYEARMONTH().equals(n.getDEALYEARMONTH())
-							&& o.getDEALDAY().equals(n.getDEALDAY())
-							&& o.getDEALAMOUNT().equals(n.getDEALAMOUNT())
-							&& o.getAPARTMENTDONG().equals(n.getAPARTMENTDONG())
-							&& o.getFLOOR().equals(n.getFLOOR())
-							&& o.getBUYERGBN().equals(n.getBUYERGBN())
-							&& o.getSELLERGBN().equals(n.getSELLERGBN())
-							&& o.getBUILDYEAR().equals(n.getBUILDYEAR())
-							&& o.getROADNAME().equals(n.getROADNAME())
-							&& o.getCANCLEDEALDAY().equals(n.getCANCLEDEALDAY())
-							&& o.getREQGBN().equals(n.getREQGBN())
-							&& o.getRDEALERLAWDNM().equals(n.getRDEALERLAWDNM())
-							&& o.getREGISTRATIONDATE().equals(n.getREGISTRATIONDATE())
-							&& o.getSGGCD().equals(n.getSGGCD())
-							;})).collect(Collectors.toList());*/
-					//System.out.println("oldList.size() = " + oldList.size() + " " + "newlist.size() = " + newlist.size() + " " + "oldoldList 개수는 = " + oldoldList.size() + " " + "newnewList 개수는 = " + newnewList.size());
+					SqlSession sqlSession = this.sqlSessionFactory.openSession(ExecutorType.BATCH);
 					
-					if(newlist.size() > 0) {
+					if (newlist.size() > 0) {
 						getLatLng(makeNameCountDto(newlist), RegionName);
-						DataMapper.DataInsert(newlist, EnglishRegion[index]); 
+						for (ApiDto apiDto : newlist) {
+							Map<String, Object> map = new HashMap<>();
+							map.put("ApiDto", apiDto);
+							map.put("RegionName", RegionName);
+							sqlSession.insert("kr.co.dw.Mapper.DataMapper.DataInsert", map);
+							
+						}
+						
 					}
-			
+					sqlSession.flushStatements();
+					sqlSession.commit();
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -628,47 +376,14 @@ public class DataServiceImpl implements DataService{
 					// TODO: handle exception
 					e.printStackTrace();
 					System.out.println(e.getMessage() + " RuntimeException");
+					break;
 				}
-			} 
-			
+			}
 		}
-		System.out.println(a);
-		long after = System.currentTimeMillis();
-		System.out.println((after - before)/1000);
+
 	}
 	
-	public void deleteApiDtoList2(List<ApiDto> list, String RegionName) {
-		//System.out.println("리스트 사이즈는 = " + list.size());
-		System.out.println(list.size());
-		try {
-			for(int i = 0 ; i < list.size() ; i++) {
-				ApiDto dto = list.get(i);
-				DataMapper.DeleteData2(dto, RegionName);
-			}
-		} 
-		catch (Exception e) {
-			// TODO: handle exception
-			e.printStackTrace();
-			System.out.println(e.getMessage() + "에러발생");
-			
-		}
-	}
 	
-	public void deleteApiDtoList(List<ApiDto> list , String REGION , String DEAL_YMD, String LAWD_CD) {
-		//System.out.println("리스트 사이즈는 = " + list.size());
-		try {
-			for(int i = 0 ; i < list.size() ; i++) {
-				ApiDto dto = list.get(i);
-				DataMapper.DeleteData(dto, REGION, DEAL_YMD, LAWD_CD);
-			}
-		} 
-		catch (Exception e) {
-			// TODO: handle exception
-			e.printStackTrace();
-			System.out.println(e.getMessage() + "에러발생");
-			
-		}
-	}
 	
 	public List<ApiDto> makeApiDto(NodeList nList ,String sigungu, String sigungu2) {
 		List<ApiDto> list = new ArrayList<>();
@@ -811,17 +526,6 @@ public class DataServiceImpl implements DataService{
 		}
 		return RoadName;
 		
-	}
-	
-	public Map<String, String> makeMap(String RegionName, String LAWD_CD, String DealYear, String EnglishMonth){
-		Map<String, String> map = new HashMap<>();
-		
-		map.put("REGION", RegionName);
-		map.put("REGIONCODE", LAWD_CD);
-		map.put("YEAR", DealYear);
-		map.put("EnglishMonth", EnglishMonth);
-		
-		return map;
 	}
 	
 	public String makeEngilshMonth(String DEAL_YMD) {

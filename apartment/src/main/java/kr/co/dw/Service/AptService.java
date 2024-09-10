@@ -12,6 +12,8 @@ public interface AptService {
 
 	List<NameCountDto> get(List<String> arr, String year);
 
+	List<NameCountDto> getLatLngNameCountDto(String lat, String lng);
+
 	
 
 	

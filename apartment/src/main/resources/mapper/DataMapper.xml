@@ -56,9 +56,10 @@
     insert into LATLNG2 (SIGUNGU, BUNGI, LAT,LNG,ROADNAME,APARTMENTNAME) values (#{SIGUNGU},#{BUNGI},#{LAT},#{LNG},#{ROADNAME},#{APARTMENTNAME})
     
     </insert>
-    <insert id="DataInsert" parameterType="java.util.List">
     
-    <!-- ${tableName} -->
+    <!-- <insert id="DataInsert" parameterType="java.util.List">
+    
+    ${tableName}
     <foreach collection="list" item="ApiDto" separator=" " open="INSERT ALL" close="SELECT 1 FROM DUAL">
     into ${tableName} (SIGUNGU, BUNGI, BONBUN, BUBUN, APARTMENTNAME,AREAFOREXCLUSIVEUSE,DEALYEARMONTH,DEALDAY,DEALAMOUNT,APARTMENTDONG,FLOOR,BUYERGBN,SELLERGBN,BUILDYEAR,ROADNAME,CANCLEDEALDAY,REQGBN,RDEALERLAWDNM,REGISTRATIONDATE,SGGCD) 
     VALUES 
@@ -85,7 +86,37 @@
     #{ApiDto.SGGCD}
     )
     </foreach>
+    </insert> -->
+    
+    <insert id="DataInsert">
+    
+    INSERT into ${RegionName} (SIGUNGU, BUNGI, BONBUN, BUBUN, APARTMENTNAME,AREAFOREXCLUSIVEUSE,DEALYEARMONTH,DEALDAY,DEALAMOUNT,APARTMENTDONG,FLOOR,BUYERGBN,SELLERGBN,BUILDYEAR,ROADNAME,CANCLEDEALDAY,REQGBN,RDEALERLAWDNM,REGISTRATIONDATE,SGGCD) 
+    VALUES 
+    (
+    #{ApiDto.SIGUNGU},
+    #{ApiDto.BUNGI},
+    #{ApiDto.BONBUN},
+    #{ApiDto.BUBUN},
+    #{ApiDto.APARTMENTNAME},
+    #{ApiDto.AREAFOREXCLUSIVEUSE},
+    #{ApiDto.DEALYEARMONTH},
+    #{ApiDto.DEALDAY},
+    #{ApiDto.DEALAMOUNT},
+    #{ApiDto.APARTMENTDONG},
+    #{ApiDto.FLOOR},
+    #{ApiDto.BUYERGBN},
+    #{ApiDto.SELLERGBN},
+    #{ApiDto.BUILDYEAR},
+    #{ApiDto.ROADNAME},
+    #{ApiDto.CANCLEDEALDAY},
+    #{ApiDto.REQGBN},
+    #{ApiDto.RDEALERLAWDNM},
+    #{ApiDto.REGISTRATIONDATE},
+    #{ApiDto.SGGCD}
+    )
+    
     </insert>
+    
     
     <select id="getTotalCount" parameterType="hashMap">
     
@@ -104,106 +135,6 @@
     select * from ${REGION} where DEALYEARMONTH = #{YEAR} and SGGCD = #{LAWD_CD}
     
     </select>
-    
-    <!-- delete from ${REGION} where 
-    SIGUNGU = #{ApiDto.SIGUNGU} 
-    and BUNGI = #{ApiDto.BUNGI} 
-    and BONBUN = #{ApiDto.BONBUN}
-    and BUBUN = #{ApiDto.BUBUN}
-    and APARTMENTNAME = #{ApiDto.APARTMENTNAME}
-    and AREAFOREXCLUSIVEUSE = #{ApiDto.AREAFOREXCLUSIVEUSE}
-    and DEALYEARMONTH = #{ApiDto.DEALYEARMONTH}
-    and DEALDAY = #{ApiDto.DEALDAY}
-    and DEALAMOUNT = #{ApiDto.DEALAMOUNT}
-    and APARTMENTDONG = #{ApiDto.APARTMENTDONG}
-    and FLOOR = #{ApiDto.FLOOR}
-    and BUYERGBN = #{ApiDto.BUYERGBN}
-    and SELLERGBN = #{ApiDto.SELLERGBN}
-    and BUILDYEAR = #{ApiDto.BUILDYEAR}
-    and ROADNAME = #{ApiDto.ROADNAME}
-    and CANCLEDEALDAY = #{ApiDto.CANCLEDEALDAY}
-    and REQGBN = #{ApiDto.REQGBN}
-    and RDEALERLAWDNM = #{ApiDto.RDEALERLAWDNM}
-    and REGISTRATIONDATE = #{ApiDto.REGISTRATIONDATE}
-    and SGGCD = #{ApiDto.SGGCD} -->
-    
-    <delete id="DeleteData" parameterType="ApiDto">
-    
-    delete from (select * from ${REGION} where 
-    SIGUNGU = #{ApiDto.SIGUNGU} 
-    and BUNGI = #{ApiDto.BUNGI} 
-    and BONBUN = #{ApiDto.BONBUN}
-    and BUBUN = #{ApiDto.BUBUN}
-    and APARTMENTNAME = #{ApiDto.APARTMENTNAME}
-    and AREAFOREXCLUSIVEUSE = #{ApiDto.AREAFOREXCLUSIVEUSE}
-    and DEALYEARMONTH = #{ApiDto.DEALYEARMONTH}
-    and DEALDAY = #{ApiDto.DEALDAY}
-    and DEALAMOUNT = #{ApiDto.DEALAMOUNT}
-    and APARTMENTDONG = #{ApiDto.APARTMENTDONG}
-    and FLOOR = #{ApiDto.FLOOR}
-    and BUYERGBN = #{ApiDto.BUYERGBN}
-    and SELLERGBN = #{ApiDto.SELLERGBN}
-    and BUILDYEAR = #{ApiDto.BUILDYEAR}
-    and ROADNAME = #{ApiDto.ROADNAME}
-    and CANCLEDEALDAY = #{ApiDto.CANCLEDEALDAY}
-    and REQGBN = #{ApiDto.REQGBN}
-    and RDEALERLAWDNM = #{ApiDto.RDEALERLAWDNM}
-    and REGISTRATIONDATE = #{ApiDto.REGISTRATIONDATE}
-    and SGGCD = #{ApiDto.SGGCD})
-    
-    </delete>
-    
-    <select id="SelectData" parameterType="ApiDto">
-    
-    select * from ${REGION} where 
-    SIGUNGU = #{ApiDto.SIGUNGU} 
-    and BUNGI = #{ApiDto.BUNGI} 
-    and BONBUN = #{ApiDto.BONBUN}
-    and BUBUN = #{ApiDto.BUBUN}
-    and APARTMENTNAME = #{ApiDto.APARTMENTNAME}
-    and AREAFOREXCLUSIVEUSE = #{ApiDto.AREAFOREXCLUSIVEUSE}
-    and DEALYEARMONTH = #{ApiDto.DEALYEARMONTH}
-    and DEALDAY = #{ApiDto.DEALDAY}
-    and DEALAMOUNT = #{ApiDto.DEALAMOUNT}
-    and APARTMENTDONG = #{ApiDto.APARTMENTDONG}
-    and FLOOR = #{ApiDto.FLOOR}
-    and BUYERGBN = #{ApiDto.BUYERGBN}
-    and SELLERGBN = #{ApiDto.SELLERGBN}
-    and BUILDYEAR = #{ApiDto.BUILDYEAR}
-    and ROADNAME = #{ApiDto.ROADNAME}
-    and CANCLEDEALDAY = #{ApiDto.CANCLEDEALDAY}
-    and REQGBN = #{ApiDto.REQGBN}
-    and RDEALERLAWDNM = #{ApiDto.RDEALERLAWDNM}
-    and REGISTRATIONDATE = #{ApiDto.REGISTRATIONDATE}
-    and SGGCD = #{ApiDto.SGGCD}
-    
-    </select>
-    
-    <delete id="DeleteData2" parameterType="ApiDto">
-    
-    delete from ${REGION} where 
-    SIGUNGU = #{ApiDto.SIGUNGU} 
-    and BUNGI = #{ApiDto.BUNGI} 
-    and BONBUN = #{ApiDto.BONBUN}
-    and BUBUN = #{ApiDto.BUBUN}
-    and APARTMENTNAME = #{ApiDto.APARTMENTNAME}
-    and AREAFOREXCLUSIVEUSE = #{ApiDto.AREAFOREXCLUSIVEUSE}
-    and DEALYEARMONTH = #{ApiDto.DEALYEARMONTH}
-    and DEALDAY = #{ApiDto.DEALDAY}
-    and DEALAMOUNT = #{ApiDto.DEALAMOUNT}
-    and APARTMENTDONG = #{ApiDto.APARTMENTDONG}
-    and FLOOR = #{ApiDto.FLOOR}
-    and BUYERGBN = #{ApiDto.BUYERGBN}
-    and SELLERGBN = #{ApiDto.SELLERGBN}
-    and BUILDYEAR = #{ApiDto.BUILDYEAR}
-    and ROADNAME = #{ApiDto.ROADNAME}
-    and CANCLEDEALDAY = #{ApiDto.CANCLEDEALDAY}
-    and REQGBN = #{ApiDto.REQGBN}
-    and RDEALERLAWDNM = #{ApiDto.RDEALERLAWDNM}
-    and REGISTRATIONDATE = #{ApiDto.REGISTRATIONDATE}
-    and SGGCD = #{ApiDto.SGGCD}
-    
-    </delete>
     
     <delete id="deleteRegionYear">
     
