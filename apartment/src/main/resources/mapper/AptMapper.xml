@@ -15,8 +15,14 @@
     
     <select id="get" parameterType="hashMap" resultMap="newNameCountDto">
        
+    select SIGUNGU, BUNGI, APARTMENTNAME, ROADNAME, lat, lng from latlng2 where sigungu like #{region_1depth_name}||'%' and sigungu like '%'||#{region_2depth_name}||'%'
     
-    select SIGUNGU, BUNGI, APARTMENTNAME, ROADNAME, lat, lng from latlng where sigungu like #{region_1depth_name}||'%' and sigungu like '%'||#{region_2depth_name}||'%'
+    </select>
+    
+    <select id="getLatLngNameCountDto" resultMap="newNameCountDto">
+    
+    Select * from latlng2 where LAT = #{lat} and LNG = #{lng}
+    
     </select>
     
 </mapper>	

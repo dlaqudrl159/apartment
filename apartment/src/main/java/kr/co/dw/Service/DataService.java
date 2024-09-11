@@ -22,23 +22,11 @@ public interface DataService {
 
 	JSONObject geocodersearchaddress(String searchAddr, String searchType) throws IOException, ParseException;
 
-	String CHUNGCHEONGBUKDO(NameCountDto NameCountDto);
-
 	JSONObject getparcel(NameCountDto NameCountDto, String tableName) throws IOException, ParseException;
 
 	JSONObject getroadname(NameCountDto NameCountDto, String tableName) throws IOException, ParseException;
 
-	String JEOLLABUKDO(NameCountDto NameCountDto);
-
-	String GYEONGSANGNAMDO(NameCountDto NameCountDto);
-
-	String GYEONGSANGBUKDO(NameCountDto NameCountDto);
-
-	String CHUNGCHEONGNAMDO(NameCountDto NameCountDto);
-
-	String GYEONGGIDO(NameCountDto NameCountDto);
-
-	String test() throws IOException, ParserConfigurationException, SAXException;
+	void AutoDataInsert(String RegionName);
 
 
 

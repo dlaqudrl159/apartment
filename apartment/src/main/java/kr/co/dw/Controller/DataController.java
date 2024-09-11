@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.xml.sax.SAXException;
 
 import kr.co.dw.Service.DataService;
+import kr.co.dw.Service.TotalCountService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -25,22 +26,43 @@ public class DataController {
 
 	private final DataService DataService;
 	
+	private final TotalCountService TotalCountService;
+	
 	@GetMapping("/api/datainsert/{tableName}")
 	private void test(@PathVariable("tableName") String tableName) throws MalformedURLException, IOException, ParseException, InterruptedException {
-		//서울 부산 경기도 충청북도 충청남도 대구 대전 강원도 광주 경상북도 인천 *여기까지 4만정도
+		//서울 부산 경기도 충청북도 충청남도 대구 대전 강원도 광주 경상북도 인천 *여기까지 4만정도 경상남도 제주도 전라북도 전라남도 세종 울산
 		DataService.LatLngInsert(tableName);
 		System.out.println("좌표 저장 완료");
 		
 	}
 	
-	@GetMapping("/api/test")
-	private ResponseEntity<String> test2() throws IOException, ParserConfigurationException, SAXException {
+	@GetMapping("/api/AutoDataInsert/{RegionName}")
+	private ResponseEntity<String> AutoDataInsert(@PathVariable("RegionName") String RegionName) throws java.text.ParseException{
 		
-		ResponseEntity<String> entity = new ResponseEntity<String>("OK",HttpStatus.OK);
+		DataService.AutoDataInsert(RegionName.toUpperCase());
+		System.out.println("완료");
+		return null;
+	}
+	
+	@GetMapping("/api/AutoDataInsert")
+	private ResponseEntity<String> AutoDataInsert2() throws java.text.ParseException{
 		
-			DataService.test();
+		String[] EnglishRegion = {"SEOUL","BUSAN","DAEGU","INCHEON","GWANGJU","DAEJEON","ULSAN","SEJONG","GYEONGGIDO","GANGWONDO",
+				"CHUNGCHEONGBUKDO","CHUNGCHEONGNAMDO","JEOLLABUKDO","JEOLLANAMDO","GYEONGSANGBUKDO","GYEONGSANGNAMDO","JEJU"};
 		
-		return entity;
+		for(int i = 0 ; i < EnglishRegion.length; i++) {
+			DataService.AutoDataInsert(EnglishRegion[i].toUpperCase());
+			System.out.println("완료");
+		}
+		
+		return null;
+	}
+	
+	@GetMapping("/api/totalCount/{region}")
+	private void test3(@PathVariable("region") String region) {
+		TotalCountService.insert(region.toUpperCase());
+		System.out.println("완료");
+		
 	}
 	
 }
