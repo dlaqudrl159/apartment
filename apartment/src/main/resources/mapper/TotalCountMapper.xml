@@ -6,7 +6,7 @@
     
     <insert id="insert">
     
-    insert into TOTALCOUNT2 
+    insert into TOTALCOUNT 
     (REGION, REGIONCODE, YEAR, January, February, March, April,May,June,July,August,September,October,November,December) 
     VALUES (#{REGION},
     #{REGIONCODE},

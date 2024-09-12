@@ -337,6 +337,7 @@ public class DataServiceImpl implements DataService{
 							+ resultMsg + " " + "resultCode= " + resultCode + " " + "resultTotalCount= "
 							+ resultTotalCount);
 					List<ApiDto> newlist = makeApiDto(nList, KoreaRegion[index], KoreaLAWD_CD);
+					
 					SqlSession sqlSession = this.sqlSessionFactory.openSession(ExecutorType.BATCH);
 					
 					if (newlist.size() > 0) {
@@ -348,10 +349,10 @@ public class DataServiceImpl implements DataService{
 							sqlSession.insert("kr.co.dw.Mapper.DataMapper.DataInsert", map);
 							
 						}
-						
+						sqlSession.flushStatements();
+						sqlSession.commit();
 					}
-					sqlSession.flushStatements();
-					sqlSession.commit();
+					
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
