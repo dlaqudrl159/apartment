@@ -13,7 +13,6 @@ public class AptUtils {
 				region_1depth_name = arr2[i];
 			}
 		}
-		//System.out.println(region_1depth_name);
 		return region_1depth_name;
 		
 	}

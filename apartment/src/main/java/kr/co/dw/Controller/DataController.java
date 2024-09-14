@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.xml.sax.SAXException;
 
 import kr.co.dw.Service.DataService;
-import kr.co.dw.Service.TotalCountService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -26,9 +25,7 @@ public class DataController {
 
 	private final DataService DataService;
 	
-	private final TotalCountService TotalCountService;
-	
-	@GetMapping("/api/datainsert/{tableName}")
+	@GetMapping("/data/LatLngInsert/{tableName}")
 	private void test(@PathVariable("tableName") String tableName) throws MalformedURLException, IOException, ParseException, InterruptedException {
 		//서울 부산 경기도 충청북도 충청남도 대구 대전 강원도 광주 경상북도 인천 *여기까지 4만정도 경상남도 제주도 전라북도 전라남도 세종 울산
 		DataService.LatLngInsert(tableName);
@@ -36,7 +33,7 @@ public class DataController {
 		
 	}
 	
-	@GetMapping("/api/AutoDataInsert/{RegionName}")
+	@GetMapping("/data/AutoDataInsert/{RegionName}")
 	private ResponseEntity<String> AutoDataInsert(@PathVariable("RegionName") String RegionName) throws java.text.ParseException{
 		
 		DataService.AutoDataInsert(RegionName.toUpperCase());
@@ -44,7 +41,7 @@ public class DataController {
 		return null;
 	}
 	
-	@GetMapping("/api/AutoDataInsert")
+	@GetMapping("/data/AutoDataInsert")
 	private ResponseEntity<String> AutoDataInsert2() throws java.text.ParseException{
 		
 		String[] EnglishRegion = {"SEOUL","BUSAN","DAEGU","INCHEON","GWANGJU","DAEJEON","ULSAN","SEJONG","GYEONGGIDO","GANGWONDO",
@@ -56,13 +53,6 @@ public class DataController {
 		}
 		
 		return null;
-	}
-	
-	@GetMapping("/api/totalCount/{region}")
-	private void test3(@PathVariable("region") String region) {
-		TotalCountService.insert(region.toUpperCase());
-		System.out.println("완료");
-		
 	}
 	
 }

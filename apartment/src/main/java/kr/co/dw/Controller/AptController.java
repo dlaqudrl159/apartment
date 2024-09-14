@@ -25,7 +25,6 @@ public class AptController {
 		return AptService.get(arr,year);
 	}
 	
-	
 	@GetMapping("/api/latlng")
 	private ResponseEntity<List<NameCountDto>> test2(@RequestParam("lat") String lat , @RequestParam("lng") String lng){
 		
@@ -37,13 +36,6 @@ public class AptController {
 		List<NameCountDto> list = AptService.getLatLngNameCountDto(lat,lng);
 		entity = new ResponseEntity<List<NameCountDto>>(list, HttpStatus.OK);
 		return entity;
-	}
-	
-	@GetMapping("/api/hello")
-	private String hello() {
-		System.out.println(System.getProperty("os.name"));
-		String os = System.getProperty("os.name");
-		return os;
 	}
 	
 }

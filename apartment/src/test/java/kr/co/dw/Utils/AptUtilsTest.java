@@ -206,7 +206,7 @@ public class AptUtilsTest {
 		String roadnamebonbun = "00000";
 		String roadnamebubun = "00000";
 		DataUtils DataUtils = new DataUtils();
-		roadname = DataUtils.makeroadname(roadname, roadnamebonbun, roadnamebubun);
+		//roadname = DataUtils.makeroadname(roadname, roadnamebonbun, roadnamebubun);
 		
 		System.out.println(roadname);
 		

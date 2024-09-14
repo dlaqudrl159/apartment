@@ -164,6 +164,7 @@ public class DataServiceImpl implements DataService{
 			//제주도
 			{ "제주시", "서귀포시" }
 			};
+	
 	private final DataMapper DataMapper;
 	
 	@Autowired
@@ -237,9 +238,7 @@ public class DataServiceImpl implements DataService{
 					    NameCountDto.setLNG("자료없음");		
 					}
 				}
-				//System.out.println(checkNameCountDto);
-				//System.out.println(NameCountDto);
-				DataMapper.insert(NameCountDto);
+				DataMapper.InsertLatLng(NameCountDto);
 			}
 			
 		}
@@ -351,6 +350,7 @@ public class DataServiceImpl implements DataService{
 						}
 						sqlSession.flushStatements();
 						sqlSession.commit();
+						sqlSession.close();
 					}
 					
 				} catch (IOException e) {
