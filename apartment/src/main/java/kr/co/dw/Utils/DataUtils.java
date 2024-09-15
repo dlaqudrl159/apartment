@@ -1,28 +1,53 @@
 package kr.co.dw.Utils;
 
-import java.io.IOException;
-import java.io.StringReader;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
-import java.util.Map;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 
 import org.springframework.stereotype.Service;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
 
 import kr.co.dw.Domain.ApiDto;
 import kr.co.dw.Domain.NameCountDto;
 
-@Service
 public class DataUtils {
-	
+
+	public static String makeEngilshMonth(String DEAL_YMD) {
+
+		String month = DEAL_YMD.substring(4, 6);
+		int numMonth = Integer.parseInt(month);
+		if (numMonth > 12) {
+			numMonth = numMonth - 12;
+			month = String.valueOf(numMonth);
+		}
+		String EnglishMonth = null;
+		if (month.equals("01")) {
+			EnglishMonth = "January";
+		} else if (month.equals("02")) {
+			EnglishMonth = "February";
+		} else if (month.equals("03")) {
+			EnglishMonth = "March";
+		} else if (month.equals("04")) {
+			EnglishMonth = "April";
+		} else if (month.equals("05")) {
+			EnglishMonth = "May";
+		} else if (month.equals("06")) {
+			EnglishMonth = "June";
+		} else if (month.equals("07")) {
+			EnglishMonth = "July";
+		} else if (month.equals("08")) {
+			EnglishMonth = "August";
+		} else if (month.equals("09")) {
+			EnglishMonth = "September";
+		} else if (month.equals("10")) {
+			EnglishMonth = "October";
+		} else if (month.equals("11")) {
+			EnglishMonth = "November";
+		} else if (month.equals("12")) {
+			EnglishMonth = "December";
+		}
+		return EnglishMonth;
+	}
+
 }

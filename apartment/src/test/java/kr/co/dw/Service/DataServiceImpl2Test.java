@@ -16,7 +16,7 @@ public class DataServiceImpl2Test {
 	@InjectMocks
 	private DataController DataController;
 	
-	@Mock
+	@Mock // 가짜 객체를 만들어 반환해주는 어노테이션 
 	private DataService DataService;
 	
 	private MockMvc mockMvc;

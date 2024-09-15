@@ -298,18 +298,20 @@ public class DataServiceImpl implements DataService{
 	@Override
 	public void AutoDataInsert(String RegionName) {
 		// TODO Auto-generated method stub
-
+		
 		int index = Arrays.asList(EnglishRegion).indexOf(RegionName);
 		int RegionCodeIndex = RegionCode[index].length;
 		boolean check = true;
-
-		String DbYear = makeDealYearMonth(13);
+		
+		int OneYear = 12;
+		
+		String DbYear = makeDealYearMonth(OneYear); // 13을 쓰지말고 final이 붙은 상수로 쓰는게 좋다고 클로드가 말해줌
 		DataMapper.deleteRegionYear(RegionName, DbYear);
 
 		for (int i = 0; i < RegionCodeIndex && check == true; i++) {
 			String LAWD_CD = RegionCode[index][i];
 			String KoreaLAWD_CD = KoreaRegionCode[index][i];
-			for (int j = 13; j >= 0; j--) {
+			for (int j = OneYear; j >= 0; j--) {
 				String DEAL_YMD = makeDealYearMonth(j);
 				try {
 					StringBuilder sb = getRTMSDataSvcAptTradeDev(RegionName, LAWD_CD, DEAL_YMD);
@@ -421,7 +423,7 @@ public class DataServiceImpl implements DataService{
 				String SggCd = eElement.getElementsByTagName("sggCd").item(0) == null ? "-" : eElement.getElementsByTagName("sggCd").item(0).getTextContent().replaceAll("\"", "").trim().equals("") ? "-" : eElement.getElementsByTagName("sggCd").item(0).getTextContent().replaceAll("\"", "").trim();  
 				
 				
-				StringBuilder sb = new StringBuilder();
+				/*StringBuilder sb = new StringBuilder();
 				sb.append(DealAmount + " ");
 				sb.append(ReqgbN + " ");
 				sb.append(BuildYear + " ");
@@ -444,7 +446,7 @@ public class DataServiceImpl implements DataService{
 				sb.append(RoadName);
 				sb.append(RoadNameBonbun + " ");
 				sb.append(RoadNameBubun+ " ");
-				sb.append(SggCd + " ");
+				sb.append(SggCd + " ");*/
 				
 				ApiDto.setSIGUNGU(sigungu + " " + sigungu2 + " " +  Dong);
 				ApiDto.setBUNGI(Jibun);				
@@ -474,103 +476,11 @@ public class DataServiceImpl implements DataService{
 		return list;
 	}
 	
-	public List<NameCountDto> makeNameCountDto(List<ApiDto> list) {
-		
-		List<NameCountDto> NameCountDtolist = new ArrayList<>();
-		
-		for(int i = 0 ; i < list.size() ; i++) {
-			NameCountDto NameCountDto = new NameCountDto();
-			String SIGUNGU = list.get(i).getSIGUNGU();
-			String BUNGI = list.get(i).getBUNGI();
-			String APARTMENTNAME = list.get(i).getAPARTMENTNAME();
-			String ROADNAME = list.get(i).getROADNAME();
-			NameCountDto.setSIGUNGU(SIGUNGU);
-			NameCountDto.setBUNGI(BUNGI);
-			NameCountDto.setAPARTMENTNAME(APARTMENTNAME);
-			NameCountDto.setROADNAME(ROADNAME);		
-			NameCountDtolist.add(NameCountDto);
-		}
-		
-		return NameCountDtolist;
-		
-	}
-	
-	public String makeRoadName(String RoadName, String RoadNameBonbun, String RoadNameBubun) {
-		RoadName = RoadName.trim();
-		if(RoadName.equals("-")) {
-			RoadName = "";
-		}
-		if(RoadNameBonbun.equals("-")) {
-			RoadNameBonbun = "";
-		}
-		if(RoadNameBubun.equals("-")) {
-			RoadNameBubun = "";
-		}
-		RoadNameBonbun = RoadNameBonbun + "!";
-		RoadNameBubun = RoadNameBubun + "!";
-		RoadNameBonbun = RoadNameBonbun.replace("0", " ").trim().replace(" ", "0").replace("!", "");
-		
-		RoadNameBubun = RoadNameBubun.replace("0", " ").trim().replace(" ", "0").replace("!", "");
-		if(RoadNameBonbun.length() !=0 ) {
-			RoadName = RoadName + " " + RoadNameBonbun;
-			if(RoadNameBubun.length() != 0) {
-				RoadName = RoadName + "-" + RoadNameBubun;
-			}
-		}else if(RoadNameBonbun.length() ==0 ) {
-			if(RoadNameBubun.length() != 0) {
-				RoadName = RoadName + " " + RoadNameBubun;
-			}
-		}
-		RoadName = RoadName.trim();
-		if(RoadName.equals("")) {
-			RoadName = "-";
-		}
-		return RoadName;
-		
-	}
-	
-	public String makeEngilshMonth(String DEAL_YMD) {
-		
-		String month = DEAL_YMD.substring(4, 6);
-		int numMonth = Integer.parseInt(month);
-		if(numMonth > 12) {
-			numMonth = numMonth - 12;
-			month = String.valueOf(numMonth);
-		}
-		String EnglishMonth = null;
-		if(month.equals("01")) {
-			EnglishMonth = "January";
-		}else if(month.equals("02")) {
-			EnglishMonth = "February";
-		}else if(month.equals("03")) {
-			EnglishMonth = "March";
-		}else if(month.equals("04")) {
-			EnglishMonth = "April";
-		}else if(month.equals("05")) {
-			EnglishMonth = "May";
-		}else if(month.equals("06")) {
-			EnglishMonth = "June";
-		}else if(month.equals("07")) {
-			EnglishMonth = "July";
-		}else if(month.equals("08")) {
-			EnglishMonth = "August";
-		}else if(month.equals("09")) {
-			EnglishMonth = "September";
-		}else if(month.equals("10")) {
-			EnglishMonth = "October";
-		}else if(month.equals("11")) {
-			EnglishMonth = "November";
-		}else if(month.equals("12")) {
-			EnglishMonth = "December";
-		}
-		return EnglishMonth;
-	}
-	
 	public String makeDealYearMonth(int j) {
-		
+
 		Calendar cal = Calendar.getInstance();
 		String year = String.valueOf(cal.get(Calendar.YEAR));
-		int month = (cal.get(Calendar.MONTH)+1);
+		int month = (cal.get(Calendar.MONTH) + 1);
 		String strMonth = String.format("%02d", month);
 		String lastMonth = year + strMonth;
 		SimpleDateFormat dtFormat = new SimpleDateFormat("yyyyMM");
@@ -584,6 +494,61 @@ public class DataServiceImpl implements DataService{
 		cal.setTime(dt);
 		cal.add(Calendar.MONTH, -j);
 		return dtFormat.format(cal.getTime());
+	}
+
+	public String makeRoadName(String RoadName, String RoadNameBonbun, String RoadNameBubun) {
+		RoadName = RoadName.trim();
+		if (RoadName.equals("-")) {
+			RoadName = "";
+		}
+		if (RoadNameBonbun.equals("-")) {
+			RoadNameBonbun = "";
+		}
+		if (RoadNameBubun.equals("-")) {
+			RoadNameBubun = "";
+		}
+		RoadNameBonbun = RoadNameBonbun + "!";
+		RoadNameBubun = RoadNameBubun + "!";
+		RoadNameBonbun = RoadNameBonbun.replace("0", " ").trim().replace(" ", "0").replace("!", "");
+
+		RoadNameBubun = RoadNameBubun.replace("0", " ").trim().replace(" ", "0").replace("!", "");
+		if (RoadNameBonbun.length() != 0) {
+			RoadName = RoadName + " " + RoadNameBonbun;
+			if (RoadNameBubun.length() != 0) {
+				RoadName = RoadName + "-" + RoadNameBubun;
+			}
+		} else if (RoadNameBonbun.length() == 0) {
+			if (RoadNameBubun.length() != 0) {
+				RoadName = RoadName + " " + RoadNameBubun;
+			}
+		}
+		RoadName = RoadName.trim();
+		if (RoadName.equals("")) {
+			RoadName = "-";
+		}
+		return RoadName;
+
+	}
+
+	public List<NameCountDto> makeNameCountDto(List<ApiDto> list) {
+
+		List<NameCountDto> NameCountDtolist = new ArrayList<>();
+
+		for (int i = 0; i < list.size(); i++) {
+			NameCountDto NameCountDto = new NameCountDto();
+			String SIGUNGU = list.get(i).getSIGUNGU();
+			String BUNGI = list.get(i).getBUNGI();
+			String APARTMENTNAME = list.get(i).getAPARTMENTNAME();
+			String ROADNAME = list.get(i).getROADNAME();
+			NameCountDto.setSIGUNGU(SIGUNGU);
+			NameCountDto.setBUNGI(BUNGI);
+			NameCountDto.setAPARTMENTNAME(APARTMENTNAME);
+			NameCountDto.setROADNAME(ROADNAME);
+			NameCountDtolist.add(NameCountDto);
+		}
+
+		return NameCountDtolist;
+
 	}
 	
 	public StringBuilder getRTMSDataSvcAptTradeDev(String RegionName, String LAWD_CD, String DEAL_YMD) throws IOException {

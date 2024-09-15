@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import kr.co.dw.Domain.NameCountDto;
+import kr.co.dw.Utils.DataUtils;
 
 @Service
 @Primary
@@ -51,6 +52,7 @@ public class DataServiceImpl2 implements DataService{
 	@Override
 	public void AutoDataInsert(String RegionName) {
 		// TODO Auto-generated method stub
+		
 		
 	}
 
