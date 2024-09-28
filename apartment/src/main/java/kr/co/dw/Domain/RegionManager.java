@@ -366,4 +366,44 @@ public class RegionManager {
 		return null;
 	}
 	
+	public ParentRegionName getkorParentName(String RegionName) {
+		
+		if(RegionName.equals("SEOUL")){
+			return new ParentRegionName("서울특별시", "SEOUL"); 
+		}else if(RegionName.equals("BUSAN")) {
+			return new ParentRegionName("부산광역시", "BUSAN"); 
+		}else if(RegionName.equals("DAEGU")) {
+			return new ParentRegionName("대구광역시", "DAEGU"); 
+		}else if(RegionName.equals("INCHEON")) {
+			return new ParentRegionName("인천광역시", "INCHEON"); 
+		}else if(RegionName.equals("GWANGJU")) {
+			return new ParentRegionName("광주광역시", "GWANGJU"); 
+		}else if(RegionName.equals("DAEJEON")) {
+			return new ParentRegionName("대전광역시", "DAEJEON"); 
+		}else if(RegionName.equals("ULSAN")) {
+			return new ParentRegionName("울산광역시", "ULSAN"); 
+		}else if(RegionName.equals("SEJONG")) {
+			return new ParentRegionName("세종특별자치시", "SEJONG"); 
+		}else if(RegionName.equals("GYEONGGIDO")) {
+			return new ParentRegionName("경기도", "GYEONGGIDO"); 
+		}else if(RegionName.equals("CHUNGCHEONGBUKDO")) {
+			return new ParentRegionName("충청북도", "CHUNGCHEONGBUKDO"); 
+		}else if(RegionName.equals("CHUNGCHEONGNAMDO")) {
+			return new ParentRegionName("충청남도", "CHUNGCHEONGNAMDO"); 
+		}else if(RegionName.equals("JEOLLANAMDO")) {
+			return new ParentRegionName("전라남도", "JEOLLANAMDO"); 
+		}else if(RegionName.equals("GYEONGSANGBUKDO")) {
+			return new ParentRegionName("경상북도", "GYEONGSANGBUKDO"); 
+		}else if(RegionName.equals("GYEONGSANGNAMDO")) {
+			return new ParentRegionName("경상남도", "GYEONGSANGNAMDO"); 
+		}else if(RegionName.equals("JEJU")) {
+			return new ParentRegionName("제주특별자치도", "JEJU"); 
+		}else if(RegionName.equals("GANGWONDO")) {
+			return new ParentRegionName("강원특별자치도", "GANGWONDO"); 
+		}else if(RegionName.equals("JEOLLABUKDO")) {
+			return new ParentRegionName("전북특별자치도", "JEOLLABUKDO"); 
+		}
+		return null;
+	}
+	
 }

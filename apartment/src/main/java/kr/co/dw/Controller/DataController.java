@@ -6,6 +6,8 @@ import java.net.MalformedURLException;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.json.simple.parser.ParseException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -17,13 +19,18 @@ import org.springframework.web.bind.annotation.RestController;
 import org.xml.sax.SAXException;
 
 import kr.co.dw.Service.DataService;
+import kr.co.dw.Service.DataServiceImpl2;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 public class DataController {
 
 	private final DataService DataService;
+	
+	private final Logger logger = LoggerFactory.getLogger(DataController.class);
 	
 	@GetMapping("/data/LatLngInsert/{tableName}")
 	private void test(@PathVariable("tableName") String tableName) throws MalformedURLException, IOException, ParseException, InterruptedException {
@@ -37,7 +44,9 @@ public class DataController {
 	private ResponseEntity<String> AutoDataInsert(@PathVariable("RegionName") String RegionName) throws java.text.ParseException{
 		
 		DataService.AutoDataInsert(RegionName.toUpperCase());
-		System.out.println("완료");
+		
+		logger.info(RegionName + " 테이블 완료");
+		
 		return null;
 	}
 	
@@ -49,7 +58,7 @@ public class DataController {
 		
 		for(int i = 0 ; i < EnglishRegion.length; i++) {
 			DataService.AutoDataInsert(EnglishRegion[i].toUpperCase());
-			System.out.println("완료");
+			logger.info(EnglishRegion[i] + " 테이블 완료");
 		}
 		
 		return null;

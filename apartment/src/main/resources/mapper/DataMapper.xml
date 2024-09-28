@@ -45,13 +45,13 @@
     
     </select>
     
-    <select id = "get" parameterType="NameCountDto">
+    <select id = "getLatLng" parameterType="NameCountDto">
     
     select * from LATLNG2 where SIGUNGU = #{SIGUNGU} and BUNGI = #{BUNGI} and ROADNAME = #{ROADNAME} and APARTMENTNAME = #{APARTMENTNAME}
    
     </select>
     
-    <insert id="insert" parameterType="NameCountDto">
+    <insert id="InsertLatLng" parameterType="NameCountDto">
     
     insert into LATLNG2 (SIGUNGU, BUNGI, LAT,LNG,ROADNAME,APARTMENTNAME) values (#{SIGUNGU},#{BUNGI},#{LAT},#{LNG},#{ROADNAME},#{APARTMENTNAME})
     
@@ -116,25 +116,6 @@
     )
     
     </insert>
-    
-    
-    <select id="getTotalCount" parameterType="hashMap">
-    
-    select ${EnglishMonth} from TOTALCOUNT where REGION = #{REGION} and REGIONCODE = #{REGIONCODE} and YEAR = #{YEAR}
-    
-    </select>
-    
-    <update id="updateTotalCount" parameterType="string">
-    
-    update TOTALCOUNT set ${EnglishMonth} = #{totalCount} where REGION = #{REGION} and REGIONCODE = #{REGIONCODE} and YEAR = #{YEAR}
-    
-    </update>
-    
-    <select id="getOldApiDto">
-    
-    select * from ${REGION} where DEALYEARMONTH = #{YEAR} and SGGCD = #{LAWD_CD}
-    
-    </select>
     
     <delete id="deleteRegionYear">
     

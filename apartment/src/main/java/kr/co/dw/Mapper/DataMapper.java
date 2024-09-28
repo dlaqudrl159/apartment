@@ -16,7 +16,7 @@ public interface DataMapper {
 
 	List<NameCountDto> getList(String tableName);
 
-	NameCountDto get(NameCountDto nameCountDto);
+	NameCountDto getLatLng(NameCountDto nameCountDto);
 
 	void deleteRegionYear(@Param("REGION") String RegionName, @Param("YEAR") String DbYear);
 

@@ -191,7 +191,7 @@ public class DataServiceImpl implements DataService{
 			
 			NameCountDto NameCountDto = list.get(i);
 			NameCountDto checkNameCountDto = new NameCountDto();
-			checkNameCountDto = DataMapper.get(NameCountDto);
+			checkNameCountDto = DataMapper.getLatLng(NameCountDto);
 			
 			if(NameCountDto.equals(checkNameCountDto)) {
 				continue;
