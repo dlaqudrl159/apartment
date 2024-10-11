@@ -25,4 +25,10 @@
     
     </select>
     
+    <select id = "getAptTrancsactionHistory">
+    
+    select * from 
+    
+    </select>
+    
 </mapper>	

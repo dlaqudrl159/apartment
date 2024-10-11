@@ -15,7 +15,7 @@
   	<result column="count" property="COUNT"/>
 	</resultMap>   
     
-     <resultMap type="ApiDto" id="newApiDto">
+    <resultMap type="ApiDto" id="newApiDto">
   	<!-- 1:1로 DTO의 멤버변수를 매핑-->
   	<result column="SIGUNGU" property="SIGUNGU"/>
   	<result column="BUNGI" property="BUNGI"/>

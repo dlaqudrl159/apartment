@@ -1,13 +1,17 @@
 package kr.co.dw.Controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import kr.co.dw.Domain.ApiDto;
 import kr.co.dw.Domain.NameCountDto;
 import kr.co.dw.Service.AptService;
 import lombok.RequiredArgsConstructor;
@@ -28,14 +32,22 @@ public class AptController {
 	@GetMapping("/api/latlng")
 	private ResponseEntity<List<NameCountDto>> test2(@RequestParam("lat") String lat , @RequestParam("lng") String lng){
 		
-		ResponseEntity<List<NameCountDto>> entity = null;
+		return new ResponseEntity<List<NameCountDto>>(AptService.getLatLngNameCountDto(lat,lng), HttpStatus.OK);
+	}
+	
+	@GetMapping("/api/getAptTrancsactionHistory")
+	public ResponseEntity<List<ApiDto>> getAptTrancsactionHistory(
+			@RequestParam("apartmentname") String apartmentname , 
+			@RequestParam("bungi") String bungi , 
+			@RequestParam("sigungu") String sigungu, 
+			@RequestParam("roadname") String roadname) {
+		System.out.println(apartmentname);
+		System.out.println(bungi);
+		System.out.println(sigungu);
+		System.out.println(roadname);
+		//List<ApiDto> list = AptService.getAptTrancsactionHistory(apartmentname,bungi,sigungu,roadname);
 		
-		System.out.println(lat);
-		System.out.println(lng);
-		
-		List<NameCountDto> list = AptService.getLatLngNameCountDto(lat,lng);
-		entity = new ResponseEntity<List<NameCountDto>>(list, HttpStatus.OK);
-		return entity;
+		return null;
 	}
 	
 }

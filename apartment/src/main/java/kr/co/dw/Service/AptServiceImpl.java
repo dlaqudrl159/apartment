@@ -18,6 +18,7 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Service;
 
+import kr.co.dw.Domain.ApiDto;
 import kr.co.dw.Domain.NameCountDto;
 import kr.co.dw.Mapper.AptMapper;
 import kr.co.dw.Mapper.DataMapper;
@@ -89,8 +90,21 @@ public class AptServiceImpl implements AptService{
 	public List<NameCountDto> getLatLngNameCountDto(String lat, String lng) {
 		// TODO Auto-generated method stub
 		
-		List<NameCountDto> list = AptMapper.getLatLngNameCountDto(lat,lng);
+		return AptMapper.getLatLngNameCountDto(lat,lng);
+	}
+
+	@Override
+	public List<ApiDto> getAptTrancsactionHistory(String apartmentname, String bungi, String sigungu, String roadname) {
+		// TODO Auto-generated method stub
 		
-		return list;
+		Map<String, String> map = Map.of(
+				"apartmentname", apartmentname,
+				"bungi", bungi,
+				"sigungu", sigungu,
+				"roadname", roadname
+				);
+		
+		//List<ApiDto> list = AptMapper.getAptTrancsactionHistory(map);
+		return null;
 	}
 }
