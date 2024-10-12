@@ -17,6 +17,8 @@ public interface AptService {
 
 	List<ApiDto> getAptTrancsactionHistory(String apartmentname, String bungi, String sigungu, String roadname);
 
+	List<NameCountDto> get(List<String> addressnameArr);
+
 	
 
 	

@@ -19,6 +19,21 @@
     
     </select>
     
+    <select id="get2" parameterType="hashMap" resultMap="newNameCountDto">
+    
+    select SIGUNGU, BUNGI, APARTMENTNAME, ROADNAME, lat, lng from latlng2 where sigungu like 
+    
+    <choose>
+        <when test="city == '세종특별자치시'">
+            #{city} || '%'
+        </when>
+        <otherwise>
+            #{city} || '%' AND sigungu LIKE '%' || #{district} || '%'
+        </otherwise>
+    </choose>
+    
+    </select>
+    
     <select id="getLatLngNameCountDto" resultMap="newNameCountDto">
     
     Select * from latlng2 where LAT = #{lat} and LNG = #{lng}

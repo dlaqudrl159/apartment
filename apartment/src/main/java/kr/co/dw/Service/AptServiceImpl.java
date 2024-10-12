@@ -18,6 +18,8 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Service;
 
+import kr.co.dw.Domain.AddressNameArrDto;
+import kr.co.dw.Domain.AddressNameArrDto.AddressElement;
 import kr.co.dw.Domain.ApiDto;
 import kr.co.dw.Domain.NameCountDto;
 import kr.co.dw.Mapper.AptMapper;
@@ -106,5 +108,19 @@ public class AptServiceImpl implements AptService{
 		
 		//List<ApiDto> list = AptMapper.getAptTrancsactionHistory(map);
 		return null;
+	}
+
+	@Override
+	public List<NameCountDto> get(List<String> addressnameArr) {
+		// TODO Auto-generated method stub
+		List<AddressElement> list = new AddressNameArrDto(addressnameArr).getList();
+		List<NameCountDto> NameCountDtoList = new ArrayList<>();
+		if(!list.isEmpty()) {
+			list.stream().forEach(AddressElement -> {
+				Map<String, String> map = Map.of("city",AddressElement.getCity(),"district",AddressElement.getDistrict());
+				NameCountDtoList.addAll(AptMapper.get2(map)); 
+			});
+		}
+		return NameCountDtoList;
 	}
 }

@@ -29,6 +29,12 @@ public class AptController {
 		return AptService.get(arr,year);
 	}
 	
+	@GetMapping("/api/get2")
+	private List<NameCountDto> get2(@RequestParam("addressnameArr")  List<String> addressnameArr) {
+		
+		return AptService.get(addressnameArr);
+	}
+	
 	@GetMapping("/api/latlng")
 	private ResponseEntity<List<NameCountDto>> test2(@RequestParam("lat") String lat , @RequestParam("lng") String lng){
 		
