@@ -328,39 +328,39 @@ public class RegionManager {
 	public List<Region> getListRegion(String Region) {
 		
 		if(Region.equals("SEOUL")) {
-			return this.SEOUL;
+			return RegionManager.SEOUL;
 		}else if(Region.equals("BUSAN")) {
-			return this.BUSAN;
+			return RegionManager.BUSAN;
 		}else if(Region.equals("DAEGU")) {
-			return this.DAEGU;
+			return RegionManager.DAEGU;
 		}else if(Region.equals("INCHEON")) {
-			return this.INCHEON;
+			return RegionManager.INCHEON;
 		}else if(Region.equals("GWANGJU")) {
-			return this.GWANGJU;
+			return RegionManager.GWANGJU;
 		}else if(Region.equals("DAEJEON")) {
-			return this.DAEJEON;
+			return RegionManager.DAEJEON;
 		}else if(Region.equals("ULSAN")) {
-			return this.ULSAN;
+			return RegionManager.ULSAN;
 		}else if(Region.equals("SEJONG")) {
-			return this.SEJONG;
+			return RegionManager.SEJONG;
 		}else if(Region.equals("GYEONGGIDO")) {
-			return this.GYEONGGIDO;
+			return RegionManager.GYEONGGIDO;
 		}else if(Region.equals("GANGWONDO")) {
-			return this.GANGWONDO;
+			return RegionManager.GANGWONDO;
 		}else if(Region.equals("CHUNGCHEONGBUKDO")) {
-			return this.CHUNGCHEONGBUKDO;
+			return RegionManager.CHUNGCHEONGBUKDO;
 		}else if(Region.equals("CHUNGCHEONGNAMDO")) {
-			return this.CHUNGCHEONGNAMDO;
+			return RegionManager.CHUNGCHEONGNAMDO;
 		}else if(Region.equals("JEOLLABUKDO")) {
-			return this.JEOLLABUKDO;
+			return RegionManager.JEOLLABUKDO;
 		}else if(Region.equals("JEOLLANAMDO")) {
-			return this.JEOLLANAMDO;
+			return RegionManager.JEOLLANAMDO;
 		}else if(Region.equals("GYEONGSANGBUKDO")) {
-			return this.GYEONGSANGBUKDO;
+			return RegionManager.GYEONGSANGBUKDO;
 		}else if(Region.equals("GYEONGSANGNAMDO")) {
-			return this.GYEONGSANGNAMDO;
+			return RegionManager.GYEONGSANGNAMDO;
 		}else if(Region.equals("JEJU")) {
-			return this.JEJU;
+			return RegionManager.JEJU;
 		}
 		
 		return null;

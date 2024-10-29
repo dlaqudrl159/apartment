@@ -60,16 +60,8 @@ public class ApiDto {
 		
 	}
 	
-	
-	
-	
-	
-
-
-
-	
-	
-	
-	
+	public int getYear() {
+		return Integer.parseInt(DEALYEARMONTH.substring(0, 4));
+	}
 	
 }

@@ -11,7 +11,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import kr.co.dw.Controller.DataController;
 
 @ExtendWith(MockitoExtension.class)
-public class DataServiceImpl2Test {
+public class DataServiceImplTest {
 
 	@InjectMocks
 	private DataController DataController;

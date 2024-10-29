@@ -14,21 +14,15 @@
 	</resultMap>   
     
     <select id="get" parameterType="hashMap" resultMap="newNameCountDto">
-       
-    select SIGUNGU, BUNGI, APARTMENTNAME, ROADNAME, lat, lng from latlng2 where sigungu like #{region_1depth_name}||'%' and sigungu like '%'||#{region_2depth_name}||'%'
     
-    </select>
-    
-    <select id="get2" parameterType="hashMap" resultMap="newNameCountDto">
-    
-    select SIGUNGU, BUNGI, APARTMENTNAME, ROADNAME, lat, lng from latlng2 where sigungu like 
+    select SIGUNGU, BUNGI, APARTMENTNAME, ROADNAME, LAT, LNG from LATLNG where SIGUNGU like 
     
     <choose>
         <when test="city == '세종특별자치시'">
             #{city} || '%'
         </when>
         <otherwise>
-            #{city} || '%' AND sigungu LIKE '%' || #{district} || '%'
+            #{city} || '%' AND SIGUNGU LIKE '%' || #{district} || '%'
         </otherwise>
     </choose>
     
@@ -36,13 +30,13 @@
     
     <select id="getLatLngNameCountDto" resultMap="newNameCountDto">
     
-    Select * from latlng2 where LAT = #{lat} and LNG = #{lng}
+    Select * from LATLNG where LAT = #{lat} and LNG = #{lng}
     
     </select>
     
-    <select id = "getAptTrancsactionHistory">
+    <select id = "getAptTrancsactionHistory" parameterType="hashMap">
     
-    select * from 
+    select * from ${tableName} where apartmentname = #{apartmentname} and bungi = #{bungi} and sigungu = #{sigungu} and roadname = #{roadname}
     
     </select>
     
