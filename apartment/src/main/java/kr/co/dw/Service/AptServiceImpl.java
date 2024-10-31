@@ -12,6 +12,7 @@ import kr.co.dw.Domain.AddressNameArrDto;
 import kr.co.dw.Domain.AddressNameArrDto.AddressElement;
 import kr.co.dw.Domain.ApiDto;
 import kr.co.dw.Domain.AptTransactionResponseDto;
+import kr.co.dw.Domain.AptTransactionResponseDtolist;
 import kr.co.dw.Domain.NameCountDto;
 import kr.co.dw.Mapper.AptMapper;
 import kr.co.dw.Utils.AptUtils;
@@ -70,6 +71,34 @@ public class AptServiceImpl implements AptService{
 				.distinct()
 				.sorted(Comparator.reverseOrder())
 				.collect(Collectors.toList());
+	}
+
+	@Override
+	public List<AptTransactionResponseDtolist> getAptTransactionResponseDtolist(String lat, String lng) {
+		// TODO Auto-generated method stub
+		List<AptTransactionResponseDtolist> AptTransactionResponseDtolist = new ArrayList<>();
+		
+		List<NameCountDto> list = AptMapper.getLatLngNameCountDto(lat,lng);
+		
+		list.forEach(NameCountDto -> {
+			String parentRegion = AptUtils.SplitSigungu(NameCountDto.getSIGUNGU());
+			String tableName = AptUtils.toEngParentRegion(parentRegion);
+			
+			Map<String, String> map = Map.of(
+					"tableName", tableName,
+					"apartmentname", NameCountDto.getAPARTMENTNAME(),
+					"bungi", NameCountDto.getBUNGI(),
+					"sigungu", NameCountDto.getSIGUNGU(),
+					"roadname", NameCountDto.getROADNAME()
+					);
+			List<ApiDto> getAptTrancsactionHistory = AptMapper.getAptTrancsactionHistory(map);
+			List<Integer> getTransactionYears = getTransactionYears(getAptTrancsactionHistory);
+			AptTransactionResponseDtolist.add(new AptTransactionResponseDtolist(getTransactionYears, getAptTrancsactionHistory, NameCountDto));
+			});
+		
+		
+		
+		return AptTransactionResponseDtolist;
 	}
 	
 }
