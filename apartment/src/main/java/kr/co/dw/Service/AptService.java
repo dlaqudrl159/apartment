@@ -4,7 +4,6 @@ import java.util.List;
 
 import kr.co.dw.Domain.ApiDto;
 import kr.co.dw.Domain.AptTransactionResponseDto;
-import kr.co.dw.Domain.AptTransactionResponseDtolist;
 import kr.co.dw.Domain.NameCountDto;
 
 public interface AptService {
@@ -13,9 +12,7 @@ public interface AptService {
 
 	List<NameCountDto> getLatLngNameCountDto(String lat, String lng);
 
-	AptTransactionResponseDto getAptTrancsactionHistory(String apartmentname, String bungi, String sigungu, String roadname);
-
-	List<AptTransactionResponseDtolist> getAptTransactionResponseDtolist(String lat, String lng);
+	List<AptTransactionResponseDto> getAptTransactionResponseDtolist(String lat, String lng);
 
 	
 

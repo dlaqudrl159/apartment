@@ -17,7 +17,5 @@ public interface AptMapper {
 	List<NameCountDto> getLatLngNameCountDto(@Param("lat") String lat,@Param("lng") String lng);
 
 	List<ApiDto> getAptTrancsactionHistory(Map<String, String> map);
-
-	
 	
 }

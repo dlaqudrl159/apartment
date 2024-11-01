@@ -8,12 +8,18 @@ import lombok.Data;
 public class AptTransactionResponseDto {
 
 	private List<Integer> years;
-	private List<ApiDto> transactions;
+	private List<ApiDto> ApiDtoList;
+	private NameCountDto NameCountDto;
 	
-	public AptTransactionResponseDto(List<Integer> years, List<ApiDto> transactions) {
+	public AptTransactionResponseDto(List<Integer> years, List<ApiDto> apiDtoList,
+			NameCountDto nameCountDto) {
 		this.years = years;
-		this.transactions = transactions;
+		this.ApiDtoList = apiDtoList;
+		this.NameCountDto = nameCountDto;
 	}
+	
+    	
+	
 	
 	
 	
