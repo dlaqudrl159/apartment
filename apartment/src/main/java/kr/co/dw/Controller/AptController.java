@@ -23,7 +23,7 @@ public class AptController {
 	
 	@GetMapping("/api/get")
 	private ResponseEntity<List<NameCountDto>>  get(@RequestParam("addressnameArr")  List<String> addressnameArr) {
-		
+		System.out.println(addressnameArr);
 		return new ResponseEntity<>(AptService.get(addressnameArr), HttpStatus.OK);
 	}
 	
