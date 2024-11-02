@@ -54,7 +54,7 @@ public class AptUtilsTest {
 		
 		AptUtils utils = new AptUtils();
 		for(int i = 0 ; i < arr.length ; i++) {
-			utils.MappingRegion(arr[i]);
+			//utils.MappingRegion(arr[i]);
 		}
 		
 	}

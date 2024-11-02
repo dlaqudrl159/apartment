@@ -64,9 +64,9 @@ public class DataServiceImpl implements DataService{
 	
 	@Transactional
 	@Override
-	public void LatLngInsert(String tableName) throws MalformedURLException, IOException, ParseException, InterruptedException {
-			
-		getLatLng(DataMapper.getList(tableName), tableName);
+	public List<NameCountDto> LatLngInsert(String tableName) throws MalformedURLException, IOException, ParseException, InterruptedException {
+		
+		return getLatLng(DataMapper.getList(tableName), tableName);
 		
 	}
 
@@ -196,7 +196,7 @@ public class DataServiceImpl implements DataService{
 		
 	}
 	
-	private void ApiDtoInsert(List<ApiDto> list, ParentRegionName ParentRegionName) {
+	private String ApiDtoInsert(List<ApiDto> list, ParentRegionName ParentRegionName) {
 		
 		SqlSession sqlSession = this.sqlSessionFactory.openSession(ExecutorType.BATCH);
 		
@@ -212,45 +212,63 @@ public class DataServiceImpl implements DataService{
 				});
 				sqlSession.flushStatements();
 				sqlSession.commit();
-				sqlSession.close();
+				
+				return "SUCCESS";
 			} catch (IOException | ParseException | InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				return "FAIL";
+			} finally {
+				sqlSession.close();
 			}
 		}
-		
+		return "LIST IS EMPTY";
 	}
 	
-	private void loopRegion(Region Region, ParentRegionName ParentRegionName) {
+	private String loopRegion(Region Region, ParentRegionName ParentRegionName) {
+		
+		String response = "";
+		
 		for(int j = DELETEYEAR ; j >= 0 ; j--) {
+			
 			String DealYmd = makeDealYearMonth(j);
 			try {
+				logger.info(Region.getRegionName() + " " + Region.getCode() + " " + DealYmd + " " + "입력 시작");
 				StringBuilder sb = getRTMSDataSvcAptTradeDev(Region,DealYmd);
 				
 				NodeList nList = makeNodeList(sb);
 				
 				List<ApiDto> list = makeApiDto(nList, Region,ParentRegionName);
 				
-				ApiDtoInsert(list, ParentRegionName);
-				
+				response = ApiDtoInsert(list, ParentRegionName);
+				logger.info(response);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 				logger.error("error:{}" , e.getClass());
+				response = "FAIL";
+				logger.error(response);
 			} catch (SAXException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 				logger.error("error:{}" , e.getClass());
+				response = "FAIL";
+				logger.error(response);
 			} catch (ParserConfigurationException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 				logger.error("error:{}" , e.getClass());
+				response = "FAIL";
+				logger.error(response);
 			} catch (RuntimeException e) {
 				// TODO: handle exception
 				e.printStackTrace();
 				logger.error("error:{}" , e.getClass());
+				response = "FAIL";
+				logger.error(response);
 			}
 		}
+		return Region.getRegionName() + " " + "지역 입력 완료";
 	}
 
 	public List<NameCountDto> makeNameCountDto(List<ApiDto> list) {
@@ -450,45 +468,5 @@ public class DataServiceImpl implements DataService{
 		
 		return sb;
 	}
-	
-	/*private String korParentName(String RegionName) {
-	
-	if(RegionName.equals("SEOUL")){
-		return "서울특별시";
-	}else if(RegionName.equals("BUSAN")) {
-		return "부산광역시";
-	}else if(RegionName.equals("DAEGU")) {
-		return "대구광역시";
-	}else if(RegionName.equals("INCHEON")) {
-		return "인천광역시";
-	}else if(RegionName.equals("GWANGJU")) {
-		return "광주광역시";
-	}else if(RegionName.equals("DAEJEON")) {
-		return "대전광역시";
-	}else if(RegionName.equals("ULSAN")) {
-		return "울산광역시";
-	}else if(RegionName.equals("SEJONG")) {
-		return "세종특별자치시";
-	}else if(RegionName.equals("GYEONGGIDO")) {
-		return "경기도";
-	}else if(RegionName.equals("CHUNGCHEONGBUKDO")) {
-		return "충청북도";
-	}else if(RegionName.equals("CHUNGCHEONGNAMDO")) {
-		return "충청남도";
-	}else if(RegionName.equals("JEOLLANAMDO")) {
-		return "전라남도";
-	}else if(RegionName.equals("GYEONGSANGBUKDO")) {
-		return "경상북도";
-	}else if(RegionName.equals("GYEONGSANGNAMDO")) {
-		return "경상남도";
-	}else if(RegionName.equals("JEJU")) {
-		return "제주특별자치도";
-	}else if(RegionName.equals("GANGWONDO")) {
-		return "강원특별자치도";
-	}else if(RegionName.equals("JEOLLABUKDO")) {
-		return "전북특별자치도";
-	}
-	return null;
-}*/
 	
 }
