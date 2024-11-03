@@ -13,7 +13,7 @@
   	<result column="lng" property="LNG"/>
 	</resultMap>   
     
-    <select id="get" parameterType="hashMap" resultMap="newNameCountDto">
+    <select id="getMarkers" parameterType="hashMap" resultMap="newNameCountDto">
     
     select SIGUNGU, BUNGI, APARTMENTNAME, ROADNAME, LAT, LNG from LATLNG where SIGUNGU like 
     

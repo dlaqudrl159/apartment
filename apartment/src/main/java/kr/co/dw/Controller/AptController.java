@@ -21,10 +21,10 @@ public class AptController {
 
 	private final AptService AptService;
 	
-	@GetMapping("/api/get")
-	private ResponseEntity<List<NameCountDto>>  get(@RequestParam("addressnameArr")  List<String> addressnameArr) {
+	@GetMapping("/api/getMarkers")
+	private ResponseEntity<List<NameCountDto>>  getMarkers(@RequestParam("addressnameArr")  List<String> addressnameArr) {
 		System.out.println(addressnameArr);
-		return new ResponseEntity<>(AptService.get(addressnameArr), HttpStatus.OK);
+		return new ResponseEntity<>(AptService.getMarkers(addressnameArr), HttpStatus.OK);
 	}
 	
 	@GetMapping("/api/getMarkerData")

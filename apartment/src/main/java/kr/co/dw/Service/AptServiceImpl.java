@@ -24,15 +24,17 @@ public class AptServiceImpl implements AptService {
 	private final AptMapper AptMapper;
 
 	@Override
-	public List<NameCountDto> get(List<String> addressnameArr) {
+	public List<NameCountDto> getMarkers(List<String> addressnameArr) {
 		// TODO Auto-generated method stub
 		List<AddressElement> list = new AddressNameArrDto(addressnameArr).getList();
 		List<NameCountDto> NameCountDtoList = new ArrayList<>();
 		if (!list.isEmpty()) {
 			list.stream().forEach(AddressElement -> {
-				Map<String, String> map = Map.of("city", AddressElement.getCity(), "district",
-						AddressElement.getDistrict());
-				NameCountDtoList.addAll(AptMapper.get(map));
+				if(!(AddressElement.getCity().equals("ERROR") || AddressElement.getDistrict().equals("ERROR"))) {
+					Map<String, String> map = Map.of("city", AddressElement.getCity(), "district",
+							AddressElement.getDistrict());
+					NameCountDtoList.addAll(AptMapper.getMarkers(map));
+				}
 			});
 		}
 		return NameCountDtoList;
