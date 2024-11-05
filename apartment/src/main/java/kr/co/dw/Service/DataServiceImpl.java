@@ -135,7 +135,7 @@ public class DataServiceImpl implements DataService{
 	@Override
 	public JSONObject geocodersearchaddress(String searchAddr,String searchType) throws IOException, ParseException {
 		
-		String apikey = "F0DBB350-67A6-39BB-A8BB-9237BB06612C";
+		String apikey = "B7417C15-3D68-309A-A5F2-ACB988833093";
 		String epsg = "epsg:4326";
 		
 		StringBuilder sb = new StringBuilder("https://api.vworld.kr/req/address");

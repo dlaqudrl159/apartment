@@ -32,4 +32,14 @@ public class AptController {
 		
 		return new ResponseEntity<List<AptTransactionResponseDto>>(AptService.getAptTransactionResponseDtolist(lat,lng), HttpStatus.OK);
 	}
+	
+	@GetMapping("/api/getCategoryClickData")
+	private void getCategoryClickData(@RequestParam("eex1") String ex1, @RequestParam("eex2") String ex2, @RequestParam("eex3") String ex3, @RequestParam("eex4") String ex4) {
+		System.out.println(ex1 + System.lineSeparator() + ex2 + System.lineSeparator() + ex3 + System.lineSeparator() + ex4);
+	}
+	
+	@GetMapping("/api/getRoadNameList")
+	private void getRoadNameList(@RequestParam("ex1") String ex1, @RequestParam("ex2") String ex2, @RequestParam("ex3") String ex3) {
+		System.out.println(ex1 + System.lineSeparator() + ex2 + System.lineSeparator() + ex3);
+	}
 }
