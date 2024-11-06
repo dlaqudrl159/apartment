@@ -4,11 +4,12 @@ import java.util.List;
 
 import kr.co.dw.Domain.ApiDto;
 import kr.co.dw.Domain.AptTransactionResponseDto;
+import kr.co.dw.Domain.LatLngDto;
 import kr.co.dw.Domain.NameCountDto;
 
 public interface AptService {
 
-	List<NameCountDto> getMarkers(List<String> addressnameArr);
+	List<LatLngDto> getMarkers(List<String> addressnameArr);
 
 	List<NameCountDto> getLatLngNameCountDto(String lat, String lng);
 

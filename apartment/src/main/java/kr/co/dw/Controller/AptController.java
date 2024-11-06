@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import io.micrometer.common.util.StringUtils;
 import kr.co.dw.Domain.ApiDto;
 import kr.co.dw.Domain.AptTransactionResponseDto;
+import kr.co.dw.Domain.LatLngDto;
 import kr.co.dw.Domain.NameCountDto;
 import kr.co.dw.Service.AptService;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +23,7 @@ public class AptController {
 	private final AptService AptService;
 	
 	@GetMapping("/api/getMarkers")
-	private ResponseEntity<List<NameCountDto>>  getMarkers(@RequestParam("addressnameArr")  List<String> addressnameArr) {
+	private ResponseEntity<List<LatLngDto>>  getMarkers(@RequestParam("addressnameArr")  List<String> addressnameArr) {
 		System.out.println(addressnameArr);
 		return new ResponseEntity<>(AptService.getMarkers(addressnameArr), HttpStatus.OK);
 	}

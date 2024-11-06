@@ -12,6 +12,7 @@ import kr.co.dw.Domain.AddressNameArrDto;
 import kr.co.dw.Domain.AddressNameArrDto.AddressElement;
 import kr.co.dw.Domain.ApiDto;
 import kr.co.dw.Domain.AptTransactionResponseDto;
+import kr.co.dw.Domain.LatLngDto;
 import kr.co.dw.Domain.NameCountDto;
 import kr.co.dw.Mapper.AptMapper;
 import kr.co.dw.Utils.AptUtils;
@@ -24,20 +25,23 @@ public class AptServiceImpl implements AptService {
 	private final AptMapper AptMapper;
 
 	@Override
-	public List<NameCountDto> getMarkers(List<String> addressnameArr) {
+	public List<LatLngDto> getMarkers(List<String> addressnameArr) {
 		// TODO Auto-generated method stub
 		List<AddressElement> list = new AddressNameArrDto(addressnameArr).getList();
-		List<NameCountDto> NameCountDtoList = new ArrayList<>();
+		List<LatLngDto> NameCountDtoList = new ArrayList<>();
 		if (!list.isEmpty()) {
 			list.stream().forEach(AddressElement -> {
 				if(!(AddressElement.getCity().equals("ERROR") || AddressElement.getDistrict().equals("ERROR"))) {
+					System.out.println(AddressElement.getCity() + " " + AddressElement.getDistrict());
 					Map<String, String> map = Map.of("city", AddressElement.getCity(), "district",
 							AddressElement.getDistrict());
 					NameCountDtoList.addAll(AptMapper.getMarkers(map));
 				}
 			});
 		}
-		return NameCountDtoList;
+		System.out.println(NameCountDtoList.size());
+		System.out.println(NameCountDtoList.stream().distinct().toList().size());
+		return NameCountDtoList.stream().distinct().toList();
 	}
 
 	@Override
