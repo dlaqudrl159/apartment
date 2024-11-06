@@ -34,8 +34,8 @@ public class AptController {
 	}
 	
 	@GetMapping("/api/getCategoryClickData")
-	private void getCategoryClickData(@RequestParam("eex1") String ex1, @RequestParam("eex2") String ex2, @RequestParam("eex3") String ex3, @RequestParam("eex4") String ex4) {
-		System.out.println(ex1 + System.lineSeparator() + ex2 + System.lineSeparator() + ex3 + System.lineSeparator() + ex4);
+	private void getCategoryClickData(@RequestParam("eex1") String Sido, @RequestParam("eex2") String Sigungu, @RequestParam("eex3") String Dong, @RequestParam(required = false, value = "eex4") String ApartmentName) {
+		System.out.println(Sido + System.lineSeparator() + Sigungu + System.lineSeparator() + Dong + System.lineSeparator() + ApartmentName);
 	}
 	
 	@GetMapping("/api/getRoadNameList")
