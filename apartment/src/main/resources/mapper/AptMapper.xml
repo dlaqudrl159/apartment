@@ -13,9 +13,9 @@
   	<result column="lng" property="LNG"/>
 	</resultMap>   
     
-    <select id="get" parameterType="hashMap" resultMap="newNameCountDto">
+    <select id="getMarkers" parameterType="hashMap">
     
-    select SIGUNGU, BUNGI, APARTMENTNAME, ROADNAME, LAT, LNG from LATLNG where SIGUNGU like 
+    select LAT, LNG from LATLNG where SIGUNGU like 
     
     <choose>
         <when test="city == '세종특별자치시'">
@@ -25,6 +25,7 @@
             #{city} || '%' AND SIGUNGU LIKE '%' || #{district} || '%'
         </otherwise>
     </choose>
+    group by LAT , LNG  
     
     </select>
     
