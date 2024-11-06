@@ -1,6 +1,7 @@
 package kr.co.dw.Service;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -71,6 +72,11 @@ public class AptServiceImpl implements AptService {
 					);
 			List<ApiDto> getAptTrancsactionHistory = AptMapper.getAptTrancsactionHistory(map);
 			List<Integer> getTransactionYears = getTransactionYears(getAptTrancsactionHistory);
+			System.out.println(getTransactionYears + " " + getAptTrancsactionHistory + " " + NameCountDto);
+			if(getTransactionYears.isEmpty()) {
+				Integer year = Calendar.getInstance().get(Calendar.YEAR);
+				getTransactionYears.add(year);
+						}
 			AptTransactionResponseDto.add(new AptTransactionResponseDto(getTransactionYears, getAptTrancsactionHistory, NameCountDto));
 		});
 
