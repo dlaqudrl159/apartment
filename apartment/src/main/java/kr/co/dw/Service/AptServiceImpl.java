@@ -28,20 +28,20 @@ public class AptServiceImpl implements AptService {
 	public List<LatLngDto> getMarkers(List<String> addressnameArr) {
 		// TODO Auto-generated method stub
 		List<AddressElement> list = new AddressNameArrDto(addressnameArr).getList();
-		List<LatLngDto> NameCountDtoList = new ArrayList<>();
+		List<LatLngDto> LatLngDtoList = new ArrayList<>();
 		if (!list.isEmpty()) {
 			list.stream().forEach(AddressElement -> {
 				if(!(AddressElement.getCity().equals("ERROR") || AddressElement.getDistrict().equals("ERROR"))) {
 					System.out.println(AddressElement.getCity() + " " + AddressElement.getDistrict());
 					Map<String, String> map = Map.of("city", AddressElement.getCity(), "district",
 							AddressElement.getDistrict());
-					NameCountDtoList.addAll(AptMapper.getMarkers(map));
+					LatLngDtoList.addAll(AptMapper.getMarkers(map));
 				}
 			});
 		}
-		System.out.println(NameCountDtoList.size());
-		System.out.println(NameCountDtoList.stream().distinct().toList().size());
-		return NameCountDtoList.stream().distinct().toList();
+		System.out.println(LatLngDtoList.size());
+		System.out.println(LatLngDtoList.stream().distinct().toList().size());
+		return LatLngDtoList.stream().distinct().toList();
 	}
 
 	@Override
