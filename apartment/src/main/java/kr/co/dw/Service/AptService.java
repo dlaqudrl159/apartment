@@ -9,7 +9,7 @@ import kr.co.dw.Domain.NameCountDto;
 
 public interface AptService {
 
-	List<LatLngDto> getMarkers(List<String> addressnameArr);
+	List<NameCountDto> getMarkers(List<String> addressnameArr);
 
 	List<NameCountDto> getLatLngNameCountDto(String lat, String lng);
 

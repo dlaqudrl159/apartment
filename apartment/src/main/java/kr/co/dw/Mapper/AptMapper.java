@@ -13,7 +13,7 @@ import kr.co.dw.Domain.NameCountDto;
 @Mapper
 public interface AptMapper {
 
-	List<LatLngDto> getMarkers(Map<String, String> map);
+	List<NameCountDto> getMarkers(Map<String, String> map);
 	
 	List<NameCountDto> getLatLngNameCountDto(@Param("lat") String lat,@Param("lng") String lng);
 

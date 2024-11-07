@@ -26,23 +26,23 @@ public class AptServiceImpl implements AptService {
 	private final AptMapper AptMapper;
 
 	@Override
-	public List<LatLngDto> getMarkers(List<String> addressnameArr) {
+	public List<NameCountDto> getMarkers(List<String> addressnameArr) {
 		// TODO Auto-generated method stub
 		List<AddressElement> list = new AddressNameArrDto(addressnameArr).getList();
-		List<LatLngDto> LatLngDtoList = new ArrayList<>();
+		List<NameCountDto> NameCountDto = new ArrayList<>();
 		if (!list.isEmpty()) {
 			list.stream().forEach(AddressElement -> {
 				if(!(AddressElement.getCity().equals("ERROR") || AddressElement.getDistrict().equals("ERROR"))) {
 					System.out.println(AddressElement.getCity() + " " + AddressElement.getDistrict());
 					Map<String, String> map = Map.of("city", AddressElement.getCity(), "district",
 							AddressElement.getDistrict());
-					LatLngDtoList.addAll(AptMapper.getMarkers(map));
+					NameCountDto.addAll(AptMapper.getMarkers(map));
 				}
 			});
 		}
-		System.out.println(LatLngDtoList.size());
-		System.out.println(LatLngDtoList.stream().distinct().toList().size());
-		return LatLngDtoList.stream().distinct().toList();
+		System.out.println(NameCountDto.size());
+		System.out.println(NameCountDto.stream().distinct().toList().size());
+		return NameCountDto;
 	}
 
 	@Override
@@ -58,7 +58,7 @@ public class AptServiceImpl implements AptService {
 		List<AptTransactionResponseDto> AptTransactionResponseDto = new ArrayList<>();
 
 		List<NameCountDto> list = AptMapper.getLatLngNameCountDto(lat, lng);
-
+		System.out.println(list);
 		list.forEach(NameCountDto -> {
 			String parentRegion = AptUtils.SplitSigungu(NameCountDto.getSIGUNGU());
 			String tableName = AptUtils.toEngParentRegion(parentRegion);
@@ -72,7 +72,6 @@ public class AptServiceImpl implements AptService {
 					);
 			List<ApiDto> getAptTrancsactionHistory = AptMapper.getAptTrancsactionHistory(map);
 			List<Integer> getTransactionYears = getTransactionYears(getAptTrancsactionHistory);
-			System.out.println(getTransactionYears + " " + getAptTrancsactionHistory + " " + NameCountDto);
 			if(getTransactionYears.isEmpty()) {
 				Integer year = Calendar.getInstance().get(Calendar.YEAR);
 				getTransactionYears.add(year);

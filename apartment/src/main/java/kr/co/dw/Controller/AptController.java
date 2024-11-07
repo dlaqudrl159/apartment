@@ -23,14 +23,14 @@ public class AptController {
 	private final AptService AptService;
 	
 	@GetMapping("/api/getMarkers")
-	private ResponseEntity<List<LatLngDto>>  getMarkers(@RequestParam("addressnameArr")  List<String> addressnameArr) {
+	private ResponseEntity<List<NameCountDto>>  getMarkers(@RequestParam("addressnameArr")  List<String> addressnameArr) {
 		System.out.println(addressnameArr);
 		return new ResponseEntity<>(AptService.getMarkers(addressnameArr), HttpStatus.OK);
 	}
 	
 	@GetMapping("/api/getMarkerData")
-	private ResponseEntity<List<AptTransactionResponseDto>> getMarkerData(@RequestParam("lat") String lat , @RequestParam("lng") String lng){
-		
+	private ResponseEntity<List<AptTransactionResponseDto>> getMarkerData(@RequestParam("lat") String lat , @RequestParam("lng") String lng, @RequestParam("apartmentname") String apartmentname){
+		System.out.println(lat + " "  + lng + " " +apartmentname);
 		return new ResponseEntity<List<AptTransactionResponseDto>>(AptService.getAptTransactionResponseDtolist(lat,lng), HttpStatus.OK);
 	}
 	
