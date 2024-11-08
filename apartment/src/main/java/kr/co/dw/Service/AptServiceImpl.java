@@ -5,6 +5,7 @@ import java.util.Calendar;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -86,6 +87,29 @@ public class AptServiceImpl implements AptService {
 
 		return getAptTrancsactionHistory.stream().map(ApiDto -> ApiDto.getYear()).distinct()
 				.sorted(Comparator.reverseOrder()).collect(Collectors.toList());
+	}
+
+	@Override
+	public List<AptTransactionResponseDto> getAptTransactionResponseDtolist(String lat, String lng,
+			String apartmentname, String sigungu, String bungi) {
+		// TODO Auto-generated method stub
+		String parentRegion = AptUtils.SplitSigungu(sigungu);
+		String tableName = AptUtils.toEngParentRegion(parentRegion);
+		
+		Map<String, String> map = Map.of(
+				"tableName", tableName,
+				"apartmentname", apartmentname,
+				"bungi", bungi,
+				"sigungu", sigungu
+				);
+		List<ApiDto> getAptTrancsactionHistory = AptMapper.getAptTrancsactionHistory2(map);
+		System.out.println(getAptTrancsactionHistory.size());
+		Map<String, List<ApiDto>> AptTrancsactionHistoryMap = getAptTrancsactionHistory.stream().collect(Collectors.groupingBy(ApiDto -> ApiDto.getROADNAME()));
+		System.out.println(AptTrancsactionHistoryMap);
+		AptTrancsactionHistoryMap.forEach((roadName, ApiDtoList) -> {
+			
+		});
+		return null;
 	}
 
 }

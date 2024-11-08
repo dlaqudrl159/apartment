@@ -15,6 +15,9 @@ public interface AptService {
 
 	List<AptTransactionResponseDto> getAptTransactionResponseDtolist(String lat, String lng);
 
+	List<AptTransactionResponseDto> getAptTransactionResponseDtolist(String lat, String lng, String apartmentname,
+			String sigungu, String bungi);
+
 	
 
 	

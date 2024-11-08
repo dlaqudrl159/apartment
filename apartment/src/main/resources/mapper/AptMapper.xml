@@ -41,4 +41,9 @@
     
     </select>
     
+    <select id = "getAptTrancsactionHistory2" parameterType="hashMap">
+    
+    select * from ${tableName} where apartmentname = #{apartmentname} and bungi = #{bungi} and sigungu = #{sigungu}
+    
+    </select>
 </mapper>	

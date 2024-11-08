@@ -29,9 +29,25 @@ public class AptController {
 	}
 	
 	@GetMapping("/api/getMarkerData")
-	private ResponseEntity<List<AptTransactionResponseDto>> getMarkerData(@RequestParam("lat") String lat , @RequestParam("lng") String lng, @RequestParam("apartmentname") String apartmentname){
-		System.out.println(lat + " "  + lng + " " +apartmentname);
+	private ResponseEntity<List<AptTransactionResponseDto>> getMarkerData(@RequestParam("lat") String lat,
+			@RequestParam("lng") String lng,
+			@RequestParam("apartmentname") String apartmentname,
+			@RequestParam("sigungu") String sigungu,
+			@RequestParam("bungi") String bungi){
+		System.out.println(lat + " "  + lng + " " +apartmentname + " " + sigungu + " " + bungi);
 		return new ResponseEntity<List<AptTransactionResponseDto>>(AptService.getAptTransactionResponseDtolist(lat,lng), HttpStatus.OK);
+	}
+	
+	@GetMapping("/api/getMarkerData2")
+	private ResponseEntity<List<AptTransactionResponseDto>> getMarkerData2(@RequestParam("lat") String lat,
+			@RequestParam("lng") String lng,
+			@RequestParam("apartmentname") String apartmentname,
+			@RequestParam("sigungu") String sigungu,
+			@RequestParam("bungi") String bungi){
+		
+		System.out.println(lat + " "  + lng + " " +apartmentname + " " + sigungu + " " + bungi);
+		
+		return new ResponseEntity<List<AptTransactionResponseDto>>(AptService.getAptTransactionResponseDtolist(lat,lng,apartmentname,sigungu,bungi), HttpStatus.OK);
 	}
 	
 	@GetMapping("/api/getCategoryClickData")
