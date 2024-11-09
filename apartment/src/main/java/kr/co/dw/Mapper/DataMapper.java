@@ -6,16 +6,16 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import kr.co.dw.Domain.NameCountDto;
+import kr.co.dw.Domain.AptLatLngDto;
 
 @Mapper
 public interface DataMapper {
 
-	void InsertLatLng(NameCountDto nameCountDto);
+	void InsertLatLng(AptLatLngDto AptLatLngDto);
 
-	List<NameCountDto> getList(String tableName);
+	List<AptLatLngDto> getList(String tableName);
 
-	NameCountDto getLatLng(NameCountDto nameCountDto);
+	AptLatLngDto getLatLng(AptLatLngDto AptLatLngDto);
 
 	void deleteRegionYear(@Param("REGION") String RegionName, @Param("YEAR") String DbYear);
 

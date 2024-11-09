@@ -15,6 +15,26 @@ public class RegionManager {
         return instance;
     }
 	
+	public static final List<String> PARENTREGIONLIST = List.of(
+			"SEOUL",
+			"BUSAN",
+			"DAEGU",
+			"INCHEON",
+			"GWANGJU",
+			"DAEJEON",
+			"ULSAN",
+			"SEJONG",
+			"GYEONGGIDO",
+			"GANGWONDO",
+			"CHUNGCHEONGBUKDO",
+			"CHUNGCHEONGNAMDO",
+			"JEOLLABUKDO",
+			"JEOLLANAMDO",
+			"GYEONGSANGBUKDO",
+			"GYEONGSANGNAMDO",
+			"JEJU"
+			);
+	
 	public static final List<Region> SEOUL = List.of(
 			
 			new Region("11110", "종로구"), new Region("11140", "중구"),
@@ -28,6 +48,7 @@ public class RegionManager {
 			new Region("11710", "송파구"), new Region("11740", "강동구")
 			
 			);
+	
 	public static final List<Region> BUSAN = List.of(
 
 			new Region("26110", "중구"), new Region("26140", "서구"), new Region("26170", "동구"),
@@ -52,6 +73,7 @@ public class RegionManager {
             new Region("27720", "군위군")
 			
 			);
+	
 	public static final List<Region> INCHEON = List.of(
 			
 			new Region("28110", "중구"),

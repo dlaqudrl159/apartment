@@ -2,10 +2,14 @@ package kr.co.dw.Domain;
 
 import java.util.Objects;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
-public class NameCountDto {
+@AllArgsConstructor
+@NoArgsConstructor
+public class AptLatLngDto {
 
 	private String SIGUNGU;
 	private String BUNGI;
@@ -22,7 +26,7 @@ public class NameCountDto {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		NameCountDto other = (NameCountDto) obj;
+		AptLatLngDto other = (AptLatLngDto) obj;
 		return Objects.equals(APARTMENTNAME, other.APARTMENTNAME) && Objects.equals(BUNGI, other.BUNGI)
 				&& Objects.equals(ROADNAME, other.ROADNAME) && Objects.equals(SIGUNGU, other.SIGUNGU);
 	}

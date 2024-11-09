@@ -48,6 +48,8 @@ public class DataController {
 	@GetMapping("/data/AutoDataInsert")
 	private ResponseEntity<String> AutoDataInsert() throws java.text.ParseException{
 		
+		
+		
 		String[] EnglishRegion = {"SEOUL","BUSAN","DAEGU","INCHEON","GWANGJU","DAEJEON","ULSAN","SEJONG","GYEONGGIDO","GANGWONDO",
 				"CHUNGCHEONGBUKDO","CHUNGCHEONGNAMDO","JEOLLABUKDO","JEOLLANAMDO","GYEONGSANGBUKDO","GYEONGSANGNAMDO","JEJU"};
 		
@@ -58,5 +60,4 @@ public class DataController {
 		
 		return new ResponseEntity<String>("전체 테이블 입력 완료", HttpStatus.OK);
 	}
-	
 }

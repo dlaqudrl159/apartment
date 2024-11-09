@@ -39,8 +39,8 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import kr.co.dw.Domain.ApiDto;
-import kr.co.dw.Domain.NameCountDto;
+import kr.co.dw.Domain.AptTransactionDto;
+import kr.co.dw.Domain.AptLatLngDto;
 import kr.co.dw.Domain.ParentRegionName;
 import kr.co.dw.Domain.Region;
 import kr.co.dw.Domain.RegionManager;
@@ -55,7 +55,7 @@ public class DataServiceImpl implements DataService{
 	
 	private final DataMapper DataMapper;
 	
-	private final Integer DELETEYEAR = 13;
+	private final Integer DELETEYEAR = 15;
 	private final String PAGENO = "1";
 	private final String NUMOFROWS = "10000";
 	
@@ -64,27 +64,27 @@ public class DataServiceImpl implements DataService{
 	
 	@Transactional
 	@Override
-	public List<NameCountDto> LatLngInsert(String tableName) throws MalformedURLException, IOException, ParseException, InterruptedException {
+	public List<AptLatLngDto> LatLngInsert(String tableName) throws MalformedURLException, IOException, ParseException, InterruptedException {
 		
 		return getLatLng(DataMapper.getList(tableName), tableName);
 		
 	}
 
 	@Override
-	public List<NameCountDto> getLatLng(List<NameCountDto> list, String tableName) throws IOException, ParseException, InterruptedException {
+	public List<AptLatLngDto> getLatLng(List<AptLatLngDto> list, String tableName) throws IOException, ParseException, InterruptedException {
 			
 		JSONObject jsrs = null;
 		for(int i = 0 ; i < list.size() ; i++) {
 			
-			NameCountDto NameCountDto = list.get(i);
-			NameCountDto checkNameCountDto = DataMapper.getLatLng(NameCountDto);
+			AptLatLngDto AptLatLngDto = list.get(i);
+			AptLatLngDto checkAptLatLngDto = DataMapper.getLatLng(AptLatLngDto);
 			
-			if(NameCountDto.equals(checkNameCountDto)) {
+			if(AptLatLngDto.equals(checkAptLatLngDto)) {
 				continue;
 			}else {
-				
+				logger.info(AptLatLngDto.toString());
 				try {
-					jsrs  = getparcel(NameCountDto,tableName);	
+					jsrs  = getparcel(AptLatLngDto,tableName);	
 				} catch (Exception e) {
 					i--;	
 					continue;
@@ -98,11 +98,11 @@ public class DataServiceImpl implements DataService{
 				    String lng = (String) jspoint.get("x");
 				    int lngidx = lng.indexOf(".");
 				    
-				    NameCountDto.setLAT(((String) jspoint.get("y")).substring(0, latidx+6));
-				    NameCountDto.setLNG(((String) jspoint.get("x")).substring(0, lngidx+6));			    
+				    AptLatLngDto.setLAT(((String) jspoint.get("y")).substring(0, latidx+6));
+				    AptLatLngDto.setLNG(((String) jspoint.get("x")).substring(0, lngidx+6));			    
 				}else {
 					try {
-						jsrs = getroadname(NameCountDto,tableName);
+						jsrs = getroadname(AptLatLngDto,tableName);
 					} catch (Exception e) {
 						i--;	
 						continue;
@@ -116,15 +116,15 @@ public class DataServiceImpl implements DataService{
 					    String lng = (String) jspoint.get("x");
 					    int lngidx = lng.indexOf(".");
 					    
-					    NameCountDto.setLAT(((String) jspoint.get("y")).substring(0, latidx+6));
-					    NameCountDto.setLNG(((String) jspoint.get("x")).substring(0, lngidx+6));			    
+					    AptLatLngDto.setLAT(((String) jspoint.get("y")).substring(0, latidx+6));
+					    AptLatLngDto.setLNG(((String) jspoint.get("x")).substring(0, lngidx+6));			    
 					}else {
-						NameCountDto.setLAT("자료없음");
-					    NameCountDto.setLNG("자료없음");		
+						AptLatLngDto.setLAT("자료없음");
+						AptLatLngDto.setLNG("자료없음");		
 					}
 				}
 				
-				DataMapper.InsertLatLng(NameCountDto);
+				DataMapper.InsertLatLng(AptLatLngDto);
 			}
 			
 		}
@@ -157,24 +157,24 @@ public class DataServiceImpl implements DataService{
 	}
 	
 	@Override
-	public JSONObject getroadname(NameCountDto NameCountDto, String tableName) throws IOException, ParseException {
+	public JSONObject getroadname(AptLatLngDto AptLatLngDto, String tableName) throws IOException, ParseException {
 		
 		String searchType = "road";
 		
-		String Sigungu = NameCountDto.getSIGUNGU();
+		String Sigungu = AptLatLngDto.getSIGUNGU();
 		
-		String roadname = NameCountDto.getROADNAME();
+		String roadname = AptLatLngDto.getROADNAME();
 		String searchAddr = Sigungu + " " + roadname;
 		return geocodersearchaddress(searchAddr, searchType);
 		
 	}
 	@Override
-	public JSONObject getparcel(NameCountDto NameCountDto, String tableName) throws IOException, ParseException {
+	public JSONObject getparcel(AptLatLngDto AptLatLngDto, String tableName) throws IOException, ParseException {
 		
 		String searchType = "parcel";
-		String Sigungu = NameCountDto.getSIGUNGU();
+		String Sigungu = AptLatLngDto.getSIGUNGU();
 		
-		String Bungi = NameCountDto.getBUNGI();		
+		String Bungi = AptLatLngDto.getBUNGI();		
 		String searchAddr = Sigungu + " " + Bungi;
 		return geocodersearchaddress(searchAddr, searchType);
 		
@@ -196,17 +196,17 @@ public class DataServiceImpl implements DataService{
 		
 	}
 	
-	private String ApiDtoInsert(List<ApiDto> list, ParentRegionName ParentRegionName) {
+	private String AptTransactionDtoInsert(List<AptTransactionDto> list, ParentRegionName ParentRegionName) {
 		
 		SqlSession sqlSession = this.sqlSessionFactory.openSession(ExecutorType.BATCH);
 		
 		if(!list.isEmpty()) {
 			try {
-				getLatLng(makeNameCountDto(list), ParentRegionName.getEngParentName());
+				getLatLng(makeAptLatLngDto(list), ParentRegionName.getEngParentName());
 				
-				list.forEach(ApiDto -> {
+				list.forEach(AptTransactionDto -> {
 					Map<String, Object> map = new HashMap<>();
-					map.put("ApiDto", ApiDto);
+					map.put("AptTransactionDto", AptTransactionDto);
 					map.put("RegionName", ParentRegionName.getEngParentName());
 					sqlSession.insert("kr.co.dw.Mapper.DataMapper.DataInsert", map);
 				});
@@ -238,9 +238,9 @@ public class DataServiceImpl implements DataService{
 				
 				NodeList nList = makeNodeList(sb);
 				
-				List<ApiDto> list = makeApiDto(nList, Region,ParentRegionName);
+				List<AptTransactionDto> list = makeAptLatLngDto(nList, Region,ParentRegionName);
 				
-				response = ApiDtoInsert(list, ParentRegionName);
+				response = AptTransactionDtoInsert(list, ParentRegionName);
 				logger.info(response);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
@@ -271,32 +271,32 @@ public class DataServiceImpl implements DataService{
 		return Region.getRegionName() + " " + "지역 입력 완료";
 	}
 
-	public List<NameCountDto> makeNameCountDto(List<ApiDto> list) {
+	public List<AptLatLngDto> makeAptLatLngDto(List<AptTransactionDto> list) {
 
-		List<NameCountDto> NameCountDtolist = new ArrayList<>();
+		List<AptLatLngDto> AptLatLngDtolist = new ArrayList<>();
 
 		for (int i = 0; i < list.size(); i++) {
-			NameCountDto NameCountDto = new NameCountDto();
+			AptLatLngDto AptLatLngDto = new AptLatLngDto();
 			String SIGUNGU = list.get(i).getSIGUNGU();
 			String BUNGI = list.get(i).getBUNGI();
 			String APARTMENTNAME = list.get(i).getAPARTMENTNAME();
 			String ROADNAME = list.get(i).getROADNAME();
-			NameCountDto.setSIGUNGU(SIGUNGU);
-			NameCountDto.setBUNGI(BUNGI);
-			NameCountDto.setAPARTMENTNAME(APARTMENTNAME);
-			NameCountDto.setROADNAME(ROADNAME);
-			NameCountDtolist.add(NameCountDto);
+			AptLatLngDto.setSIGUNGU(SIGUNGU);
+			AptLatLngDto.setBUNGI(BUNGI);
+			AptLatLngDto.setAPARTMENTNAME(APARTMENTNAME);
+			AptLatLngDto.setROADNAME(ROADNAME);
+			AptLatLngDtolist.add(AptLatLngDto);
 		}
 
-		return NameCountDtolist;
+		return AptLatLngDtolist;
 
 	}
 	
-	public List<ApiDto> makeApiDto(NodeList nList, Region Region, ParentRegionName ParentRegionName) {
-		List<ApiDto> list = new ArrayList<>();
+	public List<AptTransactionDto> makeAptLatLngDto(NodeList nList, Region Region, ParentRegionName ParentRegionName) {
+		List<AptTransactionDto> list = new ArrayList<>();
 		for(int i = 0 ; i < nList.getLength(); i++) {
 			Node nNode = nList.item(i);
-			ApiDto ApiDto = new ApiDto();
+			AptTransactionDto AptTransactionDto = new AptTransactionDto();
 			if(nNode.getNodeType() == Node.ELEMENT_NODE) {
 				Element eElement = (Element) nNode;
 				
@@ -326,28 +326,28 @@ public class DataServiceImpl implements DataService{
 				String RoadNameBubun = eElement.getElementsByTagName("roadNmBubun").item(0) == null ? "-" : eElement.getElementsByTagName("roadNmBubun").item(0).getTextContent().replaceAll("\"", "").trim().equals("") ? "-" : eElement.getElementsByTagName("roadNmBubun").item(0).getTextContent().replaceAll("\"", "").trim();
 				String SggCd = eElement.getElementsByTagName("sggCd").item(0) == null ? "-" : eElement.getElementsByTagName("sggCd").item(0).getTextContent().replaceAll("\"", "").trim().equals("") ? "-" : eElement.getElementsByTagName("sggCd").item(0).getTextContent().replaceAll("\"", "").trim();  
 				
-				ApiDto.setSIGUNGU(ParentRegionName.getKorParentName() + " " + Region.getRegionName() + " " +  Dong);
-				ApiDto.setBUNGI(Jibun);				
-				ApiDto.setBONBUN(Bonbun);
-				ApiDto.setBUBUN(Bubun);
-				ApiDto.setAPARTMENTNAME(ApartmentName);
-				ApiDto.setAREAFOREXCLUSIVEUSE(AreaforExcusiveUse);
-				ApiDto.setDEALYEARMONTH(DealYear + String.format("%02d", Integer.parseInt(DealMonth)));
-				ApiDto.setDEALDAY(DealDay);
-				ApiDto.setDEALAMOUNT(DealAmount);
-				ApiDto.setAPARTMENTDONG(ApartmentDong);
-				ApiDto.setFLOOR(Floor);
-				ApiDto.setBUYERGBN(BuyerGBN);
-				ApiDto.setSELLERGBN(SellerGBN);
-				ApiDto.setBUILDYEAR(BuildYear);
-				ApiDto.setROADNAME(makeRoadName(RoadName, RoadNameBonbun, RoadNameBubun));
-				ApiDto.setCANCLEDEALDAY(CancleDealDay);
-				ApiDto.setREQGBN(ReqgbN);
-				ApiDto.setRDEALERLAWDNM(RdealerLawdnm);
-				ApiDto.setREGISTRATIONDATE(RegistartionDate);
-				ApiDto.setSGGCD(SggCd);
+				AptTransactionDto.setSIGUNGU(ParentRegionName.getKorParentName() + " " + Region.getRegionName() + " " +  Dong);
+				AptTransactionDto.setBUNGI(Jibun);				
+				AptTransactionDto.setBONBUN(Bonbun);
+				AptTransactionDto.setBUBUN(Bubun);
+				AptTransactionDto.setAPARTMENTNAME(ApartmentName);
+				AptTransactionDto.setAREAFOREXCLUSIVEUSE(AreaforExcusiveUse);
+				AptTransactionDto.setDEALYEARMONTH(DealYear + String.format("%02d", Integer.parseInt(DealMonth)));
+				AptTransactionDto.setDEALDAY(DealDay);
+				AptTransactionDto.setDEALAMOUNT(DealAmount);
+				AptTransactionDto.setAPARTMENTDONG(ApartmentDong);
+				AptTransactionDto.setFLOOR(Floor);
+				AptTransactionDto.setBUYERGBN(BuyerGBN);
+				AptTransactionDto.setSELLERGBN(SellerGBN);
+				AptTransactionDto.setBUILDYEAR(BuildYear);
+				AptTransactionDto.setROADNAME(makeRoadName(RoadName, RoadNameBonbun, RoadNameBubun));
+				AptTransactionDto.setCANCLEDEALDAY(CancleDealDay);
+				AptTransactionDto.setREQGBN(ReqgbN);
+				AptTransactionDto.setRDEALERLAWDNM(RdealerLawdnm);
+				AptTransactionDto.setREGISTRATIONDATE(RegistartionDate);
+				AptTransactionDto.setSGGCD(SggCd);
 				
-				list.add(ApiDto);			
+				list.add(AptTransactionDto);			
 				}
 		}
 		
@@ -409,6 +409,7 @@ public class DataServiceImpl implements DataService{
 				: root.getElementsByTagName("resultCode").item(0).getTextContent();
 		String resultTotalCount = root.getElementsByTagName("totalCount").item(0) == null ? "-"
 				: root.getElementsByTagName("totalCount").item(0).getTextContent();
+		logger.info("resultMsg = " + resultMsg + "resultCode = " +  resultCode + "resultTotalCount = " + resultTotalCount);
 		if (!resultCode.equals("000")) {
 			logger.info("resultMsg:{}","resultCode:{}","resultTotalCount:{}", resultMsg,resultCode,resultTotalCount);
 			throw new RuntimeException();
