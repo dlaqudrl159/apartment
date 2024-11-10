@@ -1,4 +1,4 @@
-package kr.co.dw.Domain;
+package kr.co.dw.Dto.Common;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

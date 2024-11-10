@@ -2,9 +2,9 @@ package kr.co.dw.Service;
 
 import java.util.List;
 
-import kr.co.dw.Domain.AptTransactionDto;
-import kr.co.dw.Domain.AptTransactionResponseDto;
-import kr.co.dw.Domain.AptLatLngDto;
+import kr.co.dw.Dto.Common.AptLatLngDto;
+import kr.co.dw.Dto.Common.AptTransactionDto;
+import kr.co.dw.Dto.Response.AptTransactionResponseDto;
 
 public interface AptService {
 

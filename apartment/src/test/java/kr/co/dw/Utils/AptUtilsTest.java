@@ -1,17 +1,12 @@
 package kr.co.dw.Utils;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -19,7 +14,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.function.Predicate;
@@ -40,9 +34,8 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import kr.co.dw.Domain.AptTransactionDto;
-import kr.co.dw.Domain.AptLatLngDto;
-import kr.co.dw.Service.DataService;
+import kr.co.dw.Dto.Common.AptLatLngDto;
+import kr.co.dw.Dto.Common.AptTransactionDto;
 import kr.co.dw.Service.DataServiceImpl;
 
 public class AptUtilsTest {

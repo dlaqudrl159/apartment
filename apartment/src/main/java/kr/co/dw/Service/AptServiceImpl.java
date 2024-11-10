@@ -11,11 +11,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import kr.co.dw.Domain.AddressNameArrDto;
-import kr.co.dw.Domain.AddressNameArrDto.AddressElement;
-import kr.co.dw.Domain.AptTransactionDto;
-import kr.co.dw.Domain.AptTransactionResponseDto;
-import kr.co.dw.Domain.AptLatLngDto;
+import kr.co.dw.Domain.AddressNameArr;
+import kr.co.dw.Domain.AddressNameArr.AddressElement;
+import kr.co.dw.Dto.Common.AptLatLngDto;
+import kr.co.dw.Dto.Common.AptTransactionDto;
+import kr.co.dw.Dto.Response.AptTransactionResponseDto;
 import kr.co.dw.Mapper.AptMapper;
 import kr.co.dw.Utils.AptUtils;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +32,7 @@ public class AptServiceImpl implements AptService {
 	public List<AptLatLngDto> getMarkers(List<String> addressnameArr) {
 		// TODO Auto-generated method stub
 		List<AptLatLngDto> AptLatLngDtoList = new ArrayList<>();
-		List<AddressElement> list = new AddressNameArrDto(addressnameArr).getList();
+		List<AddressElement> list = new AddressNameArr(addressnameArr).getList();
 		if (!list.isEmpty()) {
 			list.stream().forEach(AddressElement -> {
 				if(!(AddressElement.getCity().equals("ERROR") || AddressElement.getDistrict().equals("ERROR"))) {

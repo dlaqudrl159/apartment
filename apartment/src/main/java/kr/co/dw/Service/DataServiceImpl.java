@@ -40,11 +40,11 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import kr.co.dw.Domain.AptTransactionDto;
-import kr.co.dw.Domain.AptLatLngDto;
 import kr.co.dw.Domain.ParentRegionName;
 import kr.co.dw.Domain.Region;
 import kr.co.dw.Domain.RegionManager;
+import kr.co.dw.Dto.Common.AptLatLngDto;
+import kr.co.dw.Dto.Common.AptTransactionDto;
 import kr.co.dw.Mapper.DataMapper;
 import lombok.RequiredArgsConstructor;
 

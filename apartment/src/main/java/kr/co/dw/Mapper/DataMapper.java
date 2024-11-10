@@ -6,7 +6,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import kr.co.dw.Domain.AptLatLngDto;
+import kr.co.dw.Dto.Common.AptLatLngDto;
 
 @Mapper
 public interface DataMapper {

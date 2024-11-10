@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import kr.co.dw.Domain.AptTransactionResponseDto;
-import kr.co.dw.Domain.AptLatLngDto;
+import kr.co.dw.Dto.Common.AptLatLngDto;
+import kr.co.dw.Dto.Response.AptTransactionResponseDto;
 import kr.co.dw.Service.AptService;
 import lombok.RequiredArgsConstructor;
 
