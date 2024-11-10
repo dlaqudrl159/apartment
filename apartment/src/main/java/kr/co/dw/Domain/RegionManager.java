@@ -15,24 +15,24 @@ public class RegionManager {
         return instance;
     }
 	
-	public static final List<String> PARENTREGIONLIST = List.of(
-			"SEOUL",
-			"BUSAN",
-			"DAEGU",
-			"INCHEON",
-			"GWANGJU",
-			"DAEJEON",
-			"ULSAN",
-			"SEJONG",
-			"GYEONGGIDO",
-			"GANGWONDO",
-			"CHUNGCHEONGBUKDO",
-			"CHUNGCHEONGNAMDO",
-			"JEOLLABUKDO",
-			"JEOLLANAMDO",
-			"GYEONGSANGBUKDO",
-			"GYEONGSANGNAMDO",
-			"JEJU"
+	public static final List<ParentRegionName> PARENTREGIONLIST = List.of(
+			new ParentRegionName("서울특별시","SEOUL"),
+			new ParentRegionName("부산광역시","BUSAN"),
+			new ParentRegionName("대구광역시","DAEGU"),
+			new ParentRegionName("인천광역시","INCHEON"),
+			new ParentRegionName("광주광역시","GWANGJU"),
+			new ParentRegionName("대전광역시","DAEJEON"),
+			new ParentRegionName("울산광역시","ULSAN"),
+			new ParentRegionName("세종특별자치시","SEJONG"),
+			new ParentRegionName("경기도","GYEONGGIDO"),
+			new ParentRegionName("강원특별자치도","GANGWONDO"),
+			new ParentRegionName("충청북도","CHUNGCHEONGBUKDO"),
+			new ParentRegionName("충청남도","CHUNGCHEONGNAMDO"),
+			new ParentRegionName("전북특별자치도","JEOLLABUKDO"),
+			new ParentRegionName("전라남도","JEOLLANAMDO"),
+			new ParentRegionName("경상북도","GYEONGSANGBUKDO"),
+			new ParentRegionName("경상남도","GYEONGSANGNAMDO"),
+			new ParentRegionName("제주특별자치도","JEJU")
 			);
 	
 	public static final List<Region> SEOUL = List.of(
@@ -386,6 +386,10 @@ public class RegionManager {
 		}
 		
 		return null;
+	}
+	
+	public List<ParentRegionName> getParentRegionNameList() {
+		return RegionManager.PARENTREGIONLIST;
 	}
 	
 	public ParentRegionName getkorParentName(String RegionName) {

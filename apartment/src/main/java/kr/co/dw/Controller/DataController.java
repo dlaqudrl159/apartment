@@ -2,6 +2,7 @@ package kr.co.dw.Controller;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.List;
 
 import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
+import kr.co.dw.Domain.ParentRegionName;
+import kr.co.dw.Domain.RegionManager;
 import kr.co.dw.Service.DataService;
 import lombok.RequiredArgsConstructor;
 
@@ -48,15 +51,12 @@ public class DataController {
 	@GetMapping("/data/AutoDataInsert")
 	private ResponseEntity<String> AutoDataInsert() throws java.text.ParseException{
 		
+		List<ParentRegionName> ParentRegionNameList = RegionManager.getInstance().getParentRegionNameList();
 		
-		
-		String[] EnglishRegion = {"SEOUL","BUSAN","DAEGU","INCHEON","GWANGJU","DAEJEON","ULSAN","SEJONG","GYEONGGIDO","GANGWONDO",
-				"CHUNGCHEONGBUKDO","CHUNGCHEONGNAMDO","JEOLLABUKDO","JEOLLANAMDO","GYEONGSANGBUKDO","GYEONGSANGNAMDO","JEJU"};
-		
-		for(int i = 0 ; i < EnglishRegion.length; i++) {
-			DataService.AutoDataInsert(EnglishRegion[i].toUpperCase());
-			logger.info(EnglishRegion[i] + " 테이블 완료");
-		}
+		ParentRegionNameList.forEach(t -> {
+			DataService.AutoDataInsert(t.getEngParentName());
+			logger.info(t.getEngParentName() + " 테이블 완료");
+		});
 		
 		return new ResponseEntity<String>("전체 테이블 입력 완료", HttpStatus.OK);
 	}

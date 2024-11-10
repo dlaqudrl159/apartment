@@ -30,7 +30,6 @@ import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.w3c.dom.Document;
@@ -50,10 +49,9 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-@Primary
-public class DataServiceImpl implements DataService{
+public class DataServiceImpl2 implements DataService{
 
-	private final Logger logger = LoggerFactory.getLogger(DataServiceImpl.class);
+	private final Logger logger = LoggerFactory.getLogger(DataServiceImpl2.class);
 	
 	private final DataMapper DataMapper;
 	

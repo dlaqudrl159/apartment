@@ -20,7 +20,6 @@ public class MyBatisConfiguration {
 	        return DataSourceBuilder.create().build();
 	    }
 	   
-	  
 	    @Bean(name = "sqlSessionTemplate")
 	    @Primary
 	    public SqlSessionTemplate sqlSessionTemplate(SqlSessionFactory sqlSessionFactory) throws Exception {
