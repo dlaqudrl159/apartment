@@ -7,7 +7,9 @@ import java.util.List;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 
+import kr.co.dw.Domain.ParentRegionName;
 import kr.co.dw.Dto.Common.AptLatLngDto;
+import kr.co.dw.Dto.Response.DataAutoInsertResponseDto;
 
 public interface DataService {
 
@@ -21,6 +23,8 @@ public interface DataService {
 
 	JSONObject getroadname(AptLatLngDto AptLatLngDto, String tableName) throws IOException, ParseException;
 
-	void AutoDataInsert(String RegionName);
+	void AutoDataInsert1(String RegionName);
 //-----------------------------------------------------
+	
+	DataAutoInsertResponseDto AutoDataInsert(String parentEngRegionName);
 }

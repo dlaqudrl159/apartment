@@ -392,7 +392,7 @@ public class RegionManager {
 		return RegionManager.PARENTREGIONLIST;
 	}
 	
-	public ParentRegionName getkorParentName(String RegionName) {
+	public ParentRegionName getParentNameByEng(String RegionName) {
 		
 		if(RegionName.equals("SEOUL")){
 			return new ParentRegionName("서울특별시", "SEOUL"); 
@@ -428,8 +428,9 @@ public class RegionManager {
 			return new ParentRegionName("강원특별자치도", "GANGWONDO"); 
 		}else if(RegionName.equals("JEOLLABUKDO")) {
 			return new ParentRegionName("전북특별자치도", "JEOLLABUKDO"); 
+		}else {
+			return null;
 		}
-		return null;
 	}
 	
 }
