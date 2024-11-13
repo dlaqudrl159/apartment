@@ -2,7 +2,7 @@
 
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="kr.co.dw.Mapper.DataMapper">
+<mapper namespace="kr.co.dw.Mapper.AutoLatLngDataMapper">
     
     <resultMap type="AptLatLngDto" id="newAptLatLngDto">
   	<!-- 1:1로 DTO의 멤버변수를 매핑-->
@@ -50,45 +50,10 @@
    
     </select>
     
-    <insert id="InsertLatLng" parameterType="AptLatLngDto">
+    <insert id="insertLatLng" parameterType="AptLatLngDto">
     
     insert into LATLNG (SIGUNGU, BUNGI, LAT,LNG,ROADNAME,APARTMENTNAME) values (#{SIGUNGU},#{BUNGI},#{LAT},#{LNG},#{ROADNAME},#{APARTMENTNAME})
     
     </insert>
-    
-    <insert id="DataInsert">
-    
-    insert into ${RegionName} (SIGUNGU, BUNGI, BONBUN, BUBUN, APARTMENTNAME,AREAFOREXCLUSIVEUSE,DEALYEARMONTH,DEALDAY,DEALAMOUNT,APARTMENTDONG,FLOOR,BUYERGBN,SELLERGBN,BUILDYEAR,ROADNAME,CANCLEDEALDAY,REQGBN,RDEALERLAWDNM,REGISTRATIONDATE,SGGCD) 
-    values 
-    (
-    #{AptTransactionDto.SIGUNGU},
-    #{AptTransactionDto.BUNGI},
-    #{AptTransactionDto.BONBUN},
-    #{AptTransactionDto.BUBUN},
-    #{AptTransactionDto.APARTMENTNAME},
-    #{AptTransactionDto.AREAFOREXCLUSIVEUSE},
-    #{AptTransactionDto.DEALYEARMONTH},
-    #{AptTransactionDto.DEALDAY},
-    #{AptTransactionDto.DEALAMOUNT},
-    #{AptTransactionDto.APARTMENTDONG},
-    #{AptTransactionDto.FLOOR},
-    #{AptTransactionDto.BUYERGBN},
-    #{AptTransactionDto.SELLERGBN},
-    #{AptTransactionDto.BUILDYEAR},
-    #{AptTransactionDto.ROADNAME},
-    #{AptTransactionDto.CANCLEDEALDAY},
-    #{AptTransactionDto.REQGBN},
-    #{AptTransactionDto.RDEALERLAWDNM},
-    #{AptTransactionDto.REGISTRATIONDATE},
-    #{AptTransactionDto.SGGCD}
-    )
-    
-    </insert>
-    
-    <delete id="deleteRegionYear">
-    
-    delete from ${REGION} where DEALYEARMONTH >= #{YEAR}
-    
-    </delete>
     
 </mapper>	

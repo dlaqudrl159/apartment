@@ -1,4 +1,4 @@
-package kr.co.dw.Service;
+package kr.co.dw.Service.Apt;
 
 import java.util.List;
 
@@ -10,7 +10,7 @@ public interface AptService {
 
 	List<AptLatLngDto> getMarkers(List<String> addressnameArr);
 
-	List<AptTransactionResponseDto> getAptTransactionResponseDtolist(AptLatLngDto AptLatLngDto);
+	List<AptTransactionResponseDto> getAptTransactionResponseDtolist(AptLatLngDto aptLatLngDto);
 
 	List<Integer> getTransactionYears(List<AptTransactionDto> getAptTrancsactionHistory);
 

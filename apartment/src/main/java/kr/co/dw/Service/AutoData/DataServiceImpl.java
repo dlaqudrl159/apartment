@@ -1,4 +1,4 @@
-package kr.co.dw.Service;
+package kr.co.dw.Service.AutoData;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -9,15 +9,11 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -34,8 +30,6 @@ import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cglib.core.Local;
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.w3c.dom.Document;
@@ -64,7 +58,7 @@ public class DataServiceImpl implements DataService{
 	
 	private final DataMapper DataMapper;
 	
-	private final Integer DELETEYEAR = 298;
+	private final Integer DELETEYEAR = 15;
 	private final String PAGENO = "1";
 	private final String NUMOFROWS = "10000";
 	
@@ -189,97 +183,7 @@ public class DataServiceImpl implements DataService{
 		
 	}
 
-	@Transactional
 	@Override
-	public void AutoDataInsert1(String RegionName) {
-		// TODO Auto-generated method stub
-		/*logger.info(RegionName + " " + "데이터 입력 시작");
-		List<Region> list = RegionManager.getInstance().getListRegion(RegionName);
-		ParentRegionName ParentRegionName = RegionManager.getInstance().getkorParentName(RegionName);
-		String DbYear = makeDealYearMonth(DELETEYEAR);
-		logger.info(DbYear + " = 오늘 월에서 1년을 뺀 월 " + ParentRegionName.getEngParentName() + " = 1년치 데이터 삭제 할 테이블");
-		logger.info("삭제 시작");
-		DataMapper.deleteRegionYear(RegionName, DbYear);
-		logger.info("삭제 완료");
-		list.forEach(Region -> loopRegion(Region,ParentRegionName));*/
-		
-	}
-	
-	private String AptTransactionDtoInsert(List<AptTransactionDto> list, ParentRegionName ParentRegionName) {
-		
-		SqlSession sqlSession = this.sqlSessionFactory.openSession(ExecutorType.BATCH);
-		
-		if(!list.isEmpty()) {
-			try {
-				getLatLng(makeAptLatLngDto(list), ParentRegionName.getEngParentName());
-				
-				list.forEach(AptTransactionDto -> {
-					Map<String, Object> map = new HashMap<>();
-					map.put("AptTransactionDto", AptTransactionDto);
-					map.put("RegionName", ParentRegionName.getEngParentName());
-					sqlSession.insert("kr.co.dw.Mapper.DataMapper.DataInsert", map);
-				});
-				sqlSession.flushStatements();
-				sqlSession.commit();
-				
-				return "SUCCESS";
-			} catch (IOException | ParseException | InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				return "FAIL";
-			} finally {
-				sqlSession.close();
-			}
-		}
-		return "LIST IS EMPTY";
-	}
-	
-	/*private String loopRegion(Region Region, ParentRegionName ParentRegionName) {
-		
-		String response = "";
-		
-		for(int j = DELETEYEAR ; j >= 0 ; j--) {
-			
-			String DealYmd = makeDealYearMonth(j);
-			try {
-				logger.info(Region.getRegionName() + " " + Region.getCode() + " " + DealYmd + " " + "입력 시작");
-				StringBuilder sb = getRTMSDataSvcAptTradeDev(Region,DealYmd);
-				
-				NodeList nList = makeNodeList(sb);
-				
-				List<AptTransactionDto> list = makeAptLatLngDto(nList, Region,ParentRegionName);
-				
-				response = AptTransactionDtoInsert(list, ParentRegionName);
-				logger.info(response);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				logger.error("error:{}" , e.getClass());
-				response = "FAIL";
-				logger.error(response);
-			} catch (SAXException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				logger.error("error:{}" , e.getClass());
-				response = "FAIL";
-				logger.error(response);
-			} catch (ParserConfigurationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				logger.error("error:{}" , e.getClass());
-				response = "FAIL";
-				logger.error(response);
-			} catch (RuntimeException e) {
-				// TODO: handle exception
-				e.printStackTrace();
-				logger.error("error:{}" , e.getClass());
-				response = "FAIL";
-				logger.error(response);
-			}
-		}
-		return Region.getRegionName() + " " + "지역 입력 완료";
-	}*/
-
 	public List<AptLatLngDto> makeAptLatLngDto(List<AptTransactionDto> list) {
 
 		List<AptLatLngDto> AptLatLngDtolist = new ArrayList<>();
@@ -301,68 +205,7 @@ public class DataServiceImpl implements DataService{
 
 	}
 	
-	public List<AptTransactionDto> makeAptLatLngDto(NodeList nList, Region Region, ParentRegionName ParentRegionName) {
-		List<AptTransactionDto> list = new ArrayList<>();
-		for(int i = 0 ; i < nList.getLength(); i++) {
-			Node nNode = nList.item(i);
-			AptTransactionDto AptTransactionDto = new AptTransactionDto();
-			if(nNode.getNodeType() == Node.ELEMENT_NODE) {
-				Element eElement = (Element) nNode;
-				
-				String DealAmount = eElement.getElementsByTagName("dealAmount").item(0) == null ? "-" : eElement.getElementsByTagName("dealAmount").item(0).getTextContent().replaceAll("\"", "").trim().equals("") ? "-" : eElement.getElementsByTagName("dealAmount").item(0).getTextContent().replaceAll("\"", "").trim();  
-				String ReqgbN = eElement.getElementsByTagName("dealingGbn").item(0) == null ? "-" : eElement.getElementsByTagName("dealingGbn").item(0).getTextContent().replaceAll("\"", "").trim().equals("") ? "-" : eElement.getElementsByTagName("dealingGbn").item(0).getTextContent().replaceAll("\"", "").trim();  
-				String BuildYear = eElement.getElementsByTagName("buildYear").item(0) == null ? "-" : eElement.getElementsByTagName("buildYear").item(0).getTextContent().replaceAll("\"", "").trim().equals("") ? "-" : eElement.getElementsByTagName("buildYear").item(0).getTextContent().replaceAll("\"", "").trim();  
-				String DealYear = eElement.getElementsByTagName("dealYear").item(0) == null ? "-" : eElement.getElementsByTagName("dealYear").item(0).getTextContent().replaceAll("\"", "").trim().equals("") ? "-" : eElement.getElementsByTagName("dealYear").item(0).getTextContent().replaceAll("\"", "").trim();  
-				String ApartmentDong = eElement.getElementsByTagName("aptDong").item(0) == null ? "-" : eElement.getElementsByTagName("aptDong").item(0).getTextContent().replaceAll("\"", "").trim().equals("") ? "-" : eElement.getElementsByTagName("aptDong").item(0).getTextContent().replaceAll("\"", "").trim();  
-				String RegistartionDate = eElement.getElementsByTagName("rgstDate").item(0) == null ? "-" : eElement.getElementsByTagName("rgstDate").item(0).getTextContent().replaceAll("\"", "").trim().equals("") ? "-" : eElement.getElementsByTagName("rgstDate").item(0).getTextContent().replaceAll("\"", "").trim();  
-				String SellerGBN = eElement.getElementsByTagName("slerGbn").item(0) == null ? "-" : eElement.getElementsByTagName("slerGbn").item(0).getTextContent().replaceAll("\"", "").trim().equals("") ? "-" : eElement.getElementsByTagName("slerGbn").item(0).getTextContent().replaceAll("\"", "").trim();  
-				String BuyerGBN = eElement.getElementsByTagName("buyerGbn").item(0) == null ? "-" : eElement.getElementsByTagName("buyerGbn").item(0).getTextContent().replaceAll("\"", "").trim().equals("") ? "-" : eElement.getElementsByTagName("buyerGbn").item(0).getTextContent().replaceAll("\"", "").trim();  
-				String Dong = eElement.getElementsByTagName("umdNm").item(0) == null ? "-" : eElement.getElementsByTagName("umdNm").item(0).getTextContent().replaceAll("\"", "").trim().equals("") ? "-" : eElement.getElementsByTagName("umdNm").item(0).getTextContent().replaceAll("\"", "").trim();  
-				String ApartmentName = eElement.getElementsByTagName("aptNm").item(0) == null ? "-" : eElement.getElementsByTagName("aptNm").item(0).getTextContent().replaceAll("\"", "").trim().equals("") ? "-" : eElement.getElementsByTagName("aptNm").item(0).getTextContent().replaceAll("\"", "").trim();  
-				String DealMonth = eElement.getElementsByTagName("dealMonth").item(0) == null ? "-" : eElement.getElementsByTagName("dealMonth").item(0).getTextContent().replaceAll("\"", "").trim().equals("") ? "-" : eElement.getElementsByTagName("dealMonth").item(0).getTextContent().replaceAll("\"", "").trim();  
-				String DealDay = eElement.getElementsByTagName("dealDay").item(0) == null ? "-" : eElement.getElementsByTagName("dealDay").item(0).getTextContent().replaceAll("\"", "").trim().equals("") ? "-" : eElement.getElementsByTagName("dealDay").item(0).getTextContent().replaceAll("\"", "").trim();  
-				String AreaforExcusiveUse = eElement.getElementsByTagName("excluUseAr").item(0) == null ? "-" : eElement.getElementsByTagName("excluUseAr").item(0).getTextContent().replaceAll("\"", "").trim().equals("") ? "-" : eElement.getElementsByTagName("excluUseAr").item(0).getTextContent().replaceAll("\"", "").trim();  
-				String RdealerLawdnm = eElement.getElementsByTagName("estateAgentSggNm").item(0) == null ? "-" : eElement.getElementsByTagName("estateAgentSggNm").item(0).getTextContent().replaceAll("\"", "").trim().equals("") ? "-" : eElement.getElementsByTagName("estateAgentSggNm").item(0).getTextContent().replaceAll("\"", "").trim();  
-				String Jibun = eElement.getElementsByTagName("jibun").item(0) == null ? "-" : eElement.getElementsByTagName("jibun").item(0).getTextContent().replaceAll("\"", "").trim().equals("") ? "-" : eElement.getElementsByTagName("jibun").item(0).getTextContent().replaceAll("\"", "").trim();  
-				String RegionalCode = eElement.getElementsByTagName("landCd").item(0) == null ? "-" : eElement.getElementsByTagName("landCd").item(0).getTextContent().replaceAll("\"", "").trim().equals("") ? "-" : eElement.getElementsByTagName("landCd").item(0).getTextContent().replaceAll("\"", "").trim();  
-				String Floor = eElement.getElementsByTagName("floor").item(0) == null ? "-" : eElement.getElementsByTagName("floor").item(0).getTextContent().replaceAll("\"", "").trim().equals("") ? "-" : eElement.getElementsByTagName("floor").item(0).getTextContent().replaceAll("\"", "").trim();  
-				String CancleDealDay = eElement.getElementsByTagName("cdealDay").item(0) == null ? "-" : eElement.getElementsByTagName("cdealDay").item(0).getTextContent().replaceAll("\"", "").trim().equals("") ? "-" : eElement.getElementsByTagName("cdealDay").item(0).getTextContent().replaceAll("\"", "").trim();  
-				String CancleDealType = eElement.getElementsByTagName("cdealType").item(0) == null ? "-" : eElement.getElementsByTagName("cdealType").item(0).getTextContent().replaceAll("\"", "").trim().equals("") ? "-" : eElement.getElementsByTagName("cdealType").item(0).getTextContent().replaceAll("\"", "").trim();  
-				String RoadName = eElement.getElementsByTagName("roadNm").item(0) == null ? "-" : eElement.getElementsByTagName("roadNm").item(0).getTextContent().replaceAll("\"", "").trim().equals("") ? "-" : eElement.getElementsByTagName("roadNm").item(0).getTextContent().replaceAll("\"", "").trim();  
-				String Bonbun = eElement.getElementsByTagName("bonbun").item(0) == null ? "-" : eElement.getElementsByTagName("bonbun").item(0).getTextContent().replaceAll("\"", "").trim().equals("") ? "-" : eElement.getElementsByTagName("bonbun").item(0).getTextContent().replaceAll("\"", "").trim();  
-				String Bubun = eElement.getElementsByTagName("bubun").item(0) == null ? "-" : eElement.getElementsByTagName("bubun").item(0).getTextContent().replaceAll("\"", "").trim().equals("") ? "-" : eElement.getElementsByTagName("bubun").item(0).getTextContent().replaceAll("\"", "").trim();  
-				String RoadNameBonbun = eElement.getElementsByTagName("roadNmBonbun").item(0) == null ? "-" : eElement.getElementsByTagName("roadNmBonbun").item(0).getTextContent().replaceAll("\"", "").trim().equals("") ? "-" : eElement.getElementsByTagName("roadNmBonbun").item(0).getTextContent().replaceAll("\"", "").trim();  
-				String RoadNameBubun = eElement.getElementsByTagName("roadNmBubun").item(0) == null ? "-" : eElement.getElementsByTagName("roadNmBubun").item(0).getTextContent().replaceAll("\"", "").trim().equals("") ? "-" : eElement.getElementsByTagName("roadNmBubun").item(0).getTextContent().replaceAll("\"", "").trim();
-				String SggCd = eElement.getElementsByTagName("sggCd").item(0) == null ? "-" : eElement.getElementsByTagName("sggCd").item(0).getTextContent().replaceAll("\"", "").trim().equals("") ? "-" : eElement.getElementsByTagName("sggCd").item(0).getTextContent().replaceAll("\"", "").trim();  
-				
-				AptTransactionDto.setSIGUNGU(ParentRegionName.getKorParentName() + " " + Region.getRegionName() + " " +  Dong);
-				AptTransactionDto.setBUNGI(Jibun);				
-				AptTransactionDto.setBONBUN(Bonbun);
-				AptTransactionDto.setBUBUN(Bubun);
-				AptTransactionDto.setAPARTMENTNAME(ApartmentName);
-				AptTransactionDto.setAREAFOREXCLUSIVEUSE(AreaforExcusiveUse);
-				AptTransactionDto.setDEALYEARMONTH(DealYear + String.format("%02d", Integer.parseInt(DealMonth)));
-				AptTransactionDto.setDEALDAY(DealDay);
-				AptTransactionDto.setDEALAMOUNT(DealAmount);
-				AptTransactionDto.setAPARTMENTDONG(ApartmentDong);
-				AptTransactionDto.setFLOOR(Floor);
-				AptTransactionDto.setBUYERGBN(BuyerGBN);
-				AptTransactionDto.setSELLERGBN(SellerGBN);
-				AptTransactionDto.setBUILDYEAR(BuildYear);
-				AptTransactionDto.setROADNAME(makeRoadName(RoadName, RoadNameBonbun, RoadNameBubun));
-				AptTransactionDto.setCANCLEDEALDAY(CancleDealDay);
-				AptTransactionDto.setREQGBN(ReqgbN);
-				AptTransactionDto.setRDEALERLAWDNM(RdealerLawdnm);
-				AptTransactionDto.setREGISTRATIONDATE(RegistartionDate);
-				AptTransactionDto.setSGGCD(SggCd);
-				
-				list.add(AptTransactionDto);			
-				}
-		}
-		
-		return list;
-	}
-	
+	@Override
 	public String makeRoadName(String RoadName, String RoadNameBonbun, String RoadNameBubun) {
 		RoadName = RoadName.trim();
 		if (RoadName.equals("-")) {
@@ -397,7 +240,8 @@ public class DataServiceImpl implements DataService{
 
 	}
 	
-	private NodeList makeNodeList(StringBuilder sb) throws SAXException, IOException, ParserConfigurationException {
+	@Override
+	public NodeList makeNodeList(StringBuilder sb) throws SAXException, IOException, ParserConfigurationException {
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder builder = null;
 		Document document = null;
@@ -418,65 +262,11 @@ public class DataServiceImpl implements DataService{
 				: root.getElementsByTagName("resultCode").item(0).getTextContent();
 		String resultTotalCount = root.getElementsByTagName("totalCount").item(0) == null ? "-"
 				: root.getElementsByTagName("totalCount").item(0).getTextContent();
-		logger.info("resultMsg = " + resultMsg + "resultCode = " +  resultCode + "resultTotalCount = " + resultTotalCount);
 		if (!resultCode.equals("000")) {
 			logger.info("resultMsg:{}","resultCode:{}","resultTotalCount:{}", resultMsg,resultCode,resultTotalCount);
 			throw new RuntimeException();
 		}
 		return nList;
-	}
-
-	/*public String makeDealYearMonth(int j) {
-
-		Calendar cal = Calendar.getInstance();
-		String year = String.valueOf(cal.get(Calendar.YEAR));
-		int month = (cal.get(Calendar.MONTH) + 1);
-		String strMonth = String.format("%02d", month);
-		String lastMonth = year + strMonth;
-		SimpleDateFormat dtFormat = new SimpleDateFormat("yyyyMM");
-		Date dt = null;
-		try {
-			dt = dtFormat.parse(lastMonth);
-		} catch (java.text.ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		cal.setTime(dt);
-		cal.add(Calendar.MONTH, -j);
-		return dtFormat.format(cal.getTime());
-	}*/
-	
-	public StringBuilder getRTMSDataSvcAptTradeDev(Region Region, String DealYmd) throws IOException {
-		
-		StringBuilder sb = null;
-		
-		StringBuilder urlBuilder = new StringBuilder("http://apis.data.go.kr/1613000/RTMSDataSvcAptTradeDev/getRTMSDataSvcAptTradeDev"); /*URL*/
-        urlBuilder.append("?" + URLEncoder.encode("serviceKey","UTF-8") + "=f4Ed1eAJYzb%2BQ%2BtpQx4G%2BQvFuO0ZJJMZIInJGo%2FpG889YetxgnnGE9umfvGSe8TPyZ88bAUWw%2Bn7ETYTooeF5A%3D%3D"); /*Service Key*/
-        urlBuilder.append("&" + URLEncoder.encode("LAWD_CD","UTF-8") + "=" + URLEncoder.encode(Region.getCode(), "UTF-8")); /*각 지역별 코드*/
-        urlBuilder.append("&" + URLEncoder.encode("DEAL_YMD","UTF-8") + "=" + URLEncoder.encode(DealYmd/*DEAL_YMD*/, "UTF-8")); /*월 단위 신고자료*/
-        urlBuilder.append("&" + URLEncoder.encode("pageNo","UTF-8") + "=" + URLEncoder.encode(PAGENO, "UTF-8")); /*페이지번호*/
-        urlBuilder.append("&" + URLEncoder.encode("numOfRows","UTF-8") + "=" + URLEncoder.encode(NUMOFROWS, "UTF-8")); /*한 페이지 결과 수*/
-        URL url = new URL(urlBuilder.toString());
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        conn.setRequestMethod("GET");
-        conn.setRequestProperty("Content-type", "application/json");
-
-        BufferedReader rd;
-        if(conn.getResponseCode() >= 200 && conn.getResponseCode() <= 300) {
-            rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-        } else {
-            rd = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
-            throw new ApiException(conn.getResponseMessage() , conn.getResponseCode());
-        }
-        sb = new StringBuilder();
-        String line;
-        while ((line = rd.readLine()) != null) {
-            sb.append(line);
-        }
-        rd.close();
-        conn.disconnect();
-		
-		return sb;
 	}
 	
 	@Override
@@ -496,8 +286,9 @@ public class DataServiceImpl implements DataService{
 		}
 		return ex1(RegionList,RegionManager.getInstance().getParentNameByEng(parentRegionName));
 	}
-
-	private DataAutoInsertResponseDto allex1(List<ParentRegionName> parentRegionList) {
+	
+	@Override
+	public DataAutoInsertResponseDto allex1(List<ParentRegionName> parentRegionList) {
 		List<DataAutoInsertResponseDto> totalResponse = new ArrayList<>();
 		int totalCount = 0;
 		for (ParentRegionName parentRegionName : parentRegionList) {
@@ -524,7 +315,8 @@ public class DataServiceImpl implements DataService{
 	}
 	
 	@Transactional
-	private DataAutoInsertResponseDto ex1(List<Region> regionList, ParentRegionName parentRegionName) {
+	@Override
+	public DataAutoInsertResponseDto ex1(List<Region> regionList, ParentRegionName parentRegionName) {
 		
 		List<String> dealYearMonthList = makeDealYearMonthList(DELETEYEAR); 
 		
@@ -538,7 +330,7 @@ public class DataServiceImpl implements DataService{
 			for (Region region : regionList) {
 						RegionYearDto regionYearDto = new RegionYearDto(region, dealYearMonth, PAGENO, parentRegionName);
 				try {
-						
+					logger.info(dealYearMonth + " " + region.getRegionName() + "(" + region.getCode() + ")       시작");	
 					StringBuilder sb = getRTMSDataSvcAptTradeDev(regionYearDto);
 						 
 					List<AptTransactionDto> aptTransactionDtoList = makeAptTransactionDto(makeNodeList(sb), regionYearDto);
@@ -563,15 +355,15 @@ public class DataServiceImpl implements DataService{
 		
 		DataMapper.deleteRegionYear(parentRegionName.getEngParentName(), deleteYearMonth);
 		
-		AptTransactionDtoInsert2(insertaptTransactionDtoList, parentRegionName);
+		AptTransactionDtoInsert(insertaptTransactionDtoList, parentRegionName);
 		
 		return new DataAutoInsertResponseDto("SUCCESS", null, parentRegionName.getEngParentName() + " 테이블 입력 완료", totalCount, LocalDateTime.now(), response);
 	}
 	
+	@Override
 	public StringBuilder getRTMSDataSvcAptTradeDev(RegionYearDto regionYearDto) throws IOException {
 		
 		StringBuilder sb = null;
-		System.out.println(regionYearDto.getYear());
 		StringBuilder urlBuilder = new StringBuilder("http://apis.data.go.kr/1613000/RTMSDataSvcAptTradeDev/getRTMSDataSvcAptTradeDev"); /*URL*/
         urlBuilder.append("?" + URLEncoder.encode("serviceKey","UTF-8") + "=f4Ed1eAJYzb%2BQ%2BtpQx4G%2BQvFuO0ZJJMZIInJGo%2FpG889YetxgnnGE9umfvGSe8TPyZ88bAUWw%2Bn7ETYTooeF5A%3D%3D"); /*Service Key*/
         urlBuilder.append("&" + URLEncoder.encode("LAWD_CD","UTF-8") + "=" + URLEncoder.encode(regionYearDto.getRegion().getCode(), "UTF-8")); /*각 지역별 코드*/
@@ -588,6 +380,7 @@ public class DataServiceImpl implements DataService{
             rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
         } else {
             rd = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
+            logger.error(conn.getResponseMessage() + " " + conn.getResponseCode());
             throw new ApiException(conn.getResponseMessage() , conn.getResponseCode());
         }
         sb = new StringBuilder();
@@ -601,12 +394,14 @@ public class DataServiceImpl implements DataService{
 		return sb;
 	}
 	
+	@Override
 	public String makeDealYearMonth(int num) {
 		LocalDate now = LocalDate.now();
 		String yearMonth = now.minusMonths(num).format(DateTimeFormatter.ofPattern("yyyyMM"));
 		return yearMonth;
 	}
 	
+	@Override
 	public List<String> makeDealYearMonthList(int num) {
 	    List<String> dealYearMonthList = new ArrayList<>();
 	    
@@ -618,13 +413,15 @@ public class DataServiceImpl implements DataService{
 	    return dealYearMonthList;
 	}
 	
-	private String getElementContent(Element element, String tagName) {
+	@Override
+	public String getElementContent(Element element, String tagName) {
 	    Node node = element.getElementsByTagName(tagName).item(0);
 	    return node == null ? "-" : 
 	           node.getTextContent().replaceAll("\"", "").trim().isEmpty() ? "-" : 
 	           node.getTextContent().replaceAll("\"", "").trim();
 	}
 	
+	@Override
 	public List<AptTransactionDto> makeAptTransactionDto(NodeList nList,RegionYearDto regionYearDto) {
 		List<AptTransactionDto> AptTransactionDtoList = new ArrayList<>();
 		
@@ -695,7 +492,8 @@ public class DataServiceImpl implements DataService{
 		
 		return AptTransactionDtoList;
 	}
-	private String AptTransactionDtoInsert2(List<AptTransactionDto> list, ParentRegionName ParentRegionName) {
+	@Override
+	public String AptTransactionDtoInsert(List<AptTransactionDto> list, ParentRegionName ParentRegionName) {
 		
 		if (list.isEmpty()) {
 	        return "LIST IS EMPTY";

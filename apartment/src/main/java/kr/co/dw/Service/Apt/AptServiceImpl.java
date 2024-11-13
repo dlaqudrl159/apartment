@@ -1,4 +1,4 @@
-package kr.co.dw.Service;
+package kr.co.dw.Service.Apt;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -57,19 +57,20 @@ public class AptServiceImpl implements AptService {
 		if(!getAptTrancsactionHistory.isEmpty()) {
 			Map<String, List<AptTransactionDto>> AptTrancsactionHistoryMap = getAptTrancsactionHistory.stream().collect(Collectors.groupingBy(AptTransactionDto -> AptTransactionDto.getROADNAME()));
 			AptTrancsactionHistoryMap.forEach((roadName, AptTransactionDtoList) -> {
+				AptLatLngDto responseAptLatLngDto = new AptLatLngDto(AptLatLngDto.getSIGUNGU(), AptLatLngDto.getBUNGI(), AptLatLngDto.getAPARTMENTNAME(), roadName, AptLatLngDto.getLAT(), AptLatLngDto.getLNG());
 				List<Integer> getTransactionYears = getTransactionYears(AptTransactionDtoList);
 				AptLatLngDto.setROADNAME(roadName);
 				if(getTransactionYears.isEmpty()) {
 					Integer year = Calendar.getInstance().get(Calendar.YEAR);
 					getTransactionYears.add(year);
 				}
-				AptTransactionResponseDto.add(new AptTransactionResponseDto(getTransactionYears, AptTransactionDtoList, AptLatLngDto));
+				AptTransactionResponseDto.add(new AptTransactionResponseDto(getTransactionYears, AptTransactionDtoList, responseAptLatLngDto));
 			});
 		}else {
 			List<String> roadName = AptMapper.getRoadName(AptLatLngDto);
 			roadName.forEach(rRoadName -> {
-				AptLatLngDto.setROADNAME(rRoadName);
-				AptTransactionResponseDto.add(new AptTransactionResponseDto(List.of(2024), null, AptLatLngDto));
+				AptLatLngDto responseAptLatLngDto = new AptLatLngDto(AptLatLngDto.getSIGUNGU(), AptLatLngDto.getBUNGI(), AptLatLngDto.getAPARTMENTNAME(), rRoadName, AptLatLngDto.getLAT(), AptLatLngDto.getLNG());
+				AptTransactionResponseDto.add(new AptTransactionResponseDto(List.of(2024), null, responseAptLatLngDto));
 			});
 		}
 		return AptTransactionResponseDto;

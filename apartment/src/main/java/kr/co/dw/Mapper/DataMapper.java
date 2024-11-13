@@ -18,9 +18,5 @@ public interface DataMapper {
 	AptLatLngDto getLatLng(AptLatLngDto AptLatLngDto);
 
 	void deleteRegionYear(@Param("REGION") String RegionName, @Param("YEAR") String DbYear);
-
-	void DataInsert(Map<String, Object> map);
-
-	
 	
 }

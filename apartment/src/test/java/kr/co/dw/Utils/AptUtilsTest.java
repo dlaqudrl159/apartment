@@ -36,7 +36,7 @@ import org.xml.sax.SAXException;
 
 import kr.co.dw.Dto.Common.AptLatLngDto;
 import kr.co.dw.Dto.Common.AptTransactionDto;
-import kr.co.dw.Service.DataServiceImpl;
+import kr.co.dw.Service.AutoData.DataServiceImpl;
 
 public class AptUtilsTest {
 

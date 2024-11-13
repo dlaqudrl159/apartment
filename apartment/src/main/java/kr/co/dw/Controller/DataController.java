@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import kr.co.dw.Domain.RegionManager;
 import kr.co.dw.Dto.Response.DataAutoInsertResponseDto;
-import kr.co.dw.Service.DataService;
+import kr.co.dw.Service.AutoData.DataService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -33,7 +33,7 @@ public class DataController {
 		if(tableName == null || tableName.trim().isEmpty()) {
 			return new ResponseEntity<String>("tableName이 null 이거나 빈칸입니다.", HttpStatus.BAD_REQUEST);
 		}
-		
+		DataService.LatLngInsert(tableName);
 		return new ResponseEntity<String>(tableName + "테이블 좌표 저장 완료", HttpStatus.OK);
 		
 	}

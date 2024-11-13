@@ -9,6 +9,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import kr.co.dw.Controller.DataController;
+import kr.co.dw.Service.AutoData.DataService;
 
 @ExtendWith(MockitoExtension.class)
 public class DataServiceImplTest {
