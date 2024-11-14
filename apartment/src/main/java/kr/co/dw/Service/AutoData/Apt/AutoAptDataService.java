@@ -38,5 +38,7 @@ public interface AutoAptDataService {
 	String makeRoadName(String roadName, String roadNameBonbun, String roadNameBubun);
 	
 	String aptTransactionDtoInsert(List<AptTransactionDto> list, ParentRegionName parentRegionName);
+
+	void deleteByRegionYear(ParentRegionName parentRegionName, String deleteYearMonth);
 	
 }

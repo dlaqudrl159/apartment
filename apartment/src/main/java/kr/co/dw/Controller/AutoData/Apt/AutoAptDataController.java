@@ -23,7 +23,7 @@ public class AutoAptDataController {
 	private final Logger logger = LoggerFactory.getLogger(AutoAptDataController.class);
 	
 	@GetMapping("/data/autodatainsert")
-	public ResponseEntity<DataAutoInsertResponseDto> AutoDataInsert(@RequestParam(required = false, value = "parentEngRegionName") String parentEngRegionName) throws java.text.ParseException{
+	public ResponseEntity<DataAutoInsertResponseDto> autoDataInsert(@RequestParam(required = false, value = "parentEngRegionName") String parentEngRegionName) throws java.text.ParseException{
 		
 		try {
 			DataAutoInsertResponseDto dto = autoAptService.autoDataInsert(parentEngRegionName);

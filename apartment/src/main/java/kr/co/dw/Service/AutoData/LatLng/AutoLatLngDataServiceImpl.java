@@ -31,14 +31,14 @@ public class AutoLatLngDataServiceImpl implements AutoLatLngDataService{
 	
 	@Transactional
 	@Override
-	public List<AptLatLngDto> latLngInsert(String tableName) throws MalformedURLException, IOException, ParseException, InterruptedException {
+	public List<AptLatLngDto> latLngInsert(String parentEngRegionName) throws MalformedURLException, IOException, ParseException, InterruptedException {
 		
-		return getLatLng(autoLatLngDataMapper.getList(tableName), tableName);
+		return getLatLng(autoLatLngDataMapper.getList(parentEngRegionName));
 		
 	}
 
 	@Override
-	public List<AptLatLngDto> getLatLng(List<AptLatLngDto> list, String tableName)
+	public List<AptLatLngDto> getLatLng(List<AptLatLngDto> list)
 			throws IOException, ParseException, InterruptedException {
 		// TODO Auto-generated method stub
 		JSONObject jsrs = null;

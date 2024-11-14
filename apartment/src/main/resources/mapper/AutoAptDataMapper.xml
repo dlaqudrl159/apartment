@@ -67,7 +67,7 @@
     
     </insert>
     
-    <delete id="deleteRegionYear">
+    <delete id="deleteByRegionYear">
     
     delete from ${REGION} where DEALYEARMONTH >= #{YEAR}
     

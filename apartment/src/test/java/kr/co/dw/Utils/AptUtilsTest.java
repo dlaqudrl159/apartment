@@ -36,7 +36,6 @@ import org.xml.sax.SAXException;
 
 import kr.co.dw.Dto.Common.AptLatLngDto;
 import kr.co.dw.Dto.Common.AptTransactionDto;
-import kr.co.dw.Service.AutoData.DataServiceImpl;
 
 public class AptUtilsTest {
 
@@ -422,7 +421,7 @@ public class AptUtilsTest {
 	}
 	@Test
 	void test8() throws IOException, ParseException, InterruptedException {
-		DataServiceImpl DataServiceimpl = new DataServiceImpl(null);
+	//	DataServiceImpl DataServiceimpl = new DataServiceImpl(null);
 		List<AptLatLngDto> list = new ArrayList<>();
 		
 		AptLatLngDto NameCountDto = new AptLatLngDto();
@@ -430,8 +429,8 @@ public class AptUtilsTest {
 		NameCountDto.setBUNGI("476");
 		NameCountDto.setROADNAME("29");
 		NameCountDto.setAPARTMENTNAME("고성천진한신더휴");
-		DataServiceimpl.getparcel(NameCountDto, "DUMMY");
-		DataServiceimpl.getroadname(NameCountDto, "DUMMY");
+		//DataServiceimpl.getparcel(NameCountDto, "DUMMY");
+		//DataServiceimpl.getroadname(NameCountDto, "DUMMY");
 		list.add(NameCountDto);
 		//DataServiceimpl.getLatLng(list, "DUMMY");
 		

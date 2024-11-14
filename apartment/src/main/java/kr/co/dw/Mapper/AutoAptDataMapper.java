@@ -6,7 +6,7 @@ import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface AutoAptDataMapper {
 
-	void deleteRegionYear(@Param("REGION") String regionName, @Param("YEAR") String dbYear);
+	void deleteByRegionYear(@Param("REGION") String regionName, @Param("YEAR") String dbYear);
 	
 	
 }

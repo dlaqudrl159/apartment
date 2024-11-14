@@ -24,8 +24,8 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -41,7 +41,6 @@ import kr.co.dw.Dto.Common.RegionYearDto;
 import kr.co.dw.Dto.Response.DataAutoInsertResponseDto;
 import kr.co.dw.Exception.ApiException;
 import kr.co.dw.Mapper.AutoAptDataMapper;
-import kr.co.dw.Service.AutoData.DataServiceImpl;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -61,7 +60,6 @@ public class AutoAptDataServiceImpl implements AutoAptDataService{
 	public DataAutoInsertResponseDto autoDataInsert(String parentRegionName) {
 		// TODO Auto-generated method stub
 		if(parentRegionName == null) {
-			
 			return allex1(RegionManager.getInstance().getParentRegionNameList());
 		}
 		
@@ -138,13 +136,26 @@ public class AutoAptDataServiceImpl implements AutoAptDataService{
 		}
 		
 		String deleteYearMonth = makeDealYearMonth(DELETEYEAR);
-		System.out.println(parentRegionName.getEngParentName() + deleteYearMonth);
-		autoAptDataMapper.deleteRegionYear(parentRegionName.getEngParentName(), deleteYearMonth);
+		deleteByRegionYear(parentRegionName, deleteYearMonth);
 		
 		aptTransactionDtoInsert(insertaptTransactionDtoList, parentRegionName);
 		
 		return new DataAutoInsertResponseDto("SUCCESS", null, parentRegionName.getEngParentName() + " 테이블 입력 완료", totalCount, LocalDateTime.now(), response);
 	}
+	
+	@Transactional
+	@Override
+	public void deleteByRegionYear(ParentRegionName parentRegionName, String deleteYearMonth) {
+		
+		try {
+			autoAptDataMapper.deleteByRegionYear(parentRegionName.getEngParentName(), deleteYearMonth);
+		} catch (Exception e) {
+			// TODO: handle exception
+			throw new RuntimeException(e.getMessage());
+		}
+		
+	}
+	
 	@Override
 	public String makeDealYearMonth(int num) {
 		// TODO Auto-generated method stub

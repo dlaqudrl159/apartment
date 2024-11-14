@@ -13,7 +13,7 @@ public interface AutoLatLngDataService {
 
 	List<AptLatLngDto> latLngInsert(String tableName) throws MalformedURLException, IOException, ParseException, InterruptedException;
 
-	List<AptLatLngDto> getLatLng(List<AptLatLngDto> list, String tableName) throws IOException, ParseException, InterruptedException;
+	List<AptLatLngDto> getLatLng(List<AptLatLngDto> list) throws IOException, ParseException, InterruptedException;
 
 	JSONObject geocodersearchaddress(String searchAddr, String searchType) throws IOException, ParseException;
 
