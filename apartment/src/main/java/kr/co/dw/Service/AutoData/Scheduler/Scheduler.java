@@ -1,5 +1,6 @@
 package kr.co.dw.Service.AutoData.Scheduler;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -11,11 +12,14 @@ import lombok.RequiredArgsConstructor;
 public class Scheduler {
 
 	private final AutoAptDataService autoAptDataService;
+
+	@Value("${scheduling.job.cron}")
+	private String scheduleCron;
 	
-	@Scheduled(cron = "0 57 21 * * *")
+	@Scheduled(cron = "${scheduling.job.cron}")
 	public void taskallex1() {
-		
-		autoAptDataService.autoDataInsert(null);
+		System.out.println(scheduleCron);
+		//autoAptDataService.autoDataInsert(null);
 	}
 	
 }
