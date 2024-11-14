@@ -6,17 +6,18 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import kr.co.dw.Domain.ApiDto;
-import kr.co.dw.Domain.LatLngDto;
-import kr.co.dw.Domain.NameCountDto;
+import kr.co.dw.Dto.Common.AptLatLngDto;
+import kr.co.dw.Dto.Common.AptTransactionDto;
 
 @Mapper
 public interface AptMapper {
 
-	List<LatLngDto> getMarkers(Map<String, String> map);
-	
-	List<NameCountDto> getLatLngNameCountDto(@Param("lat") String lat,@Param("lng") String lng);
+	List<AptLatLngDto> getMarkers(Map<String, String> map);
 
-	List<ApiDto> getAptTrancsactionHistory(Map<String, String> map);
+	List<AptTransactionDto> getAptTrancsactionHistory(@Param("AptLatLngDto") AptLatLngDto AptLatLngDto,@Param("tableName") String tableName);
+	
+	List<String> getRoadName(@Param("AptLatLngDto") AptLatLngDto AptLatLngDto);
+
+	
 	
 }

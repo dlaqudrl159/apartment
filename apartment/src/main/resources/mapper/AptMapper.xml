@@ -3,7 +3,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.co.dw.Mapper.AptMapper">
-    <resultMap type="NameCountDto" id="newNameCountDto">
+
+    <resultMap type="AptLatLngDto" id="newAptLatLngDto">
   	<!-- 1:1로 DTO의 멤버변수를 매핑-->
   	<result column="sigungu" property="SIGUNGU"/>
   	<result column="bungi" property="BUNGI"/>
@@ -15,7 +16,7 @@
     
     <select id="getMarkers" parameterType="hashMap">
     
-    select LAT, LNG from LATLNG where SIGUNGU like 
+    select SIGUNGU, BUNGI, APARTMENTNAME, LAT, LNG from LATLNG where SIGUNGU like 
     
     <choose>
         <when test="city == '세종특별자치시'">
@@ -25,20 +26,20 @@
             #{city} || '%' AND SIGUNGU LIKE '%' || #{district} || '%'
         </otherwise>
     </choose>
-    group by LAT , LNG  
+    
+    group by SIGUNGU, BUNGI, APARTMENTNAME, LAT, LNG  
     
     </select>
     
-    <select id="getLatLngNameCountDto" resultMap="newNameCountDto">
+    <select id = "getAptTrancsactionHistory">
     
-    Select * from LATLNG where LAT = #{lat} and LNG = #{lng}
-    
-    </select>
-    
-    <select id = "getAptTrancsactionHistory" parameterType="hashMap">
-    
-    select * from ${tableName} where apartmentname = #{apartmentname} and bungi = #{bungi} and sigungu = #{sigungu} and roadname = #{roadname}
+    select * from ${tableName} where SIGUNGU = #{AptLatLngDto.SIGUNGU} and APARTMENTNAME = #{AptLatLngDto.APARTMENTNAME} and BUNGI = #{AptLatLngDto.BUNGI}
     
     </select>
     
+    <select id = "getRoadName">
+    
+    select RoadName from LATLNG where SIGUNGU = #{AptLatLngDto.SIGUNGU} and APARTMENTNAME = #{AptLatLngDto.APARTMENTNAME} and BUNGI = #{AptLatLngDto.BUNGI}
+    
+    </select>
 </mapper>	

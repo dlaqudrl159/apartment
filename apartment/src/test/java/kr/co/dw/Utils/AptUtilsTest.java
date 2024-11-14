@@ -1,17 +1,12 @@
 package kr.co.dw.Utils;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -19,7 +14,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.function.Predicate;
@@ -40,10 +34,8 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import kr.co.dw.Domain.ApiDto;
-import kr.co.dw.Domain.NameCountDto;
-import kr.co.dw.Service.DataService;
-import kr.co.dw.Service.DataServiceImpl;
+import kr.co.dw.Dto.Common.AptLatLngDto;
+import kr.co.dw.Dto.Common.AptTransactionDto;
 
 public class AptUtilsTest {
 
@@ -294,7 +286,7 @@ public class AptUtilsTest {
 		//System.out.println(totalCount);
 		//int a = Integer.parseInt(totalCount) - nowtotalCount;
 		//System.out.println(a);
-        List<ApiDto> list = new ArrayList<>();
+        List<AptTransactionDto> list = new ArrayList<>();
        // System.out.println(nList.getLength());
         
 		
@@ -303,7 +295,7 @@ public class AptUtilsTest {
         for(int i = 0 ; i < nList.getLength() ; i++) {
         	
         	Node nNode = nList.item(i);
-        	ApiDto ApiDto = new ApiDto();
+        	AptTransactionDto ApiDto = new AptTransactionDto();
         	if(nNode.getNodeType() == Node.ELEMENT_NODE) {
         		Element eElement = (Element) nNode;
         		
@@ -395,8 +387,8 @@ public class AptUtilsTest {
 	@Test
 	void test7() {
 		
-		NameCountDto dto = new NameCountDto();
-		NameCountDto dto2 = new NameCountDto();
+		AptLatLngDto dto = new AptLatLngDto();
+		AptLatLngDto dto2 = new AptLatLngDto();
 		
 		String Sigungu = "서울특별시 중랑구 망우동";
 		String Bungi = "435-2";
@@ -429,16 +421,16 @@ public class AptUtilsTest {
 	}
 	@Test
 	void test8() throws IOException, ParseException, InterruptedException {
-		DataServiceImpl DataServiceimpl = new DataServiceImpl(null);
-		List<NameCountDto> list = new ArrayList<>();
+	//	DataServiceImpl DataServiceimpl = new DataServiceImpl(null);
+		List<AptLatLngDto> list = new ArrayList<>();
 		
-		NameCountDto NameCountDto = new NameCountDto();
+		AptLatLngDto NameCountDto = new AptLatLngDto();
 		NameCountDto.setSIGUNGU("강원특별자치도 고성군 토성면 천진리");
 		NameCountDto.setBUNGI("476");
 		NameCountDto.setROADNAME("29");
 		NameCountDto.setAPARTMENTNAME("고성천진한신더휴");
-		DataServiceimpl.getparcel(NameCountDto, "DUMMY");
-		DataServiceimpl.getroadname(NameCountDto, "DUMMY");
+		//DataServiceimpl.getparcel(NameCountDto, "DUMMY");
+		//DataServiceimpl.getroadname(NameCountDto, "DUMMY");
 		list.add(NameCountDto);
 		//DataServiceimpl.getLatLng(list, "DUMMY");
 		
@@ -468,12 +460,12 @@ public class AptUtilsTest {
 	}
 	@Test
 	void test11() {
-		List<ApiDto> oldList = new ArrayList<>();
-		List<ApiDto> newList = new ArrayList<>();
+		List<AptTransactionDto> oldList = new ArrayList<>();
+		List<AptTransactionDto> newList = new ArrayList<>();
 		
-		ApiDto dto1 = new ApiDto("부산광역시 동구 초량동", "593", "0593", "0000", "부산역삼정그린코아더시티", "75.2492", "202408", "8", "40,000", "-", "20", "개인", "개인", "2021", "중앙대로179번길 27", "-", "중개거래", "부산 동구", "-", "26170");
-		ApiDto dto2 = new ApiDto("부산광역시 동구 좌천동", "808", "0808", "0000", "동원드림타운", "84.9341", "202408", "11", "32,900", "-", "19", "개인", "개인", "2002", "고관로 173", "-", "중개거래", "부산 동구", "-", "26170");
-		ApiDto dto3 = new ApiDto("부산광역시 동구 수정동", "1352", "1352", "0000", "협성휴포레부산진역오션뷰", "69.5108", "202408", "14", "49,000", "-", "17", "개인", "개인", "2019", "중앙대로 357", "-", "중개거래", "부산 동구", "-", "26170");
+		AptTransactionDto dto1 = new AptTransactionDto("부산광역시 동구 초량동", "593", "0593", "0000", "부산역삼정그린코아더시티", "75.2492", "202408", "8", "40,000", "-", "20", "개인", "개인", "2021", "중앙대로179번길 27", "-", "중개거래", "부산 동구", "-", "26170");
+		AptTransactionDto dto2 = new AptTransactionDto("부산광역시 동구 좌천동", "808", "0808", "0000", "동원드림타운", "84.9341", "202408", "11", "32,900", "-", "19", "개인", "개인", "2002", "고관로 173", "-", "중개거래", "부산 동구", "-", "26170");
+		AptTransactionDto dto3 = new AptTransactionDto("부산광역시 동구 수정동", "1352", "1352", "0000", "협성휴포레부산진역오션뷰", "69.5108", "202408", "14", "49,000", "-", "17", "개인", "개인", "2019", "중앙대로 357", "-", "중개거래", "부산 동구", "-", "26170");
 		
 		oldList.add(dto1);
 		oldList.add(dto2);
@@ -482,7 +474,7 @@ public class AptUtilsTest {
 		newList.add(dto2);
 		newList.add(dto3);
 		
-		List<ApiDto> newnewList = newList.stream().filter(n -> oldList.stream().noneMatch(Predicate.isEqual(n))).collect(Collectors.toList());
+		List<AptTransactionDto> newnewList = newList.stream().filter(n -> oldList.stream().noneMatch(Predicate.isEqual(n))).collect(Collectors.toList());
 		System.out.println(newnewList);
 	}
 	

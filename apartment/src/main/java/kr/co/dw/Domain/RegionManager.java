@@ -15,6 +15,26 @@ public class RegionManager {
         return instance;
     }
 	
+	public static final List<ParentRegionName> PARENTREGIONLIST = List.of(
+			new ParentRegionName("서울특별시","SEOUL"),
+			new ParentRegionName("부산광역시","BUSAN"),
+			new ParentRegionName("대구광역시","DAEGU"),
+			new ParentRegionName("인천광역시","INCHEON"),
+			new ParentRegionName("광주광역시","GWANGJU"),
+			new ParentRegionName("대전광역시","DAEJEON"),
+			new ParentRegionName("울산광역시","ULSAN"),
+			new ParentRegionName("세종특별자치시","SEJONG"),
+			new ParentRegionName("경기도","GYEONGGIDO"),
+			new ParentRegionName("강원특별자치도","GANGWONDO"),
+			new ParentRegionName("충청북도","CHUNGCHEONGBUKDO"),
+			new ParentRegionName("충청남도","CHUNGCHEONGNAMDO"),
+			new ParentRegionName("전북특별자치도","JEOLLABUKDO"),
+			new ParentRegionName("전라남도","JEOLLANAMDO"),
+			new ParentRegionName("경상북도","GYEONGSANGBUKDO"),
+			new ParentRegionName("경상남도","GYEONGSANGNAMDO"),
+			new ParentRegionName("제주특별자치도","JEJU")
+			);
+	
 	public static final List<Region> SEOUL = List.of(
 			
 			new Region("11110", "종로구"), new Region("11140", "중구"),
@@ -28,6 +48,7 @@ public class RegionManager {
 			new Region("11710", "송파구"), new Region("11740", "강동구")
 			
 			);
+	
 	public static final List<Region> BUSAN = List.of(
 
 			new Region("26110", "중구"), new Region("26140", "서구"), new Region("26170", "동구"),
@@ -52,6 +73,7 @@ public class RegionManager {
             new Region("27720", "군위군")
 			
 			);
+	
 	public static final List<Region> INCHEON = List.of(
 			
 			new Region("28110", "중구"),
@@ -366,7 +388,11 @@ public class RegionManager {
 		return null;
 	}
 	
-	public ParentRegionName getkorParentName(String RegionName) {
+	public List<ParentRegionName> getParentRegionNameList() {
+		return RegionManager.PARENTREGIONLIST;
+	}
+	
+	public ParentRegionName getParentNameByEng(String RegionName) {
 		
 		if(RegionName.equals("SEOUL")){
 			return new ParentRegionName("서울특별시", "SEOUL"); 
@@ -402,8 +428,9 @@ public class RegionManager {
 			return new ParentRegionName("강원특별자치도", "GANGWONDO"); 
 		}else if(RegionName.equals("JEOLLABUKDO")) {
 			return new ParentRegionName("전북특별자치도", "JEOLLABUKDO"); 
+		}else {
+			return null;
 		}
-		return null;
 	}
 	
 }

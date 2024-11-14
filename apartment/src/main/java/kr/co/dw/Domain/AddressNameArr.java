@@ -3,11 +3,11 @@ package kr.co.dw.Domain;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class AddressNameArrDto {
+public class AddressNameArr {
 
 	private List<AddressElement> list;
 	
-	public AddressNameArrDto(List<String> addresses) {
+	public AddressNameArr(List<String> addresses) {
         this.list = processAddresses(addresses);
     }
 	
