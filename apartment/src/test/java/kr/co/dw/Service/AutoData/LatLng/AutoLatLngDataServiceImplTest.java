@@ -1,6 +1,11 @@
 package kr.co.dw.Service.AutoData.LatLng;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
@@ -12,6 +17,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Value;
 
+import kr.co.dw.Dto.Common.RegionYearDto;
+import kr.co.dw.Exception.ApiException;
 import kr.co.dw.Mapper.AutoLatLngDataMapper;
 
 @ExtendWith(MockitoExtension.class)
@@ -31,9 +38,5 @@ public class AutoLatLngDataServiceImplTest {
 		String searchTypeparcel = "parcel";
 		String searchTyperoad = "road";
 		
-		JSONObject jsrs = autoLatLngDataService.geocodersearchaddress(address, searchTypeparcel);
-		System.out.println(jsrs);
 	}
-	
-	
 }

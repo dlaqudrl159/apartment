@@ -178,7 +178,7 @@ public class AutoAptDataServiceImpl implements AutoAptDataService{
 	@Override
 	public StringBuilder getRTMSDataSvcAptTradeDev(RegionYearDto regionYearDto) throws IOException {
 		// TODO Auto-generated method stub
-		
+		String servicekey = "=f4Ed1eAJYzb%2BQ%2BtpQx4G%2BQvFuO0ZJJMZIInJGo%2FpG889YetxgnnGE9umfvGSe8TPyZ88bAUWw%2Bn7ETYTooeF5A%3D%3D";
 		StringBuilder sb = null;
 		StringBuilder urlBuilder = new StringBuilder("http://apis.data.go.kr/1613000/RTMSDataSvcAptTradeDev/getRTMSDataSvcAptTradeDev"); /*URL*/
         urlBuilder.append("?" + URLEncoder.encode("serviceKey","UTF-8") + "=f4Ed1eAJYzb%2BQ%2BtpQx4G%2BQvFuO0ZJJMZIInJGo%2FpG889YetxgnnGE9umfvGSe8TPyZ88bAUWw%2Bn7ETYTooeF5A%3D%3D"); /*Service Key*/
@@ -196,8 +196,6 @@ public class AutoAptDataServiceImpl implements AutoAptDataService{
             rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
         } else {
             rd = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
-            logger.error(conn.getResponseMessage() + " " + conn.getResponseCode());
-            throw new ApiException(conn.getResponseMessage() , conn.getResponseCode());
         }
         sb = new StringBuilder();
         String line;
