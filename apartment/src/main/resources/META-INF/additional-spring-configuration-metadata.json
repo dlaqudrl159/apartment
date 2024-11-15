@@ -8,5 +8,15 @@
     "name": "scheduling.job.cron",
     "type": "java.lang.String",
     "description": "A description for 'scheduling.job.cron'"
+  },
+  {
+    "name": "path",
+    "type": "java.lang.String",
+    "description": "A description for 'path'"
+  },
+  {
+    "name": "geocodersearchaddress.apikey",
+    "type": "java.lang.String",
+    "description": "A description for 'geocodersearchaddress.apikey'"
   }
 ]}

@@ -1,0 +1,107 @@
+2024-11-14 22:44:55.572  INFO 38436 --- [apartment] [restartedMain] kr.co.dw.ApartmentApplication            : Starting ApartmentApplication using Java 17.0.6 with PID 38436 (C:\Users\qkfka\git\apartment\apartment\bin\main started by qkfka in C:\Users\qkfka\git\apartment\apartment)
+2024-11-14 22:44:55.573  INFO 38436 --- [apartment] [restartedMain] kr.co.dw.ApartmentApplication            : The following 1 profile is active: "dev"
+2024-11-14 22:44:55.923  INFO 38436 --- [apartment] [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8050 (http)
+2024-11-14 22:44:55.924  INFO 38436 --- [apartment] [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2024-11-14 22:44:55.924  INFO 38436 --- [apartment] [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.19]
+2024-11-14 22:44:55.970  INFO 38436 --- [apartment] [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2024-11-14 22:44:55.970  INFO 38436 --- [apartment] [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 394 ms
+2024-11-14 22:44:55.978 DEBUG 38436 --- [apartment] [restartedMain] o.s.b.w.s.ServletContextInitializerBeans : Mapping filters: characterEncodingFilter urls=[/*] order=-2147483648, formContentFilter urls=[/*] order=-9900, requestContextFilter urls=[/*] order=-105
+2024-11-14 22:44:55.978 DEBUG 38436 --- [apartment] [restartedMain] o.s.b.w.s.ServletContextInitializerBeans : Mapping servlets: dispatcherServlet urls=[/]
+2024-11-14 22:44:56.116 DEBUG 38436 --- [apartment] [restartedMain] s.w.s.m.m.a.RequestMappingHandlerMapping : 8 mappings in 'requestMappingHandlerMapping'
+2024-11-14 22:44:56.147 DEBUG 38436 --- [apartment] [restartedMain] o.s.w.s.handler.SimpleUrlHandlerMapping  : Patterns [/webjars/**, /**] in 'resourceHandlerMapping'
+2024-11-14 22:44:56.152 DEBUG 38436 --- [apartment] [restartedMain] s.w.s.m.m.a.RequestMappingHandlerAdapter : ControllerAdvice beans: 0 @ModelAttribute, 0 @InitBinder, 1 RequestBodyAdvice, 1 ResponseBodyAdvice
+2024-11-14 22:44:56.156 DEBUG 38436 --- [apartment] [restartedMain] .m.m.a.ExceptionHandlerExceptionResolver : ControllerAdvice beans: 0 @ExceptionHandler, 1 ResponseBodyAdvice
+2024-11-14 22:44:56.197  INFO 38436 --- [apartment] [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2024-11-14 22:44:56.209  INFO 38436 --- [apartment] [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8050 (http) with context path ''
+2024-11-14 22:44:56.216  INFO 38436 --- [apartment] [restartedMain] kr.co.dw.ApartmentApplication            : Started ApartmentApplication in 0.692 seconds (process running for 70.421)
+2024-11-14 22:44:56.218  INFO 38436 --- [apartment] [restartedMain] .ConditionEvaluationDeltaLoggingListener : Condition evaluation unchanged
+2024-11-14 22:45:09.136  INFO 38436 --- [apartment] [File Watcher] rtingClassPathChangeChangedEventListener : Restarting due to 1 class path change (0 additions, 0 deletions, 1 modification)
+2024-11-14 22:45:09.288  INFO 38436 --- [apartment] [restartedMain] kr.co.dw.ApartmentApplication            : Starting ApartmentApplication using Java 17.0.6 with PID 38436 (C:\Users\qkfka\git\apartment\apartment\bin\main started by qkfka in C:\Users\qkfka\git\apartment\apartment)
+2024-11-14 22:45:09.288  INFO 38436 --- [apartment] [restartedMain] kr.co.dw.ApartmentApplication            : The following 1 profile is active: "dev"
+2024-11-14 22:45:09.624  INFO 38436 --- [apartment] [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8050 (http)
+2024-11-14 22:45:09.625  INFO 38436 --- [apartment] [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2024-11-14 22:45:09.625  INFO 38436 --- [apartment] [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.19]
+2024-11-14 22:45:09.655  INFO 38436 --- [apartment] [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2024-11-14 22:45:09.655  INFO 38436 --- [apartment] [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 363 ms
+2024-11-14 22:45:09.661 DEBUG 38436 --- [apartment] [restartedMain] o.s.b.w.s.ServletContextInitializerBeans : Mapping filters: characterEncodingFilter urls=[/*] order=-2147483648, formContentFilter urls=[/*] order=-9900, requestContextFilter urls=[/*] order=-105
+2024-11-14 22:45:09.661 DEBUG 38436 --- [apartment] [restartedMain] o.s.b.w.s.ServletContextInitializerBeans : Mapping servlets: dispatcherServlet urls=[/]
+2024-11-14 22:45:09.773 DEBUG 38436 --- [apartment] [restartedMain] s.w.s.m.m.a.RequestMappingHandlerMapping : 8 mappings in 'requestMappingHandlerMapping'
+2024-11-14 22:45:09.807 DEBUG 38436 --- [apartment] [restartedMain] o.s.w.s.handler.SimpleUrlHandlerMapping  : Patterns [/webjars/**, /**] in 'resourceHandlerMapping'
+2024-11-14 22:45:09.817 DEBUG 38436 --- [apartment] [restartedMain] s.w.s.m.m.a.RequestMappingHandlerAdapter : ControllerAdvice beans: 0 @ModelAttribute, 0 @InitBinder, 1 RequestBodyAdvice, 1 ResponseBodyAdvice
+2024-11-14 22:45:09.821 DEBUG 38436 --- [apartment] [restartedMain] .m.m.a.ExceptionHandlerExceptionResolver : ControllerAdvice beans: 0 @ExceptionHandler, 1 ResponseBodyAdvice
+2024-11-14 22:45:09.861  INFO 38436 --- [apartment] [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2024-11-14 22:45:09.876  INFO 38436 --- [apartment] [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8050 (http) with context path ''
+2024-11-14 22:45:09.883  INFO 38436 --- [apartment] [restartedMain] kr.co.dw.ApartmentApplication            : Started ApartmentApplication in 0.642 seconds (process running for 84.089)
+2024-11-14 22:45:09.885  INFO 38436 --- [apartment] [restartedMain] .ConditionEvaluationDeltaLoggingListener : Condition evaluation unchanged
+2024-11-14 22:45:14.478  INFO 38436 --- [apartment] [File Watcher] rtingClassPathChangeChangedEventListener : Restarting due to 1 class path change (0 additions, 0 deletions, 1 modification)
+2024-11-14 22:45:14.619  INFO 38436 --- [apartment] [restartedMain] kr.co.dw.ApartmentApplication            : Starting ApartmentApplication using Java 17.0.6 with PID 38436 (C:\Users\qkfka\git\apartment\apartment\bin\main started by qkfka in C:\Users\qkfka\git\apartment\apartment)
+2024-11-14 22:45:14.620  INFO 38436 --- [apartment] [restartedMain] kr.co.dw.ApartmentApplication            : The following 1 profile is active: "dev"
+2024-11-14 22:45:14.957  INFO 38436 --- [apartment] [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8050 (http)
+2024-11-14 22:45:14.957  INFO 38436 --- [apartment] [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2024-11-14 22:45:14.958  INFO 38436 --- [apartment] [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.19]
+2024-11-14 22:45:14.989  INFO 38436 --- [apartment] [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2024-11-14 22:45:14.990  INFO 38436 --- [apartment] [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 368 ms
+2024-11-14 22:45:14.995 DEBUG 38436 --- [apartment] [restartedMain] o.s.b.w.s.ServletContextInitializerBeans : Mapping filters: characterEncodingFilter urls=[/*] order=-2147483648, formContentFilter urls=[/*] order=-9900, requestContextFilter urls=[/*] order=-105
+2024-11-14 22:45:14.995 DEBUG 38436 --- [apartment] [restartedMain] o.s.b.w.s.ServletContextInitializerBeans : Mapping servlets: dispatcherServlet urls=[/]
+2024-11-14 22:45:15.111 DEBUG 38436 --- [apartment] [restartedMain] s.w.s.m.m.a.RequestMappingHandlerMapping : 8 mappings in 'requestMappingHandlerMapping'
+2024-11-14 22:45:15.141 DEBUG 38436 --- [apartment] [restartedMain] o.s.w.s.handler.SimpleUrlHandlerMapping  : Patterns [/webjars/**, /**] in 'resourceHandlerMapping'
+2024-11-14 22:45:15.147 DEBUG 38436 --- [apartment] [restartedMain] s.w.s.m.m.a.RequestMappingHandlerAdapter : ControllerAdvice beans: 0 @ModelAttribute, 0 @InitBinder, 1 RequestBodyAdvice, 1 ResponseBodyAdvice
+2024-11-14 22:45:15.154 DEBUG 38436 --- [apartment] [restartedMain] .m.m.a.ExceptionHandlerExceptionResolver : ControllerAdvice beans: 0 @ExceptionHandler, 1 ResponseBodyAdvice
+2024-11-14 22:45:15.184  INFO 38436 --- [apartment] [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2024-11-14 22:45:15.198  INFO 38436 --- [apartment] [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8050 (http) with context path ''
+2024-11-14 22:45:15.204  INFO 38436 --- [apartment] [restartedMain] kr.co.dw.ApartmentApplication            : Started ApartmentApplication in 0.623 seconds (process running for 89.41)
+2024-11-14 22:45:15.206  INFO 38436 --- [apartment] [restartedMain] .ConditionEvaluationDeltaLoggingListener : Condition evaluation unchanged
+2024-11-14 22:45:19.791  INFO 38436 --- [apartment] [File Watcher] rtingClassPathChangeChangedEventListener : Restarting due to 1 class path change (0 additions, 0 deletions, 1 modification)
+2024-11-14 22:45:19.956  INFO 38436 --- [apartment] [restartedMain] kr.co.dw.ApartmentApplication            : Starting ApartmentApplication using Java 17.0.6 with PID 38436 (C:\Users\qkfka\git\apartment\apartment\bin\main started by qkfka in C:\Users\qkfka\git\apartment\apartment)
+2024-11-14 22:45:19.957  INFO 38436 --- [apartment] [restartedMain] kr.co.dw.ApartmentApplication            : The following 1 profile is active: "dev"
+2024-11-14 22:45:20.324  INFO 38436 --- [apartment] [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8050 (http)
+2024-11-14 22:45:20.325  INFO 38436 --- [apartment] [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2024-11-14 22:45:20.325  INFO 38436 --- [apartment] [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.19]
+2024-11-14 22:45:20.357  INFO 38436 --- [apartment] [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2024-11-14 22:45:20.357  INFO 38436 --- [apartment] [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 396 ms
+2024-11-14 22:45:20.362 DEBUG 38436 --- [apartment] [restartedMain] o.s.b.w.s.ServletContextInitializerBeans : Mapping filters: characterEncodingFilter urls=[/*] order=-2147483648, formContentFilter urls=[/*] order=-9900, requestContextFilter urls=[/*] order=-105
+2024-11-14 22:45:20.362 DEBUG 38436 --- [apartment] [restartedMain] o.s.b.w.s.ServletContextInitializerBeans : Mapping servlets: dispatcherServlet urls=[/]
+2024-11-14 22:45:20.475 DEBUG 38436 --- [apartment] [restartedMain] s.w.s.m.m.a.RequestMappingHandlerMapping : 8 mappings in 'requestMappingHandlerMapping'
+2024-11-14 22:45:20.504 DEBUG 38436 --- [apartment] [restartedMain] o.s.w.s.handler.SimpleUrlHandlerMapping  : Patterns [/webjars/**, /**] in 'resourceHandlerMapping'
+2024-11-14 22:45:20.510 DEBUG 38436 --- [apartment] [restartedMain] s.w.s.m.m.a.RequestMappingHandlerAdapter : ControllerAdvice beans: 0 @ModelAttribute, 0 @InitBinder, 1 RequestBodyAdvice, 1 ResponseBodyAdvice
+2024-11-14 22:45:20.518 DEBUG 38436 --- [apartment] [restartedMain] .m.m.a.ExceptionHandlerExceptionResolver : ControllerAdvice beans: 0 @ExceptionHandler, 1 ResponseBodyAdvice
+2024-11-14 22:45:20.550  INFO 38436 --- [apartment] [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2024-11-14 22:45:20.562  INFO 38436 --- [apartment] [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8050 (http) with context path ''
+2024-11-14 22:45:20.570  INFO 38436 --- [apartment] [restartedMain] kr.co.dw.ApartmentApplication            : Started ApartmentApplication in 0.661 seconds (process running for 94.775)
+2024-11-14 22:45:20.571  INFO 38436 --- [apartment] [restartedMain] .ConditionEvaluationDeltaLoggingListener : Condition evaluation unchanged
+2024-11-14 22:45:25.168  INFO 38436 --- [apartment] [File Watcher] rtingClassPathChangeChangedEventListener : Restarting due to 1 class path change (0 additions, 0 deletions, 1 modification)
+2024-11-14 22:45:25.309  INFO 38436 --- [apartment] [restartedMain] kr.co.dw.ApartmentApplication            : Starting ApartmentApplication using Java 17.0.6 with PID 38436 (C:\Users\qkfka\git\apartment\apartment\bin\main started by qkfka in C:\Users\qkfka\git\apartment\apartment)
+2024-11-14 22:45:25.320  INFO 38436 --- [apartment] [restartedMain] kr.co.dw.ApartmentApplication            : The following 1 profile is active: "dev"
+2024-11-14 22:45:25.641  INFO 38436 --- [apartment] [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8050 (http)
+2024-11-14 22:45:25.642  INFO 38436 --- [apartment] [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2024-11-14 22:45:25.642  INFO 38436 --- [apartment] [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.19]
+2024-11-14 22:45:25.675  INFO 38436 --- [apartment] [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2024-11-14 22:45:25.675  INFO 38436 --- [apartment] [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 352 ms
+2024-11-14 22:45:25.681 DEBUG 38436 --- [apartment] [restartedMain] o.s.b.w.s.ServletContextInitializerBeans : Mapping filters: characterEncodingFilter urls=[/*] order=-2147483648, formContentFilter urls=[/*] order=-9900, requestContextFilter urls=[/*] order=-105
+2024-11-14 22:45:25.681 DEBUG 38436 --- [apartment] [restartedMain] o.s.b.w.s.ServletContextInitializerBeans : Mapping servlets: dispatcherServlet urls=[/]
+2024-11-14 22:45:25.786 DEBUG 38436 --- [apartment] [restartedMain] s.w.s.m.m.a.RequestMappingHandlerMapping : 8 mappings in 'requestMappingHandlerMapping'
+2024-11-14 22:45:25.814 DEBUG 38436 --- [apartment] [restartedMain] o.s.w.s.handler.SimpleUrlHandlerMapping  : Patterns [/webjars/**, /**] in 'resourceHandlerMapping'
+2024-11-14 22:45:25.825 DEBUG 38436 --- [apartment] [restartedMain] s.w.s.m.m.a.RequestMappingHandlerAdapter : ControllerAdvice beans: 0 @ModelAttribute, 0 @InitBinder, 1 RequestBodyAdvice, 1 ResponseBodyAdvice
+2024-11-14 22:45:25.829 DEBUG 38436 --- [apartment] [restartedMain] .m.m.a.ExceptionHandlerExceptionResolver : ControllerAdvice beans: 0 @ExceptionHandler, 1 ResponseBodyAdvice
+2024-11-14 22:45:25.860  INFO 38436 --- [apartment] [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2024-11-14 22:45:25.872  INFO 38436 --- [apartment] [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8050 (http) with context path ''
+2024-11-14 22:45:25.878  INFO 38436 --- [apartment] [restartedMain] kr.co.dw.ApartmentApplication            : Started ApartmentApplication in 0.609 seconds (process running for 100.083)
+2024-11-14 22:45:25.880  INFO 38436 --- [apartment] [restartedMain] .ConditionEvaluationDeltaLoggingListener : Condition evaluation unchanged
+2024-11-14 22:45:38.820  INFO 38436 --- [apartment] [File Watcher] rtingClassPathChangeChangedEventListener : Restarting due to 1 class path change (0 additions, 0 deletions, 1 modification)
+2024-11-14 22:45:38.984  INFO 38436 --- [apartment] [restartedMain] kr.co.dw.ApartmentApplication            : Starting ApartmentApplication using Java 17.0.6 with PID 38436 (C:\Users\qkfka\git\apartment\apartment\bin\main started by qkfka in C:\Users\qkfka\git\apartment\apartment)
+2024-11-14 22:45:38.992  INFO 38436 --- [apartment] [restartedMain] kr.co.dw.ApartmentApplication            : The following 1 profile is active: "dev"
+2024-11-14 22:45:39.382  INFO 38436 --- [apartment] [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8050 (http)
+2024-11-14 22:45:39.383  INFO 38436 --- [apartment] [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2024-11-14 22:45:39.384  INFO 38436 --- [apartment] [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.19]
+2024-11-14 22:45:39.424  INFO 38436 --- [apartment] [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2024-11-14 22:45:39.424  INFO 38436 --- [apartment] [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 428 ms
+2024-11-14 22:45:39.431 DEBUG 38436 --- [apartment] [restartedMain] o.s.b.w.s.ServletContextInitializerBeans : Mapping filters: characterEncodingFilter urls=[/*] order=-2147483648, formContentFilter urls=[/*] order=-9900, requestContextFilter urls=[/*] order=-105
+2024-11-14 22:45:39.431 DEBUG 38436 --- [apartment] [restartedMain] o.s.b.w.s.ServletContextInitializerBeans : Mapping servlets: dispatcherServlet urls=[/]
+2024-11-14 22:45:39.561 DEBUG 38436 --- [apartment] [restartedMain] s.w.s.m.m.a.RequestMappingHandlerMapping : 8 mappings in 'requestMappingHandlerMapping'
+2024-11-14 22:45:39.591 DEBUG 38436 --- [apartment] [restartedMain] o.s.w.s.handler.SimpleUrlHandlerMapping  : Patterns [/webjars/**, /**] in 'resourceHandlerMapping'
+2024-11-14 22:45:39.596 DEBUG 38436 --- [apartment] [restartedMain] s.w.s.m.m.a.RequestMappingHandlerAdapter : ControllerAdvice beans: 0 @ModelAttribute, 0 @InitBinder, 1 RequestBodyAdvice, 1 ResponseBodyAdvice
+2024-11-14 22:45:39.603 DEBUG 38436 --- [apartment] [restartedMain] .m.m.a.ExceptionHandlerExceptionResolver : ControllerAdvice beans: 0 @ExceptionHandler, 1 ResponseBodyAdvice
+2024-11-14 22:45:39.634  INFO 38436 --- [apartment] [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2024-11-14 22:45:39.647  INFO 38436 --- [apartment] [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8050 (http) with context path ''
+2024-11-14 22:45:39.653  INFO 38436 --- [apartment] [restartedMain] kr.co.dw.ApartmentApplication            : Started ApartmentApplication in 0.718 seconds (process running for 113.859)
+2024-11-14 22:45:39.654  INFO 38436 --- [apartment] [restartedMain] .ConditionEvaluationDeltaLoggingListener : Condition evaluation unchanged

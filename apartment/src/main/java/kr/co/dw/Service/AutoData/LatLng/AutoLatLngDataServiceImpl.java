@@ -14,6 +14,7 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,6 +29,9 @@ public class AutoLatLngDataServiceImpl implements AutoLatLngDataService{
 	private final Logger logger = LoggerFactory.getLogger(AutoLatLngDataServiceImpl.class);
 	
 	private final AutoLatLngDataMapper autoLatLngDataMapper;
+	
+	@Value("${geocodersearchaddress.apikey}") //"#{@environment.getProperty('geocodersearchaddress.apikey')}" // "${geocodersearchaddress.apikey}"
+	private String apikey;
 	
 	@Transactional
 	@Override
@@ -103,9 +107,9 @@ public class AutoLatLngDataServiceImpl implements AutoLatLngDataService{
 	@Override
 	public JSONObject geocodersearchaddress(String searchAddr, String searchType) throws IOException, ParseException {
 		// TODO Auto-generated method stub
-		String apikey = "B7417C15-3D68-309A-A5F2-ACB988833093";
+		String apikey = this.apikey;
 		String epsg = "epsg:4326";
-		
+		System.out.println("실제 apikey = " + apikey);
 		StringBuilder sb = new StringBuilder("https://api.vworld.kr/req/address");
 		sb.append("?service=address");
 		sb.append("&request=getCoord");
