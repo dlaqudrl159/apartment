@@ -52,7 +52,7 @@ public class AutoAptDataServiceImplTest {
 		builder = factory.newDocumentBuilder();
 		document = builder.parse(new InputSource(new StringReader(sb.toString())));
 		document.getDocumentElement().normalize();
-		nList = document.getElementsByTagName("item");
+		//nList = document.getElementsByTagName("item");
 		root = document.getDocumentElement();
 		
 		String resultMsg = root.getElementsByTagName("resultMsg").item(0) == null ? "-"
@@ -64,9 +64,12 @@ public class AutoAptDataServiceImplTest {
 		String resultItem = root.getElementsByTagName("items").item(0) == null ? "-"
 				: root.getElementsByTagName("items").item(0).getTextContent();
 		
+		nList = root.getElementsByTagName("item");
+		System.out.println(nList.getLength());
 		System.out.println("resultMsg = " + resultMsg + " resultCode = " + resultCode + " resultTotalCount = " + resultTotalCount + " resultItem = " + resultItem);
 		
 		List<AptTransactionDto> list = autoAptDataServiceImpl.makeAptTransactionDto(nList, dto);
+		System.out.println(list);
 		
 	}
 	

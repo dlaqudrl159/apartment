@@ -29,7 +29,7 @@ public interface AutoAptDataService {
 	
 	StringBuilder getRTMSDataSvcAptTradeDev(RegionYearDto regionYearDto) throws IOException;
 	
-	NodeList makeNodeList(StringBuilder sb) throws SAXException, IOException, ParserConfigurationException;
+	Element makeNodeList(StringBuilder sb) throws SAXException, IOException, ParserConfigurationException;
 	
 	List<AptTransactionDto> makeAptTransactionDto(NodeList nList, RegionYearDto regionYearDto);
 	

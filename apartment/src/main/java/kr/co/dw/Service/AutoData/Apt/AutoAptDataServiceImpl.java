@@ -116,12 +116,25 @@ public class AutoAptDataServiceImpl implements AutoAptDataService{
 				try {
 					logger.info(dealYearMonth + " " + region.getRegionName() + "(" + region.getCode() + ")       시작");	
 					StringBuilder sb = getRTMSDataSvcAptTradeDev(regionYearDto);
-						 
-					List<AptTransactionDto> aptTransactionDtoList = makeAptTransactionDto(makeNodeList(sb), regionYearDto);
-					insertaptTransactionDtoList.addAll(aptTransactionDtoList);	
-					response.add(new DataAutoInsertResponseDto("SUCCESS", regionYearDto, regionYearDto.getRegion().getRegionName() + " 완료     " + regionYearDto.getYear(), aptTransactionDtoList.size(), LocalDateTime.now()));
+					
+					Element eElement = makeNodeList(sb);
+					if(isResultMsg(eElement)) {
+						eElement.getElementsByTagName("item");
+					}
+					/*String resultMsg = eElement.getElementsByTagName("resultMsg").item(0) == null ? "-"
+							: eElement.getElementsByTagName("resultMsg").item(0).getTextContent();
+					String resultCode = eElement.getElementsByTagName("resultCode").item(0) == null ? "-"
+							: eElement.getElementsByTagName("resultCode").item(0).getTextContent();
+					String resultTotalCount = eElement.getElementsByTagName("totalCount").item(0) == null ? "-"
+							: eElement.getElementsByTagName("totalCount").item(0).getTextContent();
+					String resultItem = eElement.getElementsByTagName("items").item(0) == null ? "-"
+							: eElement.getElementsByTagName("items").item(0).getTextContent();*/
+					
+					//List<AptTransactionDto> aptTransactionDtoList = makeAptTransactionDto(makeNodeList(sb), regionYearDto);
+					//insertaptTransactionDtoList.addAll(aptTransactionDtoList);	
+					//response.add(new DataAutoInsertResponseDto("SUCCESS", regionYearDto, regionYearDto.getRegion().getRegionName() + " 완료     " + regionYearDto.getYear(), aptTransactionDtoList.size(), LocalDateTime.now()));
 						
-					totalCount += aptTransactionDtoList.size();
+					//totalCount += aptTransactionDtoList.size();
 					
 				} catch (Exception e) {
 					// TODO: handle exception
@@ -141,6 +154,14 @@ public class AutoAptDataServiceImpl implements AutoAptDataService{
 		aptTransactionDtoInsert(insertaptTransactionDtoList, parentRegionName);
 		
 		return new DataAutoInsertResponseDto("SUCCESS", null, parentRegionName.getEngParentName() + " 테이블 입력 완료", totalCount, LocalDateTime.now(), response);
+	}
+	
+	public boolean isResultMsg(Element eElement) {
+		
+		String resultMsg = eElement.getElementsByTagName("resultMsg").item(0) == null ? "-"
+				: eElement.getElementsByTagName("resultMsg").item(0).getTextContent();
+		
+		return !resultMsg.equals("-");
 	}
 	
 	@Transactional
@@ -181,7 +202,7 @@ public class AutoAptDataServiceImpl implements AutoAptDataService{
 		String servicekey = "=f4Ed1eAJYzb%2BQ%2BtpQx4G%2BQvFuO0ZJJMZIInJGo%2FpG889YetxgnnGE9umfvGSe8TPyZ88bAUWw%2Bn7ETYTooeF5A%3D%3D";
 		StringBuilder sb = null;
 		StringBuilder urlBuilder = new StringBuilder("http://apis.data.go.kr/1613000/RTMSDataSvcAptTradeDev/getRTMSDataSvcAptTradeDev"); /*URL*/
-        urlBuilder.append("?" + URLEncoder.encode("serviceKey","UTF-8") + "=f4Ed1eAJYzb%2BQ%2BtpQx4G%2BQvFuO0ZJJMZIInJGo%2FpG889YetxgnnGE9umfvGSe8TPyZ88bAUWw%2Bn7ETYTooeF5A%3D%3"); /*Service Key*/
+        urlBuilder.append("?" + URLEncoder.encode("serviceKey","UTF-8") + "=f4Ed1eAJYzb%2BQ%2BtpQx4G%2BQvFuO0ZJJMZIInJGo%2FpG889YetxgnnGE9umfvGSe8TPyZ88bAUWw%2Bn7ETYTooeF5A%3D%3D"); /*Service Key*/
         urlBuilder.append("&" + URLEncoder.encode("LAWD_CD","UTF-8") + "=" + URLEncoder.encode(regionYearDto.getRegion().getCode(), "UTF-8")); /*각 지역별 코드*/
         urlBuilder.append("&" + URLEncoder.encode("DEAL_YMD","UTF-8") + "=" + URLEncoder.encode(regionYearDto.getYear()/*DEAL_YMD*/, "UTF-8")); /*월 단위 신고자료*/
         urlBuilder.append("&" + URLEncoder.encode("pageNo","UTF-8") + "=" + URLEncoder.encode(PAGENO, "UTF-8")); /*페이지번호*/
@@ -208,33 +229,19 @@ public class AutoAptDataServiceImpl implements AutoAptDataService{
 		return sb;
 	}
 	@Override
-	public NodeList makeNodeList(StringBuilder sb) throws SAXException, IOException, ParserConfigurationException {
+	public Element makeNodeList(StringBuilder sb) throws SAXException, IOException, ParserConfigurationException {
 		// TODO Auto-generated method stub
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder builder = null;
 		Document document = null;
 		Element root = null;
-		NodeList nList = null;
-		
 		
 		builder = factory.newDocumentBuilder();
 		document = builder.parse(new InputSource(new StringReader(sb.toString())));
 		document.getDocumentElement().normalize();
-		nList = document.getElementsByTagName("item");
 		root = document.getDocumentElement();
-		
-		
-		String resultMsg = root.getElementsByTagName("resultMsg").item(0) == null ? "-"
-				: root.getElementsByTagName("resultMsg").item(0).getTextContent();
-		String resultCode = root.getElementsByTagName("resultCode").item(0) == null ? "-"
-				: root.getElementsByTagName("resultCode").item(0).getTextContent();
-		String resultTotalCount = root.getElementsByTagName("totalCount").item(0) == null ? "-"
-				: root.getElementsByTagName("totalCount").item(0).getTextContent();
-		if (!resultCode.equals("000")) {
-			logger.info("resultMsg:{}","resultCode:{}","resultTotalCount:{}", resultMsg,resultCode,resultTotalCount);
-			throw new RuntimeException();
-		}
-		return nList;
+
+		return root;
 	}
 	@Override
 	public List<AptTransactionDto> makeAptTransactionDto(NodeList nList, RegionYearDto regionYearDto) {
