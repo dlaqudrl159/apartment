@@ -41,7 +41,6 @@ public class AutoAptDataServiceImplTest {
 		
 		RegionYearDto dto = new RegionYearDto(new Region("50130", "서귀포시"), "202411", null, new ParentRegionName("제주특별자치도", "JEJU"));
 		StringBuilder sb = autoAptDataServiceImpl.getRTMSDataSvcAptTradeDev(dto);
-		System.out.println(sb.toString());
 		
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder builder = null;
@@ -62,11 +61,12 @@ public class AutoAptDataServiceImplTest {
 				: root.getElementsByTagName("resultCode").item(0).getTextContent();
 		String resultTotalCount = root.getElementsByTagName("totalCount").item(0) == null ? "-"
 				: root.getElementsByTagName("totalCount").item(0).getTextContent();
-		System.out.println("resultMsg = " + resultMsg + " resultCode = " + resultCode + " resultTotalCount = " + resultTotalCount);
+		String resultItem = root.getElementsByTagName("items").item(0) == null ? "-"
+				: root.getElementsByTagName("items").item(0).getTextContent();
+		
+		System.out.println("resultMsg = " + resultMsg + " resultCode = " + resultCode + " resultTotalCount = " + resultTotalCount + " resultItem = " + resultItem);
 		
 		List<AptTransactionDto> list = autoAptDataServiceImpl.makeAptTransactionDto(nList, dto);
-		System.out.println(list.isEmpty());
-		System.out.println(list.toString());
 		
 	}
 	

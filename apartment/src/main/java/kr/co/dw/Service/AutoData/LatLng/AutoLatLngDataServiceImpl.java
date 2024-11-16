@@ -109,7 +109,6 @@ public class AutoLatLngDataServiceImpl implements AutoLatLngDataService{
 		// TODO Auto-generated method stub
 		String apikey = this.apikey;
 		String epsg = "epsg:4326";
-		System.out.println("실제 apikey = " + apikey);
 		StringBuilder sb = new StringBuilder("https://api.vworld.kr/req/address");
 		sb.append("?service=address");
 		sb.append("&request=getCoord");
