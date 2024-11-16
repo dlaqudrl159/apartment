@@ -16,18 +16,18 @@ public class MyBatisConfiguration {
 
 	 	@Bean(name = "dataSource")
 	    @ConfigurationProperties(prefix = "spring.datasource")
-	    public DataSource dataSource() {
+	    DataSource dataSource() {
 	        return DataSourceBuilder.create().build();
 	    }
 	   
 	    @Bean(name = "sqlSessionTemplate")
 	    @Primary
-	    public SqlSessionTemplate sqlSessionTemplate(SqlSessionFactory sqlSessionFactory) throws Exception {
+	    SqlSessionTemplate sqlSessionTemplate(SqlSessionFactory sqlSessionFactory) throws Exception {
 	        return new SqlSessionTemplate(sqlSessionFactory);
 	    }
 
 	    @Bean(name = "batchSqlSessionTemplate")
-	    public SqlSessionTemplate batchSqlSessionTemplate(SqlSessionFactory sqlSessionFactory) throws Exception {
+	    SqlSessionTemplate batchSqlSessionTemplate(SqlSessionFactory sqlSessionFactory) throws Exception {
 	        return new SqlSessionTemplate(sqlSessionFactory, ExecutorType.BATCH);
 	    }
 	

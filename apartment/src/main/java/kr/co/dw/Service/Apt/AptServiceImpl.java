@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 
 import kr.co.dw.Domain.AddressNameArr;
 import kr.co.dw.Domain.AddressNameArr.AddressElement;
-import kr.co.dw.Dto.Common.AptLatLngDto;
+import kr.co.dw.Dto.Common.AptCoordsDto;
 import kr.co.dw.Dto.Common.AptTransactionDto;
 import kr.co.dw.Dto.Response.AptTransactionResponseDto;
 import kr.co.dw.Mapper.AptMapper;
@@ -29,9 +29,9 @@ public class AptServiceImpl implements AptService {
 	private final Logger logger = LoggerFactory.getLogger(AptServiceImpl.class);
 	
 	@Override
-	public List<AptLatLngDto> getMarkers(List<String> addressnameArr) {
+	public List<AptCoordsDto> getMarkers(List<String> addressnameArr) {
 		// TODO Auto-generated method stub
-		List<AptLatLngDto> AptLatLngDtoList = new ArrayList<>();
+		List<AptCoordsDto> AptLatLngDtoList = new ArrayList<>();
 		List<AddressElement> list = new AddressNameArr(addressnameArr).getList();
 		if (!list.isEmpty()) {
 			list.stream().forEach(AddressElement -> {
@@ -46,20 +46,20 @@ public class AptServiceImpl implements AptService {
 	}
 	
 	@Override
-	public List<AptTransactionResponseDto> getAptTransactionResponseDtolist(AptLatLngDto AptLatLngDto) {
+	public List<AptTransactionResponseDto> getAptTransactionResponseDtolist(AptCoordsDto AptCoordsDto) {
 		// TODO Auto-generated method stub
 		
 		List<AptTransactionResponseDto> AptTransactionResponseDto = new ArrayList<>();
-		String parentRegion = AptUtils.SplitSigungu(AptLatLngDto.getSIGUNGU());
+		String parentRegion = AptUtils.SplitSigungu(AptCoordsDto.getSIGUNGU());
 		String tableName = AptUtils.toEngParentRegion(parentRegion);
 		
-		List<AptTransactionDto> getAptTrancsactionHistory = AptMapper.getAptTrancsactionHistory(AptLatLngDto, tableName);
+		List<AptTransactionDto> getAptTrancsactionHistory = AptMapper.getAptTrancsactionHistory(AptCoordsDto, tableName);
 		if(!getAptTrancsactionHistory.isEmpty()) {
 			Map<String, List<AptTransactionDto>> AptTrancsactionHistoryMap = getAptTrancsactionHistory.stream().collect(Collectors.groupingBy(AptTransactionDto -> AptTransactionDto.getROADNAME()));
 			AptTrancsactionHistoryMap.forEach((roadName, AptTransactionDtoList) -> {
-				AptLatLngDto responseAptLatLngDto = new AptLatLngDto(AptLatLngDto.getSIGUNGU(), AptLatLngDto.getBUNGI(), AptLatLngDto.getAPARTMENTNAME(), roadName, AptLatLngDto.getLAT(), AptLatLngDto.getLNG());
+				AptCoordsDto responseAptLatLngDto = new AptCoordsDto(AptCoordsDto.getSIGUNGU(), AptCoordsDto.getBUNGI(), AptCoordsDto.getAPARTMENTNAME(), roadName, AptCoordsDto.getLAT(), AptCoordsDto.getLNG());
 				List<Integer> getTransactionYears = getTransactionYears(AptTransactionDtoList);
-				AptLatLngDto.setROADNAME(roadName);
+				AptCoordsDto.setROADNAME(roadName);
 				if(getTransactionYears.isEmpty()) {
 					Integer year = Calendar.getInstance().get(Calendar.YEAR);
 					getTransactionYears.add(year);
@@ -67,9 +67,9 @@ public class AptServiceImpl implements AptService {
 				AptTransactionResponseDto.add(new AptTransactionResponseDto(getTransactionYears, AptTransactionDtoList, responseAptLatLngDto));
 			});
 		}else {
-			List<String> roadName = AptMapper.getRoadName(AptLatLngDto);
+			List<String> roadName = AptMapper.getRoadName(AptCoordsDto);
 			roadName.forEach(rRoadName -> {
-				AptLatLngDto responseAptLatLngDto = new AptLatLngDto(AptLatLngDto.getSIGUNGU(), AptLatLngDto.getBUNGI(), AptLatLngDto.getAPARTMENTNAME(), rRoadName, AptLatLngDto.getLAT(), AptLatLngDto.getLNG());
+				AptCoordsDto responseAptLatLngDto = new AptCoordsDto(AptCoordsDto.getSIGUNGU(), AptCoordsDto.getBUNGI(), AptCoordsDto.getAPARTMENTNAME(), rRoadName, AptCoordsDto.getLAT(), AptCoordsDto.getLNG());
 				AptTransactionResponseDto.add(new AptTransactionResponseDto(List.of(2024), null, responseAptLatLngDto));
 			});
 		}

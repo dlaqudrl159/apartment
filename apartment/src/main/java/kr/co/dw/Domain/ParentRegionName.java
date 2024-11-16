@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 public class ParentRegionName {
 
 	private String korParentName;
-	private String EngParentName;
+	private String engParentName;
 	
 }

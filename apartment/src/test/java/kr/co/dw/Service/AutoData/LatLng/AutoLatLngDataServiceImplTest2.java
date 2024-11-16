@@ -15,17 +15,18 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 
-import kr.co.dw.Mapper.AutoLatLngDataMapper;
+import kr.co.dw.Mapper.AutoCoordsDataMapper;
+import kr.co.dw.Service.AutoData.Coords.AutoCoordsDataServiceImpl;
 
 @SpringBootTest(properties = "spring.profiles.active=dev")
 @TestPropertySource("classpath:application-dev.properties")
 public class AutoLatLngDataServiceImplTest2 {
 
 	@Autowired
-	private AutoLatLngDataMapper autoLatLngDataMapper; 
+	private AutoCoordsDataMapper autoCoordsDataMapper; 
 	
 	@Autowired
-	private AutoLatLngDataServiceImpl autoLatLngDataService;
+	private AutoCoordsDataServiceImpl autoLatLngDataService;
 	
 	@Test
 	@DisplayName("geocodersearchaddress 테스트")

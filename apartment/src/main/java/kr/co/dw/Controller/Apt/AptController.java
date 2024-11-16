@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import kr.co.dw.Dto.Common.AptLatLngDto;
+import kr.co.dw.Dto.Common.AptCoordsDto;
 import kr.co.dw.Dto.Response.AptTransactionResponseDto;
 import kr.co.dw.Service.Apt.AptService;
 import lombok.RequiredArgsConstructor;
@@ -20,13 +20,13 @@ public class AptController {
 	private final AptService aptService;
 	
 	@GetMapping("/api/getMarkers")
-	private ResponseEntity<List<AptLatLngDto>> getMarkers(@RequestParam("addressnameArr")  List<String> addressnameArr) {
+	private ResponseEntity<List<AptCoordsDto>> getMarkers(@RequestParam("addressnameArr")  List<String> addressnameArr) {
 		return new ResponseEntity<>(aptService.getMarkers(addressnameArr), HttpStatus.OK);
 	}
 	
 	@GetMapping("/api/getMarkerData")
-	private ResponseEntity<List<AptTransactionResponseDto>> getMarkerData(AptLatLngDto aptLatLngDto){
-		return new ResponseEntity<List<AptTransactionResponseDto>>(aptService.getAptTransactionResponseDtolist(aptLatLngDto), HttpStatus.OK);
+	private ResponseEntity<List<AptTransactionResponseDto>> getMarkerData(AptCoordsDto aptCoordsDto){
+		return new ResponseEntity<List<AptTransactionResponseDto>>(aptService.getAptTransactionResponseDtolist(aptCoordsDto), HttpStatus.OK);
 	}
 	
 	@GetMapping("/api/getCategoryClickData")

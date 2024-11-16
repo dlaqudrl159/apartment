@@ -2,9 +2,9 @@
 
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="kr.co.dw.Mapper.AutoLatLngDataMapper">
+<mapper namespace="kr.co.dw.Mapper.AutoCoordsDataMapper">
     
-    <resultMap type="AptLatLngDto" id="newAptLatLngDto">
+    <resultMap type="AptCoordsDto" id="newAptCoordsDto">
   	<!-- 1:1로 DTO의 멤버변수를 매핑-->
   	<result column="sigungu" property="SIGUNGU"/>
   	<result column="bungi" property="BUNGI"/>
@@ -38,22 +38,50 @@
   	<result column="SGGCD" property="SGGCD"/>
 	</resultMap>   
     
-    <select id="getList">
+    <select id="getList" resultType="newAptCoordsDto">
     
     select SIGUNGU,BUNGI,ROADNAME,APARTMENTNAME from ${tableName} group by SIGUNGU,BUNGI,ROADNAME,APARTMENTNAME order by SIGUNGU DESC
     
     </select>
     
-    <select id = "getLatLng" parameterType="AptLatLngDto">
+    <select id = "getLatLng" parameterType="AptCoordsDto">
     
     select * from LATLNG where SIGUNGU = #{SIGUNGU} and BUNGI = #{BUNGI} and ROADNAME = #{ROADNAME} and APARTMENTNAME = #{APARTMENTNAME}
    
     </select>
     
-    <insert id="insertLatLng" parameterType="AptLatLngDto">
+    <insert id="insertLatLng" parameterType="AptCoordsDto">
     
     insert into LATLNG (SIGUNGU, BUNGI, LAT,LNG,ROADNAME,APARTMENTNAME) values (#{SIGUNGU},#{BUNGI},#{LAT},#{LNG},#{ROADNAME},#{APARTMENTNAME})
     
     </insert>
+    
+    <select id="getParentRegionAptLatLngDtoList" parameterType="ParentRegionName">
+    select SIGUNGU,BUNGI,ROADNAME,APARTMENTNAME from 
+    <choose>
+    
+    <when test="engParentName == 'SEOUL'">SEOUL</when>
+    <when test="engParentName == 'BUSAN'">BUSAN</when>    
+    <when test="engParentName == 'DAEGU'">DAEGU</when>
+    <when test="engParentName == 'INCHEON'">INCHEON</when>
+    <when test="engParentName == 'GWANGJU'">GWANGJU</when>
+    <when test="engParentName == 'DAEJEON'">DAEJEON</when>
+    <when test="engParentName == 'ULSAN'">ULSAN</when>
+    <when test="engParentName == 'SEJONG'">SEJONG</when>
+    <when test="engParentName == 'GYEONGGIDO'">GYEONGGIDO</when>
+    <when test="engParentName == 'GANGWONDO'">GANGWONDO</when>
+    <when test="engParentName == 'CHUNGCHEONGBUKDO'">CHUNGCHEONGBUKDO</when>
+    <when test="engParentName == 'CHUNGCHEONGNAMDO'">CHUNGCHEONGNAMDO</when>
+    <when test="engParentName == 'JEOLLABUKDO'">JEOLLABUKDO</when>
+    <when test="engParentName == 'GYEONGSANGBUKDO'">GYEONGSANGBUKDO</when>
+    <when test="engParentName == 'GYEONGSANGNAMDO'">GYEONGSANGNAMDO</when>    
+    <when test="engParentName == 'JEJU'">JEJU</when>
+
+    <otherwise>
+    ${engParentName}
+    </otherwise> 
+    </choose>
+    group by SIGUNGU,BUNGI,ROADNAME,APARTMENTNAME order by SIGUNGU DESC
+    </select>
     
 </mapper>	

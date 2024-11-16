@@ -13,13 +13,13 @@ import lombok.ToString;
 @EqualsAndHashCode(of = {"SIGUNGU", "BUNGI", "ROADNAME", "APARTMENTNAME"})
 @AllArgsConstructor
 @NoArgsConstructor
-public class AptLatLngDto {
+public class AptCoordsDto {
 
 	private String SIGUNGU;
 	private String BUNGI;
 	private String APARTMENTNAME;
 	private String ROADNAME;
-	private String LAT;
-	private String LNG;
+	private String LAT; //LONGITUDE
+	private String LNG; //LATITUDE
 	
 }

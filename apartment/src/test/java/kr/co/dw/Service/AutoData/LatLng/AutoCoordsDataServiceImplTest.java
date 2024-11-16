@@ -19,16 +19,17 @@ import org.springframework.beans.factory.annotation.Value;
 
 import kr.co.dw.Dto.Common.RegionYearDto;
 import kr.co.dw.Exception.ApiException;
-import kr.co.dw.Mapper.AutoLatLngDataMapper;
+import kr.co.dw.Mapper.AutoCoordsDataMapper;
+import kr.co.dw.Service.AutoData.Coords.AutoCoordsDataServiceImpl;
 
 @ExtendWith(MockitoExtension.class)
-public class AutoLatLngDataServiceImplTest {
+public class AutoCoordsDataServiceImplTest {
 
 	@Mock
-	private AutoLatLngDataMapper autoLatLngDataMapper; 
+	private AutoCoordsDataMapper autoCoordsDataMapper; 
 	
 	@InjectMocks
-	private AutoLatLngDataServiceImpl autoLatLngDataService;
+	private AutoCoordsDataServiceImpl autoLatLngDataService;
 	
 	@Test
 	@DisplayName("geocodersearchaddress 테스트")

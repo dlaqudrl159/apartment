@@ -34,7 +34,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import kr.co.dw.Dto.Common.AptLatLngDto;
+import kr.co.dw.Dto.Common.AptCoordsDto;
 import kr.co.dw.Dto.Common.AptTransactionDto;
 
 public class AptUtilsTest {
@@ -377,8 +377,8 @@ public class AptUtilsTest {
 	@Test
 	void test7() {
 		
-		AptLatLngDto dto = new AptLatLngDto();
-		AptLatLngDto dto2 = new AptLatLngDto();
+		AptCoordsDto dto = new AptCoordsDto();
+		AptCoordsDto dto2 = new AptCoordsDto();
 		
 		String Sigungu = "서울특별시 중랑구 망우동";
 		String Bungi = "435-2";
@@ -412,9 +412,9 @@ public class AptUtilsTest {
 	@Test
 	void test8() throws IOException, ParseException, InterruptedException {
 	//	DataServiceImpl DataServiceimpl = new DataServiceImpl(null);
-		List<AptLatLngDto> list = new ArrayList<>();
+		List<AptCoordsDto> list = new ArrayList<>();
 		
-		AptLatLngDto NameCountDto = new AptLatLngDto();
+		AptCoordsDto NameCountDto = new AptCoordsDto();
 		NameCountDto.setSIGUNGU("강원특별자치도 고성군 토성면 천진리");
 		NameCountDto.setBUNGI("476");
 		NameCountDto.setROADNAME("29");
