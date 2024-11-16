@@ -29,6 +29,8 @@ public interface AutoAptDataService {
 	
 	StringBuilder getRTMSDataSvcAptTradeDev(RegionYearDto regionYearDto) throws IOException;
 	
+	boolean isResultMsg(Element eElement);
+	
 	Element makeNodeList(StringBuilder sb) throws SAXException, IOException, ParserConfigurationException;
 	
 	List<AptTransactionDto> makeAptTransactionDto(NodeList nList, RegionYearDto regionYearDto);
@@ -40,5 +42,7 @@ public interface AutoAptDataService {
 	String aptTransactionDtoInsert(List<AptTransactionDto> list, ParentRegionName parentRegionName);
 
 	void deleteByRegionYear(ParentRegionName parentRegionName, String deleteYearMonth);
+
+	
 	
 }

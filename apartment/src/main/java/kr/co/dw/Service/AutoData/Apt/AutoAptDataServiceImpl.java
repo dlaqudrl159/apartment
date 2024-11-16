@@ -24,6 +24,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.w3c.dom.Document;
@@ -52,7 +53,13 @@ public class AutoAptDataServiceImpl implements AutoAptDataService{
 	private final AutoAptDataMapper autoAptDataMapper;
 	private final SqlSessionFactory sqlSessionFactory;
 	
-	private final Integer DELETEYEAR = 15;
+	@Value("${api.apt.url}")
+	private String apturl;
+	
+	@Value("${api.apt.service-key}")
+	private String aptserviceKey;
+	
+	private final Integer DELETEYEAR = 12;
 	private final String PAGENO = "1";
 	private final String NUMOFROWS = "10000";
 	
@@ -114,27 +121,33 @@ public class AutoAptDataServiceImpl implements AutoAptDataService{
 			for (Region region : regionList) {
 						RegionYearDto regionYearDto = new RegionYearDto(region, dealYearMonth, PAGENO, parentRegionName);
 				try {
-					logger.info(dealYearMonth + " " + region.getRegionName() + "(" + region.getCode() + ")       시작");	
+					//logger.info(dealYearMonth + " " + region.getRegionName() + "(" + region.getCode() + ")       시작");	
 					StringBuilder sb = getRTMSDataSvcAptTradeDev(regionYearDto);
 					
 					Element eElement = makeNodeList(sb);
 					if(isResultMsg(eElement)) {
-						eElement.getElementsByTagName("item");
+						String resultMsg = eElement.getElementsByTagName("resultMsg").item(0) == null ? "-"
+								: eElement.getElementsByTagName("resultMsg").item(0).getTextContent();
+						String resultCode = eElement.getElementsByTagName("resultCode").item(0) == null ? "-"
+								: eElement.getElementsByTagName("resultCode").item(0).getTextContent();
+						NodeList nList = null;
+						nList = eElement.getElementsByTagName("item");
+						List<AptTransactionDto> aptTransactionDtoList = makeAptTransactionDto(nList, regionYearDto);
+						insertaptTransactionDtoList.addAll(aptTransactionDtoList);
+						response.add(new DataAutoInsertResponseDto(resultMsg, regionYearDto, resultCode , aptTransactionDtoList.size(), LocalDateTime.now()));
+						logger.info(new DataAutoInsertResponseDto(resultMsg, regionYearDto, resultCode , aptTransactionDtoList.size(), LocalDateTime.now()).toString());
+						totalCount += aptTransactionDtoList.size();
+					} else {
+						String errMsg = eElement.getElementsByTagName("errMsg").item(0) == null ? "-"
+								: eElement.getElementsByTagName("errMsg").item(0).getTextContent();
+						String returnAuthMsg = eElement.getElementsByTagName("returnAuthMsg").item(0) == null ? "-"
+								: eElement.getElementsByTagName("returnAuthMsg").item(0).getTextContent();
+						String returnReasonCode = eElement.getElementsByTagName("returnReasonCode").item(0) == null ? "-"
+								: eElement.getElementsByTagName("returnReasonCode").item(0).getTextContent();
+						System.out.println("errMsg = " + errMsg + " returnAuthMsg = " + returnAuthMsg + " returnReasonCode = " + returnReasonCode);
+						response.add(new DataAutoInsertResponseDto(returnAuthMsg, regionYearDto,returnAuthMsg + " " + returnReasonCode, 0, LocalDateTime.now()));
+						return new DataAutoInsertResponseDto("ERROR", regionYearDto, "처리 중 오류 발생", totalCount, LocalDateTime.now(), response);
 					}
-					/*String resultMsg = eElement.getElementsByTagName("resultMsg").item(0) == null ? "-"
-							: eElement.getElementsByTagName("resultMsg").item(0).getTextContent();
-					String resultCode = eElement.getElementsByTagName("resultCode").item(0) == null ? "-"
-							: eElement.getElementsByTagName("resultCode").item(0).getTextContent();
-					String resultTotalCount = eElement.getElementsByTagName("totalCount").item(0) == null ? "-"
-							: eElement.getElementsByTagName("totalCount").item(0).getTextContent();
-					String resultItem = eElement.getElementsByTagName("items").item(0) == null ? "-"
-							: eElement.getElementsByTagName("items").item(0).getTextContent();*/
-					
-					//List<AptTransactionDto> aptTransactionDtoList = makeAptTransactionDto(makeNodeList(sb), regionYearDto);
-					//insertaptTransactionDtoList.addAll(aptTransactionDtoList);	
-					//response.add(new DataAutoInsertResponseDto("SUCCESS", regionYearDto, regionYearDto.getRegion().getRegionName() + " 완료     " + regionYearDto.getYear(), aptTransactionDtoList.size(), LocalDateTime.now()));
-						
-					//totalCount += aptTransactionDtoList.size();
 					
 				} catch (Exception e) {
 					// TODO: handle exception
@@ -149,13 +162,20 @@ public class AutoAptDataServiceImpl implements AutoAptDataService{
 		}
 		
 		String deleteYearMonth = makeDealYearMonth(DELETEYEAR);
-		deleteByRegionYear(parentRegionName, deleteYearMonth);
-		
-		aptTransactionDtoInsert(insertaptTransactionDtoList, parentRegionName);
+		try {
+			deleteByRegionYear(parentRegionName, deleteYearMonth);
+			
+			aptTransactionDtoInsert(insertaptTransactionDtoList, parentRegionName);
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			return new DataAutoInsertResponseDto("SQL ERROR", null, parentRegionName.getEngParentName() + " 테이블 작업중 오류 발생", totalCount, LocalDateTime.now(), response);
+		}
 		
 		return new DataAutoInsertResponseDto("SUCCESS", null, parentRegionName.getEngParentName() + " 테이블 입력 완료", totalCount, LocalDateTime.now(), response);
 	}
 	
+	@Override
 	public boolean isResultMsg(Element eElement) {
 		
 		String resultMsg = eElement.getElementsByTagName("resultMsg").item(0) == null ? "-"
@@ -199,10 +219,10 @@ public class AutoAptDataServiceImpl implements AutoAptDataService{
 	@Override
 	public StringBuilder getRTMSDataSvcAptTradeDev(RegionYearDto regionYearDto) throws IOException {
 		// TODO Auto-generated method stub
-		String servicekey = "=f4Ed1eAJYzb%2BQ%2BtpQx4G%2BQvFuO0ZJJMZIInJGo%2FpG889YetxgnnGE9umfvGSe8TPyZ88bAUWw%2Bn7ETYTooeF5A%3D%3D";
+		
 		StringBuilder sb = null;
-		StringBuilder urlBuilder = new StringBuilder("http://apis.data.go.kr/1613000/RTMSDataSvcAptTradeDev/getRTMSDataSvcAptTradeDev"); /*URL*/
-        urlBuilder.append("?" + URLEncoder.encode("serviceKey","UTF-8") + "=f4Ed1eAJYzb%2BQ%2BtpQx4G%2BQvFuO0ZJJMZIInJGo%2FpG889YetxgnnGE9umfvGSe8TPyZ88bAUWw%2Bn7ETYTooeF5A%3D%3D"); /*Service Key*/
+		StringBuilder urlBuilder = new StringBuilder(this.apturl); /*URL*/
+        urlBuilder.append("?" + URLEncoder.encode("serviceKey","UTF-8") + this.aptserviceKey); /*Service Key*/
         urlBuilder.append("&" + URLEncoder.encode("LAWD_CD","UTF-8") + "=" + URLEncoder.encode(regionYearDto.getRegion().getCode(), "UTF-8")); /*각 지역별 코드*/
         urlBuilder.append("&" + URLEncoder.encode("DEAL_YMD","UTF-8") + "=" + URLEncoder.encode(regionYearDto.getYear()/*DEAL_YMD*/, "UTF-8")); /*월 단위 신고자료*/
         urlBuilder.append("&" + URLEncoder.encode("pageNo","UTF-8") + "=" + URLEncoder.encode(PAGENO, "UTF-8")); /*페이지번호*/

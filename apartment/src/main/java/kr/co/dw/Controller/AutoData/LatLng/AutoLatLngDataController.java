@@ -26,9 +26,6 @@ public class AutoLatLngDataController {
 	
 	@GetMapping("/data/autolatlnginsert")
 	public ResponseEntity<String> autoLatLngInsert(@RequestParam(required = false, value = "parentEngRegionName") String parentEngRegionName) throws MalformedURLException, IOException, ParseException, InterruptedException {
-		System.out.println(parentEngRegionName);
-		System.out.println(parentEngRegionName);
-
 		
 		if(parentEngRegionName == null || parentEngRegionName.trim().isEmpty()) {
 			return new ResponseEntity<String>("tableName이 null 이거나 빈칸입니다.", HttpStatus.BAD_REQUEST);

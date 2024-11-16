@@ -15,8 +15,23 @@
     "description": "A description for 'path'"
   },
   {
-    "name": "geocodersearchaddress.apikey",
+    "name": "api.geocoder.url",
     "type": "java.lang.String",
-    "description": "A description for 'geocodersearchaddress.apikey'"
+    "description": "A description for 'api.geocoder.url'"
+  },
+  {
+    "name": "api.geocoder.service-key",
+    "type": "java.lang.String",
+    "description": "A description for 'api.geocoder.service-key'"
+  },
+  {
+    "name": "api.apt.url",
+    "type": "java.lang.String",
+    "description": "A description for 'api.apt.url'"
+  },
+  {
+    "name": "api.apt.service-key",
+    "type": "java.lang.String",
+    "description": "A description for 'api.apt.service-key'"
   }
 ]}

@@ -30,8 +30,11 @@ public class AutoLatLngDataServiceImpl implements AutoLatLngDataService{
 	
 	private final AutoLatLngDataMapper autoLatLngDataMapper;
 	
-	@Value("${geocodersearchaddress.apikey}") //"#{@environment.getProperty('geocodersearchaddress.apikey')}" // "${geocodersearchaddress.apikey}"
-	private String apikey;
+	@Value("${api.geocoder.url}")
+	private String geocodersearchaddressUrl;
+	
+	@Value("${api.geocoder.service-key}") //"#{@environment.getProperty('geocodersearchaddress.apikey')}" // "${geocodersearchaddress.apikey}"
+	private String geocodersearchaddressServiceKey;
 	
 	@Transactional
 	@Override
@@ -107,14 +110,14 @@ public class AutoLatLngDataServiceImpl implements AutoLatLngDataService{
 	@Override
 	public JSONObject geocodersearchaddress(String searchAddr, String searchType) throws IOException, ParseException {
 		// TODO Auto-generated method stub
-		String apikey = this.apikey;
+		
 		String epsg = "epsg:4326";
-		StringBuilder sb = new StringBuilder("https://api.vworld.kr/req/address");
+		StringBuilder sb = new StringBuilder(this.geocodersearchaddressUrl);
 		sb.append("?service=address");
 		sb.append("&request=getCoord");
 		sb.append("&format=json");
 		sb.append("&crs=" + epsg);
-		sb.append("&key=" + apikey);
+		sb.append("&key=" + this.geocodersearchaddressServiceKey);
 		sb.append("&type=" + searchType);
 		sb.append("&address=" + URLEncoder.encode(searchAddr, StandardCharsets.UTF_8));
 		
