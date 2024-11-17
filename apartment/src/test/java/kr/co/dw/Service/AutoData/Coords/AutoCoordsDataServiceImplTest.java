@@ -1,4 +1,4 @@
-package kr.co.dw.Service.AutoData.LatLng;
+package kr.co.dw.Service.AutoData.Coords;
 
 import java.io.BufferedReader;
 import java.io.IOException;

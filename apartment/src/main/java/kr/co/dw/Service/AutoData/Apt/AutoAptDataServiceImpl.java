@@ -42,6 +42,7 @@ import kr.co.dw.Dto.Common.RegionYearDto;
 import kr.co.dw.Dto.Response.DataAutoInsertResponseDto;
 import kr.co.dw.Exception.ApiException;
 import kr.co.dw.Mapper.AutoAptDataMapper;
+import kr.co.dw.Utils.DateUtils;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -54,33 +55,27 @@ public class AutoAptDataServiceImpl implements AutoAptDataService{
 	private final SqlSessionFactory sqlSessionFactory;
 	
 	@Value("${api.apt.url}")
-	private String apturl;
+	private String api_apt_Url;
 	
 	@Value("${api.apt.service-key}")
-	private String aptserviceKey;
+	private String api_apt_Service_Key;
 	
-	private final Integer DELETEYEAR = 12;
-	private final String PAGENO = "1";
-	private final String NUMOFROWS = "10000";
+	private final Integer DELETE_YEAR = 12;
 	
 	@Override
 	public DataAutoInsertResponseDto autoDataInsert(String parentRegionName) {
-		// TODO Auto-generated method stub
 		if(parentRegionName == null) {
 			return allex1(RegionManager.getInstance().getParentRegionNameList());
 		}
-		
-		parentRegionName = parentRegionName.toUpperCase();
 		
 		List<Region> RegionList = RegionManager.getInstance().getListRegion(parentRegionName);
 		if(RegionList == null) {
 			throw new IllegalArgumentException("RegionList null 발생      유효하지 않은 지역명: " + parentRegionName);
 		}
-		return ex1(RegionList,RegionManager.getInstance().getParentNameByEng(parentRegionName));
+		return ex1(RegionList,RegionManager.getInstance().getParentName(parentRegionName));
 	}
 	@Override
 	public DataAutoInsertResponseDto allex1(List<ParentRegionName> parentRegionList) {
-		// TODO Auto-generated method stub
 		List<DataAutoInsertResponseDto> totalResponse = new ArrayList<>();
 		int totalCount = 0;
 		for (ParentRegionName parentRegionName : parentRegionList) {
@@ -96,7 +91,6 @@ public class AutoAptDataServiceImpl implements AutoAptDataService{
 				totalResponse.add(response);
 				logger.info("{} 처리 완료: {}건", parentRegionName.getKorParentName(), response.getTotalCount());
 			} catch (Exception e) {
-				// TODO: handle exception
 				logger.error("{} 처리 중 예외 발생: {}", parentRegionName.getKorParentName(), e.getMessage());
 				return new DataAutoInsertResponseDto("ERROR",null,"예상치 못한 오류 발생: " + e.getMessage(),totalCount,LocalDateTime.now(),totalResponse);
 			}
@@ -107,21 +101,20 @@ public class AutoAptDataServiceImpl implements AutoAptDataService{
 	}
 	@Override
 	public DataAutoInsertResponseDto ex1(List<Region> regionList, ParentRegionName parentRegionName) {
-		// TODO Auto-generated method stub
 		
-		List<String> dealYearMonthList = makeDealYearMonthList(DELETEYEAR); 
+		List<String> dealYearMonthList = DateUtils.makeDealYearMonthList(DELETE_YEAR); 
 		
 		List<DataAutoInsertResponseDto> response = new ArrayList<>();
 		
-		List<AptTransactionDto> insertaptTransactionDtoList = new ArrayList<>();
+		List<AptTransactionDto> insertAptTransactionDtoList = new ArrayList<>();
 		int totalCount = 0;
 		
 		for (String dealYearMonth : dealYearMonthList) {
 				
 			for (Region region : regionList) {
-						RegionYearDto regionYearDto = new RegionYearDto(region, dealYearMonth, PAGENO, parentRegionName);
+						RegionYearDto regionYearDto = new RegionYearDto(region, dealYearMonth, null, parentRegionName);
 				try {
-					//logger.info(dealYearMonth + " " + region.getRegionName() + "(" + region.getCode() + ")       시작");	
+					
 					StringBuilder sb = getRTMSDataSvcAptTradeDev(regionYearDto);
 					
 					Element eElement = makeNodeList(sb);
@@ -133,7 +126,7 @@ public class AutoAptDataServiceImpl implements AutoAptDataService{
 						NodeList nList = null;
 						nList = eElement.getElementsByTagName("item");
 						List<AptTransactionDto> aptTransactionDtoList = makeAptTransactionDto(nList, regionYearDto);
-						insertaptTransactionDtoList.addAll(aptTransactionDtoList);
+						insertAptTransactionDtoList.addAll(aptTransactionDtoList);
 						response.add(new DataAutoInsertResponseDto(resultMsg, regionYearDto, resultCode , aptTransactionDtoList.size(), LocalDateTime.now()));
 						logger.info(new DataAutoInsertResponseDto(resultMsg, regionYearDto, resultCode , aptTransactionDtoList.size(), LocalDateTime.now()).toString());
 						totalCount += aptTransactionDtoList.size();
@@ -150,7 +143,6 @@ public class AutoAptDataServiceImpl implements AutoAptDataService{
 					}
 					
 				} catch (Exception e) {
-					// TODO: handle exception
 	                   logger.error("처리 실패: region={}, yearMonth={}, error={}", region.getRegionName(), dealYearMonth, e.getMessage());						
 	                   response.add(new DataAutoInsertResponseDto("ERROR", regionYearDto, e.getMessage(), 0, LocalDateTime.now()));
 						
@@ -161,14 +153,13 @@ public class AutoAptDataServiceImpl implements AutoAptDataService{
 				
 		}
 		
-		String deleteYearMonth = makeDealYearMonth(DELETEYEAR);
+		String deleteYearMonth = DateUtils.makeDealYearMonth(DELETE_YEAR);
 		try {
 			deleteByRegionYear(parentRegionName, deleteYearMonth);
 			
-			aptTransactionDtoInsert(insertaptTransactionDtoList, parentRegionName);
+			aptTransactionDtoInsert(insertAptTransactionDtoList, parentRegionName);
 			
 		} catch (Exception e) {
-			// TODO: handle exception
 			return new DataAutoInsertResponseDto("SQL ERROR", null, parentRegionName.getEngParentName() + " 테이블 작업중 오류 발생", totalCount, LocalDateTime.now(), response);
 		}
 		
@@ -191,42 +182,21 @@ public class AutoAptDataServiceImpl implements AutoAptDataService{
 		try {
 			autoAptDataMapper.deleteByRegionYear(parentRegionName.getEngParentName(), deleteYearMonth);
 		} catch (Exception e) {
-			// TODO: handle exception
 			throw new RuntimeException(e.getMessage());
 		}
 		
 	}
-	
-	@Override
-	public String makeDealYearMonth(int num) {
-		// TODO Auto-generated method stub
-		LocalDate now = LocalDate.now();
-		String yearMonth = now.minusMonths(num).format(DateTimeFormatter.ofPattern("yyyyMM"));
-		return yearMonth;
-	}
-	@Override
-	public List<String> makeDealYearMonthList(int num) {
-		// TODO Auto-generated method stub
-	    List<String> dealYearMonthList = new ArrayList<>();
-	    
-	    for(int i = 0; i <= num; i++) {
-	        String yearMonth = makeDealYearMonth(i);
-	        dealYearMonthList.add(yearMonth);
-	    }
-	    
-	    return dealYearMonthList;
-	}
+
 	@Override
 	public StringBuilder getRTMSDataSvcAptTradeDev(RegionYearDto regionYearDto) throws IOException {
-		// TODO Auto-generated method stub
 		
 		StringBuilder sb = null;
-		StringBuilder urlBuilder = new StringBuilder(this.apturl); /*URL*/
-        urlBuilder.append("?" + URLEncoder.encode("serviceKey","UTF-8") + this.aptserviceKey); /*Service Key*/
+		StringBuilder urlBuilder = new StringBuilder(this.api_apt_Url); /*URL*/
+        urlBuilder.append("?" + URLEncoder.encode("serviceKey","UTF-8") + this.api_apt_Service_Key); /*Service Key*/
         urlBuilder.append("&" + URLEncoder.encode("LAWD_CD","UTF-8") + "=" + URLEncoder.encode(regionYearDto.getRegion().getCode(), "UTF-8")); /*각 지역별 코드*/
         urlBuilder.append("&" + URLEncoder.encode("DEAL_YMD","UTF-8") + "=" + URLEncoder.encode(regionYearDto.getYear()/*DEAL_YMD*/, "UTF-8")); /*월 단위 신고자료*/
-        urlBuilder.append("&" + URLEncoder.encode("pageNo","UTF-8") + "=" + URLEncoder.encode(PAGENO, "UTF-8")); /*페이지번호*/
-        urlBuilder.append("&" + URLEncoder.encode("numOfRows","UTF-8") + "=" + URLEncoder.encode(NUMOFROWS, "UTF-8")); /*한 페이지 결과 수*/
+        urlBuilder.append("&" + URLEncoder.encode("pageNo","UTF-8") + "=" + URLEncoder.encode(regionYearDto.getPageNo(), "UTF-8")); /*페이지번호*/
+        urlBuilder.append("&" + URLEncoder.encode("numOfRows","UTF-8") + "=" + URLEncoder.encode(regionYearDto.getNUMOFROWS(), "UTF-8")); /*한 페이지 결과 수*/
         URL url = new URL(urlBuilder.toString());
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestMethod("GET");
@@ -250,7 +220,6 @@ public class AutoAptDataServiceImpl implements AutoAptDataService{
 	}
 	@Override
 	public Element makeNodeList(StringBuilder sb) throws SAXException, IOException, ParserConfigurationException {
-		// TODO Auto-generated method stub
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder builder = null;
 		Document document = null;
@@ -265,8 +234,7 @@ public class AutoAptDataServiceImpl implements AutoAptDataService{
 	}
 	@Override
 	public List<AptTransactionDto> makeAptTransactionDto(NodeList nList, RegionYearDto regionYearDto) {
-		// TODO Auto-generated method stub
-		List<AptTransactionDto> AptTransactionDtoList = new ArrayList<>();
+		List<AptTransactionDto> aptTransactionDtoList = new ArrayList<>();
 		
 		String apiDealAmount = "dealAmount";
 		String apiDealingGbn = "dealingGbn";
@@ -325,7 +293,7 @@ public class AutoAptDataServiceImpl implements AutoAptDataService{
 				String RoadNameBubun = getElementContent(eElement,apiRoadNmBubun);
 				String SggCd = getElementContent(eElement,apiSggCd);
 				
-				AptTransactionDtoList.add(new AptTransactionDto(regionYearDto.getParentRegionName().getKorParentName() + " " + regionYearDto.getRegion().getRegionName() + " " +  Dong,
+				aptTransactionDtoList.add(new AptTransactionDto(regionYearDto.getParentRegionName().getKorParentName() + " " + regionYearDto.getRegion().getRegionName() + " " +  Dong,
 						Jibun,
 						Bonbun,
 						Bubun,
@@ -348,11 +316,10 @@ public class AutoAptDataServiceImpl implements AutoAptDataService{
 				}
 		}
 		
-		return AptTransactionDtoList;
+		return aptTransactionDtoList;
 	}
 	@Override
 	public String getElementContent(Element element, String tagName) {
-		// TODO Auto-generated method stub
 	    Node node = element.getElementsByTagName(tagName).item(0);
 	    return node == null ? "-" : 
 	           node.getTextContent().replaceAll("\"", "").trim().isEmpty() ? "-" : 
@@ -360,7 +327,6 @@ public class AutoAptDataServiceImpl implements AutoAptDataService{
 	}
 	@Override
 	public String makeRoadName(String roadName, String roadNameBonbun, String roadNameBubun) {
-		// TODO Auto-generated method stub
 		roadName = roadName.trim();
 		if (roadName.equals("-")) {roadName = "";}
 		if (roadNameBonbun.equals("-")) {roadNameBonbun = "";}
@@ -390,7 +356,6 @@ public class AutoAptDataServiceImpl implements AutoAptDataService{
 	}
 	@Override
 	public String aptTransactionDtoInsert(List<AptTransactionDto> list, ParentRegionName parentRegionName) {
-		// TODO Auto-generated method stub
 		if (list.isEmpty()) {
 	        return "LIST IS EMPTY";
 	    }
@@ -400,11 +365,11 @@ public class AutoAptDataServiceImpl implements AutoAptDataService{
 		try {
 			sqlSession = this.sqlSessionFactory.openSession(ExecutorType.BATCH);
 			int count = 0;
-			for (AptTransactionDto AptTransactionDto : list) {
+			for (AptTransactionDto aptTransactionDto : list) {
 				
 				Map<String, Object> map = new HashMap<>();
-				map.put("AptTransactionDto", AptTransactionDto);
-				map.put("RegionName", parentRegionName.getEngParentName());
+				map.put("aptTransactionDto", aptTransactionDto);
+				map.put("regionName", parentRegionName.getEngParentName());
 				sqlSession.insert("kr.co.dw.Mapper.AutoAptDataMapper.dataInsert", map);
 				if (++count % BATCH_SIZE == 0) {
 	                sqlSession.flushStatements();

@@ -14,55 +14,31 @@
   	<result column="lng" property="LNG"/>
 	</resultMap>   
     
-    <resultMap type="AptTransactionDto" id="newAptTransactionDto">
-  	<!-- 1:1로 DTO의 멤버변수를 매핑-->
-  	<result column="SIGUNGU" property="SIGUNGU"/>
-  	<result column="BUNGI" property="BUNGI"/>
-  	<result column="BONBUN" property="BONBUN"/>
-  	<result column="BUBUN" property="BUBUN"/>
-  	<result column="APARTMENTNAME" property="APARTMENTNAME"/>
-  	<result column="AREAFOREXCLUSIVEUSE" property="AREAFOREXCLUSIVEUSE"/>
-  	<result column="DEALYEARMONTH" property="DEALYEARMONTH"/>
-  	<result column="DEALDAY" property="DEALDAY"/>
-  	<result column="DEALAMOUNT" property="DEALAMOUNT"/>
-  	<result column="APARTMENTDONG" property="APARTMENTDONG"/>
-  	<result column="FLOOR" property="FLOOR"/>
-  	<result column="BUYERGBN" property="BUYERGBN"/>
-  	<result column="SELLERGBN" property="SELLERGBN"/>
-  	<result column="BUILDYEAR" property="BUILDYEAR"/>
-  	<result column="ROADNAME" property="ROADNAME"/>
-  	<result column="CANCLEDEALDAY" property="CANCLEDEALDAY"/>
-  	<result column="REQGBN" property="REQGBN"/>
-  	<result column="RDEALERLAWDNM" property="RDEALERLAWDNM"/>
-  	<result column="REGISTRATIONDATE" property="REGISTRATIONDATE"/>
-  	<result column="SGGCD" property="SGGCD"/>
-	</resultMap>   
+    <insert id="dataInsert" parameterType="hashMap">
     
-    <insert id="dataInsert">
-    
-    insert into ${RegionName} (SIGUNGU, BUNGI, BONBUN, BUBUN, APARTMENTNAME,AREAFOREXCLUSIVEUSE,DEALYEARMONTH,DEALDAY,DEALAMOUNT,APARTMENTDONG,FLOOR,BUYERGBN,SELLERGBN,BUILDYEAR,ROADNAME,CANCLEDEALDAY,REQGBN,RDEALERLAWDNM,REGISTRATIONDATE,SGGCD) 
+    insert into ${regionName} (SIGUNGU, BUNGI, BONBUN, BUBUN, APARTMENTNAME,AREAFOREXCLUSIVEUSE,DEALYEARMONTH,DEALDAY,DEALAMOUNT,APARTMENTDONG,FLOOR,BUYERGBN,SELLERGBN,BUILDYEAR,ROADNAME,CANCLEDEALDAY,REQGBN,RDEALERLAWDNM,REGISTRATIONDATE,SGGCD) 
     values 
     (
-    #{AptTransactionDto.SIGUNGU},
-    #{AptTransactionDto.BUNGI},
-    #{AptTransactionDto.BONBUN},
-    #{AptTransactionDto.BUBUN},
-    #{AptTransactionDto.APARTMENTNAME},
-    #{AptTransactionDto.AREAFOREXCLUSIVEUSE},
-    #{AptTransactionDto.DEALYEARMONTH},
-    #{AptTransactionDto.DEALDAY},
-    #{AptTransactionDto.DEALAMOUNT},
-    #{AptTransactionDto.APARTMENTDONG},
-    #{AptTransactionDto.FLOOR},
-    #{AptTransactionDto.BUYERGBN},
-    #{AptTransactionDto.SELLERGBN},
-    #{AptTransactionDto.BUILDYEAR},
-    #{AptTransactionDto.ROADNAME},
-    #{AptTransactionDto.CANCLEDEALDAY},
-    #{AptTransactionDto.REQGBN},
-    #{AptTransactionDto.RDEALERLAWDNM},
-    #{AptTransactionDto.REGISTRATIONDATE},
-    #{AptTransactionDto.SGGCD}
+    #{aptTransactionDto.SIGUNGU},
+    #{aptTransactionDto.BUNGI},
+    #{aptTransactionDto.BONBUN},
+    #{aptTransactionDto.BUBUN},
+    #{aptTransactionDto.APARTMENTNAME},
+    #{aptTransactionDto.AREAFOREXCLUSIVEUSE},
+    #{aptTransactionDto.DEALYEARMONTH},
+    #{aptTransactionDto.DEALDAY},
+    #{aptTransactionDto.DEALAMOUNT},
+    #{aptTransactionDto.APARTMENTDONG},
+    #{aptTransactionDto.FLOOR},
+    #{aptTransactionDto.BUYERGBN},
+    #{aptTransactionDto.SELLERGBN},
+    #{aptTransactionDto.BUILDYEAR},
+    #{aptTransactionDto.ROADNAME},
+    #{aptTransactionDto.CANCLEDEALDAY},
+    #{aptTransactionDto.REQGBN},
+    #{aptTransactionDto.RDEALERLAWDNM},
+    #{aptTransactionDto.REGISTRATIONDATE},
+    #{aptTransactionDto.SGGCD}
     )
     
     </insert>

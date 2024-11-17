@@ -23,10 +23,6 @@ public interface AutoAptDataService {
 
 	DataAutoInsertResponseDto ex1(List<Region> regionList, ParentRegionName parentRegionName);
 	
-	String makeDealYearMonth(int num);
-
-	List<String> makeDealYearMonthList(int num);
-	
 	StringBuilder getRTMSDataSvcAptTradeDev(RegionYearDto regionYearDto) throws IOException;
 	
 	boolean isResultMsg(Element eElement);

@@ -35,93 +35,21 @@ public class AutoCoordsDataServiceImpl implements AutoCoordsDataService{
 	private final AutoCoordsDataMapper autoCoordsDataMapper;
 	
 	@Value("${api.geocoder.url}")
-	private String geocodersearchaddressUrl;
+	private String api_Geocoder_Url;
 	
 	@Value("${api.geocoder.service-key}") //"#{@environment.getProperty('geocodersearchaddress.apikey')}" // "${geocodersearchaddress.apikey}"
-	private String geocodersearchaddressServiceKey;
-	
-	@Transactional
-	@Override
-	public List<AptCoordsDto> CoordsInsert(String parentEngRegionName) throws MalformedURLException, IOException, ParseException, InterruptedException {
-		
-		return getCoords(autoCoordsDataMapper.getList(parentEngRegionName));
-		
-	}
-
-	@Override
-	public List<AptCoordsDto> getCoords(List<AptCoordsDto> list)
-			throws IOException, ParseException, InterruptedException {
-		// TODO Auto-generated method stub
-		JSONObject jsrs = null;
-		for(int i = 0 ; i < list.size() ; i++) {
-			
-			AptCoordsDto aptCoordsDto = list.get(i);
-			AptCoordsDto checkAptCoordsDto = autoCoordsDataMapper.getCoords(aptCoordsDto);
-			logger.info(String.valueOf(aptCoordsDto.equals(checkAptCoordsDto)));
-			if(aptCoordsDto.equals(checkAptCoordsDto)) {
-				continue;
-			}else {
-				logger.info(aptCoordsDto.toString());
-				try {
-					jsrs  = getparcel(aptCoordsDto);	
-				} catch (Exception e) {
-					i--;	
-					continue;
-				}
-				if(jsrs.get("status").equals("OK")) {
-					JSONObject jsResult = (JSONObject) jsrs.get("result");
-				    JSONObject jspoint = (JSONObject) jsResult.get("point");
-				    
-				    String lat = (String) jspoint.get("y");
-				    int latidx =lat.indexOf(".");
-				    String lng = (String) jspoint.get("x");
-				    int lngidx = lng.indexOf(".");
-				    
-				    aptCoordsDto.setLAT(((String) jspoint.get("y")).substring(0, latidx+6));
-				    aptCoordsDto.setLNG(((String) jspoint.get("x")).substring(0, lngidx+6));			    
-				}else {
-					try {
-						jsrs = getroadname(aptCoordsDto);
-					} catch (Exception e) {
-						i--;	
-						continue;
-					}
-					if(jsrs.get("status").equals("OK")) {
-						JSONObject jsResult = (JSONObject) jsrs.get("result");
-					    JSONObject jspoint = (JSONObject) jsResult.get("point");
-					    
-					    String lat = (String) jspoint.get("y");
-					    int latidx =lat.indexOf(".");
-					    String lng = (String) jspoint.get("x");
-					    int lngidx = lng.indexOf(".");
-					    
-					    aptCoordsDto.setLAT(((String) jspoint.get("y")).substring(0, latidx+6));
-					    aptCoordsDto.setLNG(((String) jspoint.get("x")).substring(0, lngidx+6));			    
-					}else {
-						aptCoordsDto.setLAT("자료없음");
-						aptCoordsDto.setLNG("자료없음");		
-					}
-				}
-				
-				autoCoordsDataMapper.insertCoords(aptCoordsDto);
-			}
-			
-		}
-	
-		return list;
-	}
+	private String api_Geocoder_Service_Key;
 
 	@Override
 	public JSONObject geocodersearchaddress(String searchAddr, String searchType) throws IOException, ParseException {
-		// TODO Auto-generated method stub
 		
 		String epsg = "epsg:4326";
-		StringBuilder sb = new StringBuilder(this.geocodersearchaddressUrl);
+		StringBuilder sb = new StringBuilder(this.api_Geocoder_Url);
 		sb.append("?service=address");
 		sb.append("&request=getCoord");
 		sb.append("&format=json");
 		sb.append("&crs=" + epsg);
-		sb.append("&key=" + this.geocodersearchaddressServiceKey);
+		sb.append("&key=" + this.api_Geocoder_Service_Key);
 		sb.append("&type=" + searchType);
 		sb.append("&address=" + URLEncoder.encode(searchAddr, StandardCharsets.UTF_8));
 		
@@ -136,7 +64,6 @@ public class AutoCoordsDataServiceImpl implements AutoCoordsDataService{
 
 	@Override
 	public JSONObject getparcel(AptCoordsDto aptCoordsDto) throws IOException, ParseException {
-		// TODO Auto-generated method stub
 		String searchType = "parcel";
 		String Sigungu = aptCoordsDto.getSIGUNGU();
 		String Bungi = aptCoordsDto.getBUNGI();		
@@ -146,7 +73,6 @@ public class AutoCoordsDataServiceImpl implements AutoCoordsDataService{
 
 	@Override
 	public JSONObject getroadname(AptCoordsDto aptCoordsDto) throws IOException, ParseException {
-		// TODO Auto-generated method stub
 		String searchType = "road";
 		String Sigungu = aptCoordsDto.getSIGUNGU();
 		String roadname = aptCoordsDto.getROADNAME();
@@ -156,49 +82,118 @@ public class AutoCoordsDataServiceImpl implements AutoCoordsDataService{
 
 	@Override
 	public AutoCoordsDataResponse allCoordsInsert() {
-		// TODO Auto-generated method stub
-		return null;
+		
+		List<AutoCoordsDataResponse> totalresponse = new ArrayList<>();
+		
+		List<ParentRegionName> parentRegionNameLIst = RegionManager.getInstance().getParentRegionNameList();
+		
+		for(int i = 0 ; i < parentRegionNameLIst.size() ; i++) {
+			AutoCoordsDataResponse response = CoordsInsert(parentRegionNameLIst.get(i).getEngParentName());
+			if("ERROR".equals(response.getStatus())) {
+				return new AutoCoordsDataResponse("ERROR", "01", parentRegionNameLIst.get(i).getEngParentName() + "지역 좌표 처리 중 오류 발생", null, totalresponse);
+			}
+			totalresponse.add(response);
+		}
+		
+		return new AutoCoordsDataResponse("OK", "01", "전체 지역 좌표 입력 완료", null, totalresponse);
 	}
 
 	@Override
-	public AutoCoordsDataResponse CoordsInsert2(String parentEngRegionName) {
+	public AutoCoordsDataResponse CoordsInsert(String parentEngRegionName) {
 		logger.info(parentEngRegionName);
-		ParentRegionName parentRegionNmae = RegionManager.getInstance().getParentNameByEng(parentEngRegionName.toUpperCase());
-		logger.info(parentRegionNmae.toString());
-		getParentRegionAptCoordsDtoList(parentRegionNmae);
-		return null;
+		ParentRegionName parentRegionName = RegionManager.getInstance().getParentName(parentEngRegionName);
+		logger.info(parentRegionName.toString());
+		List<AptCoordsDto> updateAptCoordsDtoList = getParentRegionAptCoordsDtoList(parentRegionName);
+		
+		List<AutoCoordsDataResponse> response = new ArrayList<>();
+		List<AptCoordsDto> updateAptCoords = new ArrayList<>();
+		for(int i = 0 ; i< updateAptCoordsDtoList.size() ; i++) {
+			
+			AptCoordsDto aptCoordsDto = updateAptCoordsDtoList.get(i);
+			
+			if(IsCoordsExist(aptCoordsDto)) {
+				continue;
+			}
+			
+			try {
+				updateAptCoords.add(processCoords(aptCoordsDto));
+				response.add(new AutoCoordsDataResponse("OK", "00", "좌표 조회 성공", aptCoordsDto));
+			} catch (Exception e) {
+				// TODO: handle exception
+				logger.error("Error processing LatLng for apt: " + aptCoordsDto.toString(), e);
+				response.add(new AutoCoordsDataResponse("ERROR", "01", "좌표 입력 실패", aptCoordsDto));
+				return new AutoCoordsDataResponse("ERROR", "01", parentEngRegionName + "지역 좌표 입력 실패", aptCoordsDto, response);
+			}
+			
+		}
+		
+		
+		
+		return new AutoCoordsDataResponse("OK", "00", parentEngRegionName + "지역 좌표 입력 성공", null, response);
 	}
 	
+	@Override
 	public List<AptCoordsDto> getParentRegionAptCoordsDtoList(ParentRegionName parentRegionName) {
 		
-		List<AptCoordsDto> aptCoordsDto = autoCoordsDataMapper.getParentRegionAptCoordsDtoList(parentRegionName);
-		logger.info(aptCoordsDto.toString());
-		return null;
+		List<AptCoordsDto> updateAptCoordsDtoList = autoCoordsDataMapper.getParentRegionAptCoordsDtoList(parentRegionName);
+		return updateAptCoordsDtoList;
 	}
 	
-	public AptCoordsDto getCoords(AptCoordsDto aptCoordsDto) {
+	@Override
+	public AptCoordsDto getCoordsDto(AptCoordsDto aptCoordsDto) {
 		
 		return autoCoordsDataMapper.getCoordsDto(aptCoordsDto);
 	}
 	
-	public List<AptCoordsDto> getCoordsList(List<AptCoordsDto> aptCoordsList) {
+	@Override
+	public boolean IsCoordsExist (AptCoordsDto aptCoordsDto) {
 		
-		List<AptCoordsDto> aAptCoordsList = new ArrayList<>();
-		
-		for(int i = 0 ; i < aptCoordsList.size() ; i++) {
-			aAptCoordsList.add(getCoords(aptCoordsList.get(i))); 
-		}
-		
-		return aptCoordsList;
-		
+		return aptCoordsDto.equals(getCoordsDto(aptCoordsDto));
 	}
 	
-	public ParentRegionName getParentRegionName(AptCoordsDto aptCoordsDto) {
-		String sigungu = aptCoordsDto.getSIGUNGU();
-		String[] splitString = sigungu.split(" ");
-		if(splitString.length > 2) {
-		return RegionManager.getInstance().getParentNameByEng(splitString[0]);
-		}
-		return null;
+	@Override
+	public AptCoordsDto processCoords(AptCoordsDto aptCoordsDto) throws IOException, ParseException {
+		JSONObject response = getparcel(aptCoordsDto);
+		
+	    if (!"OK".equals(response.get("status"))) {
+	        response = getroadname(aptCoordsDto);
+	    }
+	    
+	    if ("OK".equals(response.get("status"))) {
+	        setCoordinates(aptCoordsDto, response);
+	    } else {
+	    	setNoDataCoordinates(aptCoordsDto);
+	    }
+	    
+	    autoCoordsDataMapper.insertCoords(aptCoordsDto);
+	    
+		return aptCoordsDto;
 	}
+	
+	@Override
+	public void setCoordinates(AptCoordsDto aptCoordsDto, JSONObject response) {
+	    
+		JSONObject jsResult = (JSONObject) response.get("result");
+	    JSONObject jspoint = (JSONObject) jsResult.get("point");
+	    
+	    String lat = (String) jspoint.get("y");
+	    String lng = (String) jspoint.get("x");
+	    
+	    aptCoordsDto.setLAT(truncateCoordinate(lat));
+	    aptCoordsDto.setLNG(truncateCoordinate(lng));
+	}
+	
+	@Override
+	public String truncateCoordinate(String coordinate) {
+	    int decimalIndex = coordinate.indexOf(".");
+	    return coordinate.substring(0, decimalIndex + 6);
+	}
+	
+	@Override
+	public void setNoDataCoordinates(AptCoordsDto aptCoordsDto) {
+		aptCoordsDto.setLAT("자료없음");
+		aptCoordsDto.setLNG("자료없음");
+	}
+	
+	
 }

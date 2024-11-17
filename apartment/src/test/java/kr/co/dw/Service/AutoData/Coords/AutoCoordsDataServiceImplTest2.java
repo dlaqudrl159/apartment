@@ -1,4 +1,4 @@
-package kr.co.dw.Service.AutoData.LatLng;
+package kr.co.dw.Service.AutoData.Coords;
 
 import java.io.IOException;
 
@@ -20,7 +20,7 @@ import kr.co.dw.Service.AutoData.Coords.AutoCoordsDataServiceImpl;
 
 @SpringBootTest(properties = "spring.profiles.active=dev")
 @TestPropertySource("classpath:application-dev.properties")
-public class AutoLatLngDataServiceImplTest2 {
+public class AutoCoordsDataServiceImplTest2 {
 
 	@Autowired
 	private AutoCoordsDataMapper autoCoordsDataMapper; 

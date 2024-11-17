@@ -38,25 +38,25 @@
   	<result column="SGGCD" property="SGGCD"/>
 	</resultMap>   
     
-    <select id="getList" resultType="newAptCoordsDto">
+    <select id="getList">
     
     select SIGUNGU,BUNGI,ROADNAME,APARTMENTNAME from ${tableName} group by SIGUNGU,BUNGI,ROADNAME,APARTMENTNAME order by SIGUNGU DESC
     
     </select>
     
-    <select id = "getLatLng" parameterType="AptCoordsDto">
+    <select id = "getCoords" parameterType="AptCoordsDto">
     
-    select * from LATLNG where SIGUNGU = #{SIGUNGU} and BUNGI = #{BUNGI} and ROADNAME = #{ROADNAME} and APARTMENTNAME = #{APARTMENTNAME}
+    select * from COORDINATES where SIGUNGU = #{SIGUNGU} and BUNGI = #{BUNGI} and ROADNAME = #{ROADNAME} and APARTMENTNAME = #{APARTMENTNAME}
    
     </select>
     
-    <insert id="insertLatLng" parameterType="AptCoordsDto">
+    <insert id="insertCoords" parameterType="AptCoordsDto">
     
-    insert into LATLNG (SIGUNGU, BUNGI, LAT,LNG,ROADNAME,APARTMENTNAME) values (#{SIGUNGU},#{BUNGI},#{LAT},#{LNG},#{ROADNAME},#{APARTMENTNAME})
+    insert into COORDINATES (SIGUNGU, BUNGI, LAT,LNG,ROADNAME,APARTMENTNAME) values (#{SIGUNGU},#{BUNGI},#{LAT},#{LNG},#{ROADNAME},#{APARTMENTNAME})
     
     </insert>
     
-    <select id="getParentRegionAptLatLngDtoList" parameterType="ParentRegionName">
+    <select id="getParentRegionAptCoordsDtoList" parameterType="ParentRegionName">
     select SIGUNGU,BUNGI,ROADNAME,APARTMENTNAME from 
     <choose>
     
@@ -82,6 +82,12 @@
     </otherwise> 
     </choose>
     group by SIGUNGU,BUNGI,ROADNAME,APARTMENTNAME order by SIGUNGU DESC
+    </select>
+    
+    <select id = "getCoordsDto" parameterType="AptCoordsDto">
+    
+    select * from COORDINATES where SIGUNGU = #{SIGUNGU} and BUNGI = #{BUNGI} and ROADNAME = #{ROADNAME} and APARTMENTNAME = #{APARTMENTNAME}
+   
     </select>
     
 </mapper>	

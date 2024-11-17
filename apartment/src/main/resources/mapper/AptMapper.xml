@@ -16,7 +16,7 @@
     
     <select id="getMarkers" parameterType="hashMap">
     
-    select SIGUNGU, BUNGI, APARTMENTNAME, LAT, LNG from LATLNG where SIGUNGU like 
+    select SIGUNGU, BUNGI, APARTMENTNAME, LAT, LNG from COORDINATES where SIGUNGU like 
     
     <choose>
         <when test="city == '세종특별자치시'">
@@ -39,7 +39,7 @@
     
     <select id = "getRoadName">
     
-    select RoadName from LATLNG where SIGUNGU = #{aptCoordsDto.SIGUNGU} and APARTMENTNAME = #{aptCoordsDto.APARTMENTNAME} and BUNGI = #{aptCoordsDto.BUNGI}
+    select RoadName from COORDINATES where SIGUNGU = #{aptCoordsDto.SIGUNGU} and APARTMENTNAME = #{aptCoordsDto.APARTMENTNAME} and BUNGI = #{aptCoordsDto.BUNGI}
     
     </select>
 </mapper>	

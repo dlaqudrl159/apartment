@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import kr.co.dw.Dto.Response.AutoCoordsDataResponse;
 import kr.co.dw.Service.AutoData.Coords.AutoCoordsDataService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequiredArgsConstructor
@@ -22,27 +23,28 @@ public class AutoCoordsDataController {
 
 	private final AutoCoordsDataService autoCoordsDataService;
 	
-	private final Logger logger = LoggerFactory.getLogger(AutoCoordsDataController.class);
+	private final Logger looger = LoggerFactory.getLogger(AutoCoordsDataService.class);
 	
 	@GetMapping("/data/autoallCoordsdatainsert")
 	public ResponseEntity<AutoCoordsDataResponse> autoallCoordsdatainsert() {
 		
 		AutoCoordsDataResponse response = autoCoordsDataService.allCoordsInsert();
 		
-		return null;
+		return new ResponseEntity<AutoCoordsDataResponse>(response, HttpStatus.OK);
 	}
 	
 	@GetMapping("/data/autoCoordsdatainsert")
-	public ResponseEntity<String> autoCoordsInsert(@RequestParam(required = false, value = "parentEngRegionName") String parentEngRegionName) throws MalformedURLException, IOException, ParseException, InterruptedException {
+	public ResponseEntity<AutoCoordsDataResponse> autoCoordsInsert(@RequestParam(required = false, value = "parentEngRegionName") String parentEngRegionName) throws MalformedURLException, IOException, ParseException, InterruptedException {
 		
 		if(parentEngRegionName == null || parentEngRegionName.trim().isEmpty()) {
-			return new ResponseEntity<String>("파라미터가 null 이거나 빈칸입니다.", HttpStatus.BAD_REQUEST);
+			//return new ResponseEntity<String>("파라미터가 null 이거나 빈칸입니다.", HttpStatus.BAD_REQUEST);
+			return null;
 		}
-		autoCoordsDataService.CoordsInsert(parentEngRegionName);
-		/*autoLatLngDataService.CoordsInsert(parentEngRegionName);
-		return new ResponseEntity<String>(parentEngRegionName + "테이블 좌표 저장 완료", HttpStatus.OK);*/
+		AutoCoordsDataResponse response = autoCoordsDataService.CoordsInsert(parentEngRegionName);
 		
-		return null;
+		looger.info(response.toString());
+		
+		return new ResponseEntity<AutoCoordsDataResponse>(response, HttpStatus.OK);
 		
 	}
 	

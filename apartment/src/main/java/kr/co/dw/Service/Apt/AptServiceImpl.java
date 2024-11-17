@@ -24,62 +24,60 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AptServiceImpl implements AptService {
 
-	private final AptMapper AptMapper;
+	private final AptMapper aptMapper;
 
 	private final Logger logger = LoggerFactory.getLogger(AptServiceImpl.class);
 	
 	@Override
 	public List<AptCoordsDto> getMarkers(List<String> addressnameArr) {
-		// TODO Auto-generated method stub
-		List<AptCoordsDto> AptLatLngDtoList = new ArrayList<>();
+		List<AptCoordsDto> aptCoordsDtoList = new ArrayList<>();
 		List<AddressElement> list = new AddressNameArr(addressnameArr).getList();
 		if (!list.isEmpty()) {
-			list.stream().forEach(AddressElement -> {
-				if(!(AddressElement.getCity().equals("ERROR") || AddressElement.getDistrict().equals("ERROR"))) {
-					Map<String, String> map = Map.of("city", AddressElement.getCity(), "district",
-							AddressElement.getDistrict());
-					AptLatLngDtoList.addAll(AptMapper.getMarkers(map));
+			list.stream().forEach(addressElement -> {
+				if(!(addressElement.getCity().equals("ERROR") || addressElement.getDistrict().equals("ERROR"))) {
+					Map<String, String> map = Map.of("city", addressElement.getCity(), "district",
+							addressElement.getDistrict());
+					aptCoordsDtoList.addAll(aptMapper.getMarkers(map));
 				}
 			});
 		}
-		return AptLatLngDtoList;
+		return aptCoordsDtoList;
 	}
 	
 	@Override
-	public List<AptTransactionResponseDto> getAptTransactionResponseDtolist(AptCoordsDto AptCoordsDto) {
-		// TODO Auto-generated method stub
+	public List<AptTransactionResponseDto> getAptTransactionResponseDtolist(AptCoordsDto aptCoordsDto) {
 		
-		List<AptTransactionResponseDto> AptTransactionResponseDto = new ArrayList<>();
-		String parentRegion = AptUtils.SplitSigungu(AptCoordsDto.getSIGUNGU());
+		List<AptTransactionResponseDto> aptTransactionResponseDto = new ArrayList<>();
+		String parentRegion = AptUtils.SplitSigungu(aptCoordsDto.getSIGUNGU());
 		String tableName = AptUtils.toEngParentRegion(parentRegion);
 		
-		List<AptTransactionDto> getAptTrancsactionHistory = AptMapper.getAptTrancsactionHistory(AptCoordsDto, tableName);
+		List<AptTransactionDto> getAptTrancsactionHistory = aptMapper.getAptTrancsactionHistory(aptCoordsDto, tableName);
 		if(!getAptTrancsactionHistory.isEmpty()) {
-			Map<String, List<AptTransactionDto>> AptTrancsactionHistoryMap = getAptTrancsactionHistory.stream().collect(Collectors.groupingBy(AptTransactionDto -> AptTransactionDto.getROADNAME()));
-			AptTrancsactionHistoryMap.forEach((roadName, AptTransactionDtoList) -> {
-				AptCoordsDto responseAptLatLngDto = new AptCoordsDto(AptCoordsDto.getSIGUNGU(), AptCoordsDto.getBUNGI(), AptCoordsDto.getAPARTMENTNAME(), roadName, AptCoordsDto.getLAT(), AptCoordsDto.getLNG());
-				List<Integer> getTransactionYears = getTransactionYears(AptTransactionDtoList);
-				AptCoordsDto.setROADNAME(roadName);
+			Map<String, List<AptTransactionDto>> aptTrancsactionHistoryMap = getAptTrancsactionHistory.stream().collect(Collectors.groupingBy(aptTransactionDto -> aptTransactionDto.getROADNAME()));
+			aptTrancsactionHistoryMap.forEach((roadName, aptTransactionDtoList) -> {
+				AptCoordsDto responseAptCoordsDto = new AptCoordsDto(aptCoordsDto.getSIGUNGU(), aptCoordsDto.getBUNGI(), aptCoordsDto.getAPARTMENTNAME(), roadName, aptCoordsDto.getLAT(), aptCoordsDto.getLNG());
+				List<Integer> getTransactionYears = getTransactionYears(aptTransactionDtoList);
+				aptCoordsDto.setROADNAME(roadName);
 				if(getTransactionYears.isEmpty()) {
 					Integer year = Calendar.getInstance().get(Calendar.YEAR);
 					getTransactionYears.add(year);
 				}
-				AptTransactionResponseDto.add(new AptTransactionResponseDto(getTransactionYears, AptTransactionDtoList, responseAptLatLngDto));
+				aptTransactionResponseDto.add(new AptTransactionResponseDto(getTransactionYears, aptTransactionDtoList, responseAptCoordsDto));
 			});
 		}else {
-			List<String> roadName = AptMapper.getRoadName(AptCoordsDto);
+			List<String> roadName = aptMapper.getRoadName(aptCoordsDto);
 			roadName.forEach(rRoadName -> {
-				AptCoordsDto responseAptLatLngDto = new AptCoordsDto(AptCoordsDto.getSIGUNGU(), AptCoordsDto.getBUNGI(), AptCoordsDto.getAPARTMENTNAME(), rRoadName, AptCoordsDto.getLAT(), AptCoordsDto.getLNG());
-				AptTransactionResponseDto.add(new AptTransactionResponseDto(List.of(2024), null, responseAptLatLngDto));
+				AptCoordsDto responseAptCoordsDto = new AptCoordsDto(aptCoordsDto.getSIGUNGU(), aptCoordsDto.getBUNGI(), aptCoordsDto.getAPARTMENTNAME(), rRoadName, aptCoordsDto.getLAT(), aptCoordsDto.getLNG());
+				aptTransactionResponseDto.add(new AptTransactionResponseDto(List.of(2024), null, responseAptCoordsDto));
 			});
 		}
-		return AptTransactionResponseDto;
+		return aptTransactionResponseDto;
 	}
 	
 	@Override
 	public List<Integer> getTransactionYears(List<AptTransactionDto> getAptTrancsactionHistory) {
 
-		return getAptTrancsactionHistory.stream().map(AptTransactionDtoList -> AptTransactionDtoList.getYear()).distinct()
+		return getAptTrancsactionHistory.stream().map(aptTransactionDtoList -> aptTransactionDtoList.getYear()).distinct()
 				.sorted(Comparator.reverseOrder()).collect(Collectors.toList());
 	}
 }
