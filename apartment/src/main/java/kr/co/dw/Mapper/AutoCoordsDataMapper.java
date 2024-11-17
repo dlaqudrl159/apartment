@@ -12,11 +12,6 @@ public interface AutoCoordsDataMapper {
 
 	void insertCoords(AptCoordsDto aptCoordsDto);
 
-	List<AptCoordsDto> getList(String tableName);
-
-	AptCoordsDto getCoords(AptCoordsDto aptCoordsDto);
-//--------------------------------------------------------------
-
 	List<AptCoordsDto> getParentRegionAptCoordsDtoList(ParentRegionName parentRegionName);
 
 	AptCoordsDto getCoordsDto(AptCoordsDto aptCoordsDto);

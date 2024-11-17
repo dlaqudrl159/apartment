@@ -98,6 +98,7 @@ public class AutoCoordsDataServiceImpl implements AutoCoordsDataService{
 		return new AutoCoordsDataResponse("OK", "01", "전체 지역 좌표 입력 완료", null, totalresponse);
 	}
 
+	@Transactional
 	@Override
 	public AutoCoordsDataResponse CoordsInsert(String parentEngRegionName) {
 		logger.info(parentEngRegionName);
@@ -126,6 +127,7 @@ public class AutoCoordsDataServiceImpl implements AutoCoordsDataService{
 			}
 			
 		}
+		
 		
 		
 		
