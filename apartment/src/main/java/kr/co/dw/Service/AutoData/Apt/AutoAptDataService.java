@@ -17,11 +17,9 @@ import kr.co.dw.Dto.Response.DataAutoInsertResponseDto;
 
 public interface AutoAptDataService {
 
-	DataAutoInsertResponseDto autoDataInsert(String parentRegionName);
-	
-	DataAutoInsertResponseDto allex1(List<ParentRegionName> parentRegionList);
+	DataAutoInsertResponseDto allAutoAptDataInsert();
 
-	DataAutoInsertResponseDto ex1(List<Region> regionList, ParentRegionName parentRegionName);
+	DataAutoInsertResponseDto autoAptDataInsert(ParentRegionName parentRegionName);
 	
 	StringBuilder getRTMSDataSvcAptTradeDev(RegionYearDto regionYearDto) throws IOException;
 	

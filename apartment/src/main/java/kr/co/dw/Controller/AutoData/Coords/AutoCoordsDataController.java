@@ -34,7 +34,7 @@ public class AutoCoordsDataController {
 	}
 	
 	@GetMapping("/data/autoCoordsdatainsert")
-	public ResponseEntity<AutoCoordsDataResponse> autoCoordsInsert(@RequestParam(required = false, value = "parentEngRegionName") String parentEngRegionName) throws MalformedURLException, IOException, ParseException, InterruptedException {
+	public ResponseEntity<AutoCoordsDataResponse> autoCoordsInsert(@RequestParam(value = "parentEngRegionName") String parentEngRegionName) throws MalformedURLException, IOException, ParseException, InterruptedException {
 		
 		if(parentEngRegionName == null || parentEngRegionName.trim().isEmpty()) {
 			//return new ResponseEntity<String>("파라미터가 null 이거나 빈칸입니다.", HttpStatus.BAD_REQUEST);

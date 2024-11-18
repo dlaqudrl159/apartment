@@ -62,25 +62,14 @@ public class AutoAptDataServiceImpl implements AutoAptDataService{
 	private final Integer DELETE_YEAR = 12;
 	
 	@Override
-	public DataAutoInsertResponseDto autoDataInsert(String parentRegionName) {
-		if(parentRegionName == null) {
-			return allex1(RegionManager.getInstance().getParentRegionNameList());
-		}
-		
-		List<Region> RegionList = RegionManager.getInstance().getListRegion(parentRegionName);
-		if(RegionList == null) {
-			throw new IllegalArgumentException("RegionList null 발생      유효하지 않은 지역명: " + parentRegionName);
-		}
-		return ex1(RegionList,RegionManager.getInstance().getParentName(parentRegionName));
-	}
-	@Override
-	public DataAutoInsertResponseDto allex1(List<ParentRegionName> parentRegionList) {
+	public DataAutoInsertResponseDto allAutoAptDataInsert() {
 		List<DataAutoInsertResponseDto> totalResponse = new ArrayList<>();
 		int totalCount = 0;
-		for (ParentRegionName parentRegionName : parentRegionList) {
+		
+		for (ParentRegionName parentRegionName : RegionManager.getInstance().getParentRegionNameList()) {
 			try {
 				List<Region> RegionList = RegionManager.getInstance().getListRegion(parentRegionName.getEngParentName());
-				DataAutoInsertResponseDto response = ex1(RegionList,parentRegionName);
+				DataAutoInsertResponseDto response = autoAptDataInsert(parentRegionName);
 				
 				if ("ERROR".equals(response.getStatus())) {
 		               logger.error("{} 처리 실패", parentRegionName.getKorParentName());
@@ -99,7 +88,9 @@ public class AutoAptDataServiceImpl implements AutoAptDataService{
 		return new DataAutoInsertResponseDto("SUCCESS", null, "전체 지역 처리 완료", totalCount, LocalDateTime.now(), totalResponse);
 	}
 	@Override
-	public DataAutoInsertResponseDto ex1(List<Region> regionList, ParentRegionName parentRegionName) {
+	public DataAutoInsertResponseDto autoAptDataInsert(ParentRegionName parentRegionName) {
+		
+		List<Region> regionList = RegionManager.getInstance().getListRegion(parentRegionName.getEngParentName());
 		
 		List<String> dealYearMonthList = DateUtils.makeDealYearMonthList(DELETE_YEAR); 
 		
