@@ -18,7 +18,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Value;
 
 import kr.co.dw.Dto.Common.RegionYearDto;
-import kr.co.dw.Exception.ApiException;
 import kr.co.dw.Mapper.AutoCoordsDataMapper;
 import kr.co.dw.Service.AutoData.Coords.AutoCoordsDataServiceImpl;
 

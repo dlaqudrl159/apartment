@@ -40,7 +40,6 @@ import kr.co.dw.Domain.RegionManager;
 import kr.co.dw.Dto.Common.AptTransactionDto;
 import kr.co.dw.Dto.Common.RegionYearDto;
 import kr.co.dw.Dto.Response.DataAutoInsertResponseDto;
-import kr.co.dw.Exception.ApiException;
 import kr.co.dw.Mapper.AutoAptDataMapper;
 import kr.co.dw.Utils.DateUtils;
 import lombok.RequiredArgsConstructor;

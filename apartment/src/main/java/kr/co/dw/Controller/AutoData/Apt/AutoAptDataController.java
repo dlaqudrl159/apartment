@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import kr.co.dw.Dto.Response.DataAutoInsertResponseDto;
+import kr.co.dw.Exception.EmptyOrNullRegion;
+import kr.co.dw.Exception.ErrorCode.ErrorCode;
 import kr.co.dw.Service.AutoData.Apt.AutoAptDataService;
 import lombok.RequiredArgsConstructor;
 
@@ -22,18 +24,22 @@ public class AutoAptDataController {
 	
 	private final Logger logger = LoggerFactory.getLogger(AutoAptDataController.class);
 	
-	@GetMapping("/data/autodatainsert")
-	public ResponseEntity<DataAutoInsertResponseDto> autoDataInsert(@RequestParam(required = false, value = "parentEngRegionName") String parentEngRegionName) throws java.text.ParseException{
+	@GetMapping("/data/allautoaptdatainsert")
+	public ResponseEntity<DataAutoInsertResponseDto> autoAllDataInsert() {
+		return null;
+	}
+	
+	@GetMapping("/data/autoaptdatainsert")
+	public ResponseEntity<DataAutoInsertResponseDto> autoDataInsert(@RequestParam(value = "parentEngRegionName") String parentEngRegionName) throws java.text.ParseException{
 		
+		if(parentEngRegionName == null || parentEngRegionName.isEmpty()) {
+			throw new EmptyOrNullRegion(ErrorCode.EMPTY_OR_NULL_REGION, "파라미터 입력 오류 null or empty " + parentEngRegionName);
+		}
 		try {
-			DataAutoInsertResponseDto dto = autoAptService.autoDataInsert(parentEngRegionName);
+			DataAutoInsertResponseDto response = autoAptService.autoDataInsert(parentEngRegionName);
 			
-			return new ResponseEntity<DataAutoInsertResponseDto>(dto, HttpStatus.OK);
+			return new ResponseEntity<DataAutoInsertResponseDto>(response, HttpStatus.OK);
 			
-		} catch (IllegalArgumentException  e) {
-			// TODO: handle exception
-			logger.warn("잘못된 요청: {}", e.getMessage());
-			return new ResponseEntity<DataAutoInsertResponseDto>(new DataAutoInsertResponseDto("400", null, e.getMessage(), 0, LocalDateTime.now()),HttpStatus.BAD_REQUEST);
 		} catch (Exception e) {
 			// TODO: handle exception
 			logger.error("처리 중 오류 발생", e);
