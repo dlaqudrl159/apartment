@@ -199,8 +199,8 @@ public class RegionManager {
 
 	);
 
-	public List<Region> getListRegion(String Region) {
-		switch (Region.toUpperCase()) {
+	public List<Region> getRegionList(String region) {
+		switch (region.toUpperCase()) {
 		case "SEOUL":
 		case "서울특별시":
 			return RegionManager.SEOUL;

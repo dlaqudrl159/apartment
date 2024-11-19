@@ -3,7 +3,7 @@ package kr.co.dw.Exception.ErrorCode;
 public enum ErrorCode {
 
 	//AutoAptDataController
-	EMPTY_OR_NULL_REGION("A001","empty_or_null_region", 400);
+	EMPTY_OR_NULL_Parameter("A001","empty_or_null_region", 400);
 
 
 	private final String code;

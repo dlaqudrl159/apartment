@@ -101,9 +101,8 @@ public class AutoCoordsDataServiceImpl implements AutoCoordsDataService{
 	@Transactional
 	@Override
 	public AutoCoordsDataResponse CoordsInsert(String parentEngRegionName) {
-		logger.info(parentEngRegionName);
+		
 		ParentRegionName parentRegionName = RegionManager.getInstance().getParentName(parentEngRegionName);
-		logger.info(parentRegionName.toString());
 		List<AptCoordsDto> updateAptCoordsDtoList = getParentRegionAptCoordsDtoList(parentRegionName);
 		
 		List<AutoCoordsDataResponse> response = new ArrayList<>();

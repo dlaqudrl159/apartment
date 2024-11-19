@@ -68,8 +68,7 @@ public class AutoAptDataServiceImpl implements AutoAptDataService{
 		
 		for (ParentRegionName parentRegionName : RegionManager.getInstance().getParentRegionNameList()) {
 			try {
-				List<Region> RegionList = RegionManager.getInstance().getListRegion(parentRegionName.getEngParentName());
-				DataAutoInsertResponseDto response = autoAptDataInsert(parentRegionName);
+				DataAutoInsertResponseDto response = autoAptDataInsert(parentRegionName.getEngParentName());
 				
 				if ("ERROR".equals(response.getStatus())) {
 		               logger.error("{} 처리 실패", parentRegionName.getKorParentName());
@@ -88,9 +87,11 @@ public class AutoAptDataServiceImpl implements AutoAptDataService{
 		return new DataAutoInsertResponseDto("SUCCESS", null, "전체 지역 처리 완료", totalCount, LocalDateTime.now(), totalResponse);
 	}
 	@Override
-	public DataAutoInsertResponseDto autoAptDataInsert(ParentRegionName parentRegionName) {
+	public DataAutoInsertResponseDto autoAptDataInsert(String parentEngRegionName) {
 		
-		List<Region> regionList = RegionManager.getInstance().getListRegion(parentRegionName.getEngParentName());
+		List<Region> regionList = RegionManager.getInstance().getRegionList(parentEngRegionName);
+		
+		ParentRegionName parentRegionName = RegionManager.getInstance().getParentName(parentEngRegionName);
 		
 		List<String> dealYearMonthList = DateUtils.makeDealYearMonthList(DELETE_YEAR); 
 		
@@ -133,7 +134,7 @@ public class AutoAptDataServiceImpl implements AutoAptDataService{
 					}
 					
 				} catch (Exception e) {
-	                   logger.error("처리 실패: region={}, yearMonth={}, error={}", region.getRegionName(), dealYearMonth, e.getMessage());						
+	                   logger.error("처리 실패: region={}, yearMonth={}, error={}", region.getName(), dealYearMonth, e.getMessage());						
 	                   response.add(new DataAutoInsertResponseDto("ERROR", regionYearDto, e.getMessage(), 0, LocalDateTime.now()));
 						
 					   return new DataAutoInsertResponseDto("ERROR", regionYearDto, "처리 중 오류 발생", totalCount, LocalDateTime.now(), response);
@@ -185,8 +186,8 @@ public class AutoAptDataServiceImpl implements AutoAptDataService{
         urlBuilder.append("?" + URLEncoder.encode("serviceKey","UTF-8") + this.api_apt_Service_Key); /*Service Key*/
         urlBuilder.append("&" + URLEncoder.encode("LAWD_CD","UTF-8") + "=" + URLEncoder.encode(regionYearDto.getRegion().getCode(), "UTF-8")); /*각 지역별 코드*/
         urlBuilder.append("&" + URLEncoder.encode("DEAL_YMD","UTF-8") + "=" + URLEncoder.encode(regionYearDto.getYear()/*DEAL_YMD*/, "UTF-8")); /*월 단위 신고자료*/
-        urlBuilder.append("&" + URLEncoder.encode("pageNo","UTF-8") + "=" + URLEncoder.encode(regionYearDto.getPageNo(), "UTF-8")); /*페이지번호*/
-        urlBuilder.append("&" + URLEncoder.encode("numOfRows","UTF-8") + "=" + URLEncoder.encode(regionYearDto.getNUMOFROWS(), "UTF-8")); /*한 페이지 결과 수*/
+        urlBuilder.append("&" + URLEncoder.encode("pageNo","UTF-8") + "=" + URLEncoder.encode(regionYearDto.getPAGE_NO(), "UTF-8")); /*페이지번호*/
+        urlBuilder.append("&" + URLEncoder.encode("numOfRows","UTF-8") + "=" + URLEncoder.encode(regionYearDto.getNUM_OF_ROWS(), "UTF-8")); /*한 페이지 결과 수*/
         URL url = new URL(urlBuilder.toString());
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestMethod("GET");
@@ -283,7 +284,7 @@ public class AutoAptDataServiceImpl implements AutoAptDataService{
 				String RoadNameBubun = getElementContent(eElement,apiRoadNmBubun);
 				String SggCd = getElementContent(eElement,apiSggCd);
 				
-				aptTransactionDtoList.add(new AptTransactionDto(regionYearDto.getParentRegionName().getKorParentName() + " " + regionYearDto.getRegion().getRegionName() + " " +  Dong,
+				aptTransactionDtoList.add(new AptTransactionDto(regionYearDto.getParentRegionName().getKorParentName() + " " + regionYearDto.getRegion().getName() + " " +  Dong,
 						Jibun,
 						Bonbun,
 						Bubun,

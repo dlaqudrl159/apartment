@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import kr.co.dw.Domain.ParentRegionName;
 import kr.co.dw.Domain.RegionManager;
 import kr.co.dw.Dto.Response.DataAutoInsertResponseDto;
-import kr.co.dw.Exception.EmptyOrNullRegion;
+import kr.co.dw.Exception.EmptyOrNullParamException;
 import kr.co.dw.Exception.ErrorCode.ErrorCode;
 import kr.co.dw.Service.AutoData.Apt.AutoAptDataService;
 import lombok.RequiredArgsConstructor;
@@ -28,26 +28,21 @@ public class AutoAptDataController {
 	
 	@GetMapping("/data/allautoaptdatainsert")
 	public ResponseEntity<DataAutoInsertResponseDto> autoAllDataInsert() {
-		return null;
+		return ResponseEntity.ok(autoAptDataService.allAutoAptDataInsert());
 	}
 	
 	@GetMapping("/data/autoaptdatainsert")
 	public ResponseEntity<DataAutoInsertResponseDto> autoDataInsert(@RequestParam(value = "parentEngRegionName") String parentEngRegionName) throws java.text.ParseException{
 		try {
-		System.out.println(parentEngRegionName);
-		if(RegionManager.getInstance().getParentName(parentEngRegionName) == null) {
-			throw new EmptyOrNullRegion(ErrorCode.EMPTY_OR_NULL_REGION, "파라미터 입력 오류 null or empty " + parentEngRegionName);
-		}
+		/*if(parentEngRegionName == null || parentEngRegionName.trim().isEmpty()) {
+			throw new EmptyOrNullParamException(ErrorCode.EMPTY_OR_NULL_Parameter, "파라미터 입력 오류 " + parentEngRegionName);
+		}*/
 		
 		
-			//DataAutoInsertResponseDto response = autoAptDataService.autoAptDataInsert(parentEngRegionName);
-			System.out.println(parentEngRegionName + ":::::::::::::::::::::");
-			//return new ResponseEntity<DataAutoInsertResponseDto>(response, HttpStatus.OK);
-			return null;
+			return ResponseEntity.ok(autoAptDataService.autoAptDataInsert(parentEngRegionName));
 		} catch (Exception e) {
-			// TODO: handle exception
-			logger.error("처리 중 오류 발생", e);
-			return new ResponseEntity<DataAutoInsertResponseDto>(new DataAutoInsertResponseDto("500", null, e.getMessage(), 0, LocalDateTime.now()),HttpStatus.INTERNAL_SERVER_ERROR);
+			logger.error("서버 Error 발생", e);
+			return ResponseEntity.internalServerError().body(new DataAutoInsertResponseDto("500", null, e.getMessage(), 0, LocalDateTime.now()));
 		}
 	}
 	
