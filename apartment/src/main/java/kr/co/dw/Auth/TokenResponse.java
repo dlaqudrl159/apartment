@@ -1,4 +1,4 @@
-package kr.co.dw.Dto.Response;
+package kr.co.dw.Auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
