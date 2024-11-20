@@ -1,4 +1,4 @@
-package kr.co.dw.Service.Auth;
+package kr.co.dw.Auth;
 
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
@@ -16,13 +16,13 @@ public class JwtTokenProvider {
 
 	@Value("${jwt.service.key}")
 	private String serviceKey;
-	
-	private final long tokenValidMilliseconds = 1000L * 60 * 60; // 1시간
-	
+
+	private final long tokenValidMilliseconds = 1000L * 60 * 5; // 1시간
+
 	public String createToken(String userId) {
 		Claims claims = Jwts.claims().setSubject(userId);
 		Date date = new Date();
-		
+
 		return Jwts.builder()
 				.setClaims(claims)
 				.setIssuedAt(date)
@@ -30,9 +30,30 @@ public class JwtTokenProvider {
 				.signWith(getSigningKey())
 				.compact();
 	}
+
+	public String getUserId(String token) {
+		return Jwts.parserBuilder()
+				.setSigningKey(getSigningKey())
+				.build()
+				.parseClaimsJws(token)
+				.getBody()
+				.getSubject();
+	}
 	
-	   private Key getSigningKey() {
-	       byte[] keyBytes = serviceKey.getBytes(StandardCharsets.UTF_8);
-	       return Keys.hmacShaKeyFor(keyBytes);
+	public boolean validateToken(String token) {
+	       try {
+	           Jwts.parserBuilder()
+	               .setSigningKey(getSigningKey())
+	               .build()
+	               .parseClaimsJws(token);
+	           return true;
+	       } catch (Exception e) {
+	           return false;
+	       }
 	   }
+
+	private Key getSigningKey() {
+		byte[] keyBytes = serviceKey.getBytes(StandardCharsets.UTF_8);
+		return Keys.hmacShaKeyFor(keyBytes);
+	}
 }
