@@ -21,6 +21,7 @@ public class AptController {
 	
 	@GetMapping("/api/getMarkers")
 	private ResponseEntity<List<AptCoordsDto>> getMarkers(@RequestParam("addressnameArr")  List<String> addressnameArr) {
+		System.out.println(addressnameArr);
 		return new ResponseEntity<>(aptService.getMarkers(addressnameArr), HttpStatus.OK);
 	}
 	

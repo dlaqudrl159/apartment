@@ -89,6 +89,8 @@ public class AutoAptDataServiceImpl implements AutoAptDataService{
 	@Override
 	public DataAutoInsertResponseDto autoAptDataInsert(String parentEngRegionName) {
 		
+		RegionManager rm = RegionManager.getInstance();
+		
 		List<Region> regionList = RegionManager.getInstance().getRegionList(parentEngRegionName);
 		
 		ParentRegionName parentRegionName = RegionManager.getInstance().getParentName(parentEngRegionName);

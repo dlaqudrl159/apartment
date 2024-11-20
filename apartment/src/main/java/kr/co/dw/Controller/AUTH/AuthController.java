@@ -9,7 +9,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.servlet.http.HttpSession;
 import kr.co.dw.Domain.Auth.LoginRequest;
+import kr.co.dw.Dto.Response.TokenResponse;
+import kr.co.dw.Service.Auth.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -22,19 +25,18 @@ public class AuthController {
     @Value("${spring.admin.userpw}")
     private String adminPW;
 	
-    @PostMapping("/api/admin/login")
+    private final JwtTokenProvider jwtTokenProvider;
+    
+    @PostMapping("/auth/admin/login")
     public ResponseEntity<?> adminlogin(@RequestBody LoginRequest request) {
     	
-    	System.out.println(adminUserId);
-    	System.out.println(adminPW);
-    	
-    	
-    	System.out.println(request.getUserId());
-    	System.out.println(request.getUserPw());
-    	
-    	
-    	
-    	return null;
+    	if(adminUserId.equals(request.getUserId()) && adminPW.equals(request.getUserPw())) {
+    		String token = jwtTokenProvider.createToken(request.getUserId());
+    		System.out.println("토큰생성성공");
+            return ResponseEntity.ok().body(new TokenResponse(token, "Bearer"));
+    	}
+    	System.out.println("토큰생성실패ㅇㅇ");
+    	return ResponseEntity.status(401).body("로그인 실패");
     }
     
 }
