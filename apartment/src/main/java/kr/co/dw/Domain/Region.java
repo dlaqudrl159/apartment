@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 public class Region {
 
 	private String code;
-	private String regionName;
+	private String name;
 	
 }

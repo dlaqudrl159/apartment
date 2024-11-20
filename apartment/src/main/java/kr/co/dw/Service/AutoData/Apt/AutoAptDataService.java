@@ -17,19 +17,15 @@ import kr.co.dw.Dto.Response.DataAutoInsertResponseDto;
 
 public interface AutoAptDataService {
 
-	DataAutoInsertResponseDto autoDataInsert(String parentRegionName);
-	
-	DataAutoInsertResponseDto allex1(List<ParentRegionName> parentRegionList);
+	DataAutoInsertResponseDto allAutoAptDataInsert();
 
-	DataAutoInsertResponseDto ex1(List<Region> regionList, ParentRegionName parentRegionName);
-	
-	String makeDealYearMonth(int num);
-
-	List<String> makeDealYearMonthList(int num);
+	DataAutoInsertResponseDto autoAptDataInsert(String parentEngRegionName);
 	
 	StringBuilder getRTMSDataSvcAptTradeDev(RegionYearDto regionYearDto) throws IOException;
 	
-	NodeList makeNodeList(StringBuilder sb) throws SAXException, IOException, ParserConfigurationException;
+	boolean isResultMsg(Element eElement);
+	
+	Element makeNodeList(StringBuilder sb) throws SAXException, IOException, ParserConfigurationException;
 	
 	List<AptTransactionDto> makeAptTransactionDto(NodeList nList, RegionYearDto regionYearDto);
 	
@@ -40,5 +36,7 @@ public interface AutoAptDataService {
 	String aptTransactionDtoInsert(List<AptTransactionDto> list, ParentRegionName parentRegionName);
 
 	void deleteByRegionYear(ParentRegionName parentRegionName, String deleteYearMonth);
+
+	
 	
 }

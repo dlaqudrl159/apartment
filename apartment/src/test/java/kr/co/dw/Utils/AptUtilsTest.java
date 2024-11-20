@@ -34,22 +34,12 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import kr.co.dw.Dto.Common.AptLatLngDto;
+import kr.co.dw.Dto.Common.AptCoordsDto;
 import kr.co.dw.Dto.Common.AptTransactionDto;
 
 public class AptUtilsTest {
 
-	@Test
-	void MappingRegionTest() {
-		
-		String[] arr = {"서울특별시","부산광역시","대구광역시","인천광역시","광주광역시","대전광역시","울산광역시","세종특별자치시","경기도","충청북도","충청남도","전라남도","경상북도","경상남도","제주특별자치도","강원특별자치도","전북특별자치도"};
-		
-		AptUtils utils = new AptUtils();
-		for(int i = 0 ; i < arr.length ; i++) {
-			//utils.MappingRegion(arr[i]);
-		}
-		
-	}
+	
 	//주소(지번)로 좌표검색
 	@Test
 	void getlatlng() throws IOException, ParseException {
@@ -197,7 +187,7 @@ public class AptUtilsTest {
 		String roadname = "22";
 		String roadnamebonbun = "00000";
 		String roadnamebubun = "00000";
-		DataUtils DataUtils = new DataUtils();
+		DateUtils DataUtils = new DateUtils();
 		//roadname = DataUtils.makeroadname(roadname, roadnamebonbun, roadnamebubun);
 		
 		System.out.println(roadname);
@@ -387,8 +377,8 @@ public class AptUtilsTest {
 	@Test
 	void test7() {
 		
-		AptLatLngDto dto = new AptLatLngDto();
-		AptLatLngDto dto2 = new AptLatLngDto();
+		AptCoordsDto dto = new AptCoordsDto();
+		AptCoordsDto dto2 = new AptCoordsDto();
 		
 		String Sigungu = "서울특별시 중랑구 망우동";
 		String Bungi = "435-2";
@@ -422,9 +412,9 @@ public class AptUtilsTest {
 	@Test
 	void test8() throws IOException, ParseException, InterruptedException {
 	//	DataServiceImpl DataServiceimpl = new DataServiceImpl(null);
-		List<AptLatLngDto> list = new ArrayList<>();
+		List<AptCoordsDto> list = new ArrayList<>();
 		
-		AptLatLngDto NameCountDto = new AptLatLngDto();
+		AptCoordsDto NameCountDto = new AptCoordsDto();
 		NameCountDto.setSIGUNGU("강원특별자치도 고성군 토성면 천진리");
 		NameCountDto.setBUNGI("476");
 		NameCountDto.setROADNAME("29");

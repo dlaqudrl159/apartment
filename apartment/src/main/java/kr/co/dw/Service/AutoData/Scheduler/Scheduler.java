@@ -19,7 +19,7 @@ public class Scheduler {
 	@Scheduled(cron = "${scheduling.job.cron}")
 	public void taskallex1() {
 		System.out.println(scheduleCron);
-		//autoAptDataService.autoDataInsert(null);
+		autoAptDataService.allAutoAptDataInsert();
 	}
 	
 }
