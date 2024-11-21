@@ -30,6 +30,7 @@ public class SecurityConfig {
 		.csrf(csrf -> csrf.disable())
 		.authorizeHttpRequests(authz -> authz
 				.requestMatchers("/auth/admin/dashboard").authenticated()
+				.requestMatchers("/data/*").authenticated()
 				.anyRequest().permitAll());
 		
 		return http.build();

@@ -2,6 +2,9 @@ package kr.co.dw.Domain;
 
 import java.util.List;
 
+import kr.co.dw.Exception.EmptyOrNullParamException;
+import kr.co.dw.Exception.ErrorCode.ErrorCode;
+
 public class RegionManager {
 
 	private static RegionManager instance;
@@ -200,61 +203,67 @@ public class RegionManager {
 	);
 
 	public List<Region> getRegionList(String region) {
-		switch (region.toUpperCase()) {
-		case "SEOUL":
-		case "서울특별시":
-			return RegionManager.SEOUL;
-		case "BUSAN":
-		case "부산광역시":
-			return RegionManager.BUSAN;
-		case "DAEGU":
-		case "대구광역시":
-			return RegionManager.DAEGU;
-		case "INCHEON":
-		case "인천광역시":
-			return RegionManager.INCHEON;
-		case "GWANGJU":
-		case "광주광역시":
-			return RegionManager.GWANGJU;
-		case "DAEJEON":
-		case "대전광역시":
-			return RegionManager.DAEJEON;
-		case "ULSAN":
-		case "울산광역시":
-			return RegionManager.ULSAN;
-		case "SEJONG":
-		case "세종특별자치시":
-			return RegionManager.SEJONG;
-		case "GYEONGGIDO":
-		case "경기도":
-			return RegionManager.GYEONGGIDO;
-		case "GANGWONDO":
-		case "강원특별자치도":
-			return RegionManager.GANGWONDO;
-		case "CHUNGCHEONGBUKDO":
-		case "충청북도":
-			return RegionManager.CHUNGCHEONGBUKDO;
-		case "CHUNGCHEONGNAMDO":
-		case "충청남도":
-			return RegionManager.CHUNGCHEONGNAMDO;
-		case "JEOLLABUKDO":
-		case "전북특별자치도":
-			return RegionManager.JEOLLABUKDO;
-		case "JEOLLANAMDO":
-		case "전라남도":
-			return RegionManager.JEOLLANAMDO;
-		case "GYEONGSANGBUKDO":
-		case "경상북도":
-			return RegionManager.GYEONGSANGBUKDO;
-		case "GYEONGSANGNAMDO":
-		case "경상남도":
-			return RegionManager.GYEONGSANGNAMDO;
-		case "JEJU":
-		case "제주특별자치도":
-			return RegionManager.JEJU;
-		default:
-			return null;
+		try {
+			switch (region.toUpperCase()) {
+			case "SEOUL":
+			case "서울특별시":
+				return RegionManager.SEOUL;
+			case "BUSAN":
+			case "부산광역시":
+				return RegionManager.BUSAN;
+			case "DAEGU":
+			case "대구광역시":
+				return RegionManager.DAEGU;
+			case "INCHEON":
+			case "인천광역시":
+				return RegionManager.INCHEON;
+			case "GWANGJU":
+			case "광주광역시":
+				return RegionManager.GWANGJU;
+			case "DAEJEON":
+			case "대전광역시":
+				return RegionManager.DAEJEON;
+			case "ULSAN":
+			case "울산광역시":
+				return RegionManager.ULSAN;
+			case "SEJONG":
+			case "세종특별자치시":
+				return RegionManager.SEJONG;
+			case "GYEONGGIDO":
+			case "경기도":
+				return RegionManager.GYEONGGIDO;
+			case "GANGWONDO":
+			case "강원특별자치도":
+				return RegionManager.GANGWONDO;
+			case "CHUNGCHEONGBUKDO":
+			case "충청북도":
+				return RegionManager.CHUNGCHEONGBUKDO;
+			case "CHUNGCHEONGNAMDO":
+			case "충청남도":
+				return RegionManager.CHUNGCHEONGNAMDO;
+			case "JEOLLABUKDO":
+			case "전북특별자치도":
+				return RegionManager.JEOLLABUKDO;
+			case "JEOLLANAMDO":
+			case "전라남도":
+				return RegionManager.JEOLLANAMDO;
+			case "GYEONGSANGBUKDO":
+			case "경상북도":
+				return RegionManager.GYEONGSANGBUKDO;
+			case "GYEONGSANGNAMDO":
+			case "경상남도":
+				return RegionManager.GYEONGSANGNAMDO;
+			case "JEJU":
+			case "제주특별자치도":
+				return RegionManager.JEJU;
+			default:
+				return null;
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			throw new EmptyOrNullParamException(ErrorCode.EMPTY_OR_NULL_Parameter, "파라미터 입력 오류" + e.getMessage());
 		}
+		
 	}
 
 	public List<ParentRegionName> getParentRegionNameList() {
@@ -262,61 +271,66 @@ public class RegionManager {
 	}
 
 	public ParentRegionName getParentName(String RegionName) {
-		switch (RegionName.toUpperCase()) {
-		case "SEOUL":
-		case "서울특별시":
-			return new ParentRegionName("서울특별시", "SEOUL");
-		case "BUSAN":
-		case "부산광역시":
-			return new ParentRegionName("부산광역시", "BUSAN");
-		case "DAEGU":
-		case "대구광역시":
-			return new ParentRegionName("대구광역시", "DAEGU");
-		case "INCHEON":
-		case "인천광역시":
-			return new ParentRegionName("인천광역시", "INCHEON");
-		case "GWANGJU":
-		case "광주광역시":
-			return new ParentRegionName("광주광역시", "GWANGJU");
-		case "DAEJEON":
-		case "대전광역시":
-			return new ParentRegionName("대전광역시", "DAEJEON");
-		case "ULSAN":
-		case "울산광역시":
-			return new ParentRegionName("울산광역시", "ULSAN");
-		case "SEJONG":
-		case "세종특별자치시":
-			return new ParentRegionName("세종특별자치시", "SEJONG");
-		case "GYEONGGIDO":
-		case "경기도":
-			return new ParentRegionName("경기도", "GYEONGGIDO");
-		case "CHUNGCHEONGBUKDO":
-		case "충청북도":
-			return new ParentRegionName("충청북도", "CHUNGCHEONGBUKDO");
-		case "CHUNGCHEONGNAMDO":
-		case "충청남도":
-			return new ParentRegionName("충청남도", "CHUNGCHEONGNAMDO");
-		case "JEOLLANAMDO":
-		case "전라남도":
-			return new ParentRegionName("전라남도", "JEOLLANAMDO");
-		case "GYEONGSANGBUKDO":
-		case "경상북도":
-			return new ParentRegionName("경상북도", "GYEONGSANGBUKDO");
-		case "GYEONGSANGNAMDO":
-		case "경상남도":
-			return new ParentRegionName("경상남도", "GYEONGSANGNAMDO");
-		case "JEJU":
-		case "제주특별자치도":
-			return new ParentRegionName("제주특별자치도", "JEJU");
-		case "GANGWONDO":
-		case "강원특별자치도":
-			return new ParentRegionName("강원특별자치도", "GANGWONDO");
-		case "JEOLLABUKDO":
-		case "전북특별자치도":
-			return new ParentRegionName("전북특별자치도", "JEOLLABUKDO");
-		default:
-			return null;
+		try {
+			switch (RegionName.toUpperCase()) {
+			case "SEOUL":
+			case "서울특별시":
+				return new ParentRegionName("서울특별시", "SEOUL");
+			case "BUSAN":
+			case "부산광역시":
+				return new ParentRegionName("부산광역시", "BUSAN");
+			case "DAEGU":
+			case "대구광역시":
+				return new ParentRegionName("대구광역시", "DAEGU");
+			case "INCHEON":
+			case "인천광역시":
+				return new ParentRegionName("인천광역시", "INCHEON");
+			case "GWANGJU":
+			case "광주광역시":
+				return new ParentRegionName("광주광역시", "GWANGJU");
+			case "DAEJEON":
+			case "대전광역시":
+				return new ParentRegionName("대전광역시", "DAEJEON");
+			case "ULSAN":
+			case "울산광역시":
+				return new ParentRegionName("울산광역시", "ULSAN");
+			case "SEJONG":
+			case "세종특별자치시":
+				return new ParentRegionName("세종특별자치시", "SEJONG");
+			case "GYEONGGIDO":
+			case "경기도":
+				return new ParentRegionName("경기도", "GYEONGGIDO");
+			case "CHUNGCHEONGBUKDO":
+			case "충청북도":
+				return new ParentRegionName("충청북도", "CHUNGCHEONGBUKDO");
+			case "CHUNGCHEONGNAMDO":
+			case "충청남도":
+				return new ParentRegionName("충청남도", "CHUNGCHEONGNAMDO");
+			case "JEOLLANAMDO":
+			case "전라남도":
+				return new ParentRegionName("전라남도", "JEOLLANAMDO");
+			case "GYEONGSANGBUKDO":
+			case "경상북도":
+				return new ParentRegionName("경상북도", "GYEONGSANGBUKDO");
+			case "GYEONGSANGNAMDO":
+			case "경상남도":
+				return new ParentRegionName("경상남도", "GYEONGSANGNAMDO");
+			case "JEJU":
+			case "제주특별자치도":
+				return new ParentRegionName("제주특별자치도", "JEJU");
+			case "GANGWONDO":
+			case "강원특별자치도":
+				return new ParentRegionName("강원특별자치도", "GANGWONDO");
+			case "JEOLLABUKDO":
+			case "전북특별자치도":
+				return new ParentRegionName("전북특별자치도", "JEOLLABUKDO");
+			default:
+				return null;
+			}
+		} catch (Exception e) {
+			throw new EmptyOrNullParamException(ErrorCode.EMPTY_OR_NULL_Parameter, "파라미터 입력 오류" + e.getMessage());
 		}
+		
 	}
 
 }

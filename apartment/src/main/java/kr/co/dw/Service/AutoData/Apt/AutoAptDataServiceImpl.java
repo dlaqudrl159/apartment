@@ -89,11 +89,9 @@ public class AutoAptDataServiceImpl implements AutoAptDataService{
 	@Override
 	public DataAutoInsertResponseDto autoAptDataInsert(ParentRegionName parentEngRegionName) {
 		
-		RegionManager rm = RegionManager.getInstance();
+		List<Region> regionList = RegionManager.getInstance().getRegionList(parentEngRegionName.getKorParentName());
 		
-		List<Region> regionList = RegionManager.getInstance().getRegionList(parentEngRegionName.getEngParentName());
-		
-		ParentRegionName parentRegionName = RegionManager.getInstance().getParentName(parentEngRegionName.getEngParentName());
+		ParentRegionName parentRegionName = RegionManager.getInstance().getParentName(parentEngRegionName.getKorParentName());
 		
 		List<String> dealYearMonthList = DateUtils.makeDealYearMonthList(DELETE_YEAR); 
 		
