@@ -68,7 +68,7 @@ public class AutoAptDataServiceImpl implements AutoAptDataService{
 		
 		for (ParentRegionName parentRegionName : RegionManager.getInstance().getParentRegionNameList()) {
 			try {
-				DataAutoInsertResponseDto response = autoAptDataInsert(parentRegionName.getEngParentName());
+				DataAutoInsertResponseDto response = autoAptDataInsert(parentRegionName);
 				
 				if ("ERROR".equals(response.getStatus())) {
 		               logger.error("{} 처리 실패", parentRegionName.getKorParentName());
@@ -87,13 +87,13 @@ public class AutoAptDataServiceImpl implements AutoAptDataService{
 		return new DataAutoInsertResponseDto("SUCCESS", null, "전체 지역 처리 완료", totalCount, LocalDateTime.now(), totalResponse);
 	}
 	@Override
-	public DataAutoInsertResponseDto autoAptDataInsert(String parentEngRegionName) {
+	public DataAutoInsertResponseDto autoAptDataInsert(ParentRegionName parentEngRegionName) {
 		
 		RegionManager rm = RegionManager.getInstance();
 		
-		List<Region> regionList = RegionManager.getInstance().getRegionList(parentEngRegionName);
+		List<Region> regionList = RegionManager.getInstance().getRegionList(parentEngRegionName.getEngParentName());
 		
-		ParentRegionName parentRegionName = RegionManager.getInstance().getParentName(parentEngRegionName);
+		ParentRegionName parentRegionName = RegionManager.getInstance().getParentName(parentEngRegionName.getEngParentName());
 		
 		List<String> dealYearMonthList = DateUtils.makeDealYearMonthList(DELETE_YEAR); 
 		
