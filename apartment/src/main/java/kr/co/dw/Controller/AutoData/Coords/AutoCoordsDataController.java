@@ -42,8 +42,6 @@ public class AutoCoordsDataController {
 		}
 		AutoCoordsDataResponse response = autoCoordsDataService.CoordsInsert(parentEngRegionName);
 		
-		looger.info(response.toString());
-		
 		return new ResponseEntity<AutoCoordsDataResponse>(response, HttpStatus.OK);
 		
 	}
