@@ -17,7 +17,7 @@ public class JwtTokenProvider {
 	@Value("${jwt.service.key}")
 	private String serviceKey;
 
-	private final long tokenValidMilliseconds = 1000L * 60 * 60; // 1시간
+	private final long tokenValidMilliseconds = 1000L * 60 * 5; // 1시간
 
 	public String createToken(String userId) {
 		Claims claims = Jwts.claims().setSubject(userId);

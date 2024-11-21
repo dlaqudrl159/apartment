@@ -19,7 +19,7 @@ public interface AutoAptDataService {
 
 	DataAutoInsertResponseDto allAutoAptDataInsert();
 
-	DataAutoInsertResponseDto autoAptDataInsert(ParentRegionName parentRegionName);
+	DataAutoInsertResponseDto autoAptDataInsert(String parentEngRegionName);
 	
 	StringBuilder getRTMSDataSvcAptTradeDev(RegionYearDto regionYearDto) throws IOException;
 	

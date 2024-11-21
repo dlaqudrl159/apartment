@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import kr.co.dw.Domain.ParentRegionName;
 import kr.co.dw.Dto.Response.DataAutoInsertResponseDto;
 import kr.co.dw.Exception.EmptyOrNullParamException;
 import kr.co.dw.Exception.ErrorCode.ErrorCode;
@@ -29,23 +28,23 @@ public class AutoAptDataController {
 	
 	@PostMapping("/data/allautoaptdatainsert")
 	public ResponseEntity<DataAutoInsertResponseDto> autoAllDataInsert() {
-		
-		System.out.println("allautoaptdatainsert 실행");
-		
-		return null;
-		//return ResponseEntity.ok(autoAptDataService.allAutoAptDataInsert());
+		return ResponseEntity.ok(autoAptDataService.allAutoAptDataInsert());
 	}
 	
 	@PostMapping("/data/autoaptdatainsert")
-	public ResponseEntity<DataAutoInsertResponseDto> autoDataInsert(@RequestBody ParentRegionName parentRegionName) throws java.text.ParseException{
-		try {
-			DataAutoInsertResponseDto response = autoAptDataService.autoAptDataInsert(parentRegionName);
-			System.out.println(response);
-			return ResponseEntity.ok(response);
+	public ResponseEntity<DataAutoInsertResponseDto> autoDataInsert(@RequestBody String parentEngRegionName) throws java.text.ParseException{
+		return null;
+		/*try {
+		if(parentEngRegionName == null || parentEngRegionName.trim().isEmpty()) {
+			throw new EmptyOrNullParamException(ErrorCode.EMPTY_OR_NULL_Parameter, "파라미터 입력 오류 " + parentEngRegionName);
+		}
+		
+		
+			return ResponseEntity.ok(autoAptDataService.autoAptDataInsert(parentEngRegionName));
 		} catch (Exception e) {
 			logger.error("서버 Error 발생", e);
 			return ResponseEntity.internalServerError().body(new DataAutoInsertResponseDto("500", null, e.getMessage(), 0, LocalDateTime.now()));
-		}
+		}*/
 	}
 	
 }
