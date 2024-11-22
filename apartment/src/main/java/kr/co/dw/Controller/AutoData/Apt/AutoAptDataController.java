@@ -30,17 +30,13 @@ public class AutoAptDataController {
 	@PostMapping("/data/allautoaptdatainsert")
 	public ResponseEntity<DataAutoInsertResponseDto> autoAllDataInsert() {
 		
-		System.out.println("allautoaptdatainsert 실행");
-		
-		return null;
-		//return ResponseEntity.ok(autoAptDataService.allAutoAptDataInsert());
+		return ResponseEntity.ok(autoAptDataService.allAutoAptDataInsert());
 	}
 	
 	@PostMapping("/data/autoaptdatainsert")
 	public ResponseEntity<DataAutoInsertResponseDto> autoDataInsert(@RequestBody ParentRegionName parentRegionName) throws java.text.ParseException{
 		try {
 			DataAutoInsertResponseDto response = autoAptDataService.autoAptDataInsert(parentRegionName);
-			System.out.println(response);
 			return ResponseEntity.ok(response);
 		} catch (Exception e) {
 			logger.error("서버 Error 발생", e);

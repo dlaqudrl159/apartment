@@ -31,7 +31,6 @@ public class GlobalExceptionHandler {
 		logger.error("Required parameter is missing: {}", e.getParameterName());
         return ResponseEntity
             .status(error.getStatus())
-            
             .body(error);
 		
 	}
