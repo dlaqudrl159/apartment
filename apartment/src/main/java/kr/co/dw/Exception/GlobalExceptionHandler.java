@@ -25,6 +25,15 @@ public class GlobalExceptionHandler {
 		
 	}
 	
+	@ExceptionHandler(Exception.class)
+    protected ResponseEntity<ErrorResponse> handleException(Exception e) {
+        logger.error("HandleException: {}", e.getMessage(), e);
+        ErrorCode errorCode = ErrorCode.INTERNAL_SERVER_ERROR;
+        return ResponseEntity
+            .status(errorCode.getStatus())
+            .body(ErrorResponse.of(errorCode));
+    }
+	
 	@ExceptionHandler(MissingServletRequestParameterException.class)
 	protected ResponseEntity<ErrorResponse> handleMissingServletRequestParameter(MissingServletRequestParameterException e) {
 		ErrorResponse error = new ErrorResponse("400", "필수 파라미터가 누락되었습니다 " + e.getParameterName(), 400);

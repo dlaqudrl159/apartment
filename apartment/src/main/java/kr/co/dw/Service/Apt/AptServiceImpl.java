@@ -30,17 +30,35 @@ public class AptServiceImpl implements AptService {
 	
 	@Override
 	public List<AptCoordsDto> getMarkers(List<String> addressnameArr) {
+		Long startTime = System.currentTimeMillis();
+		
 		List<AptCoordsDto> aptCoordsDtoList = new ArrayList<>();
 		List<AddressElement> list = new AddressNameArr(addressnameArr).getList();
 		if (!list.isEmpty()) {
-			list.stream().forEach(addressElement -> {
+			
+			for(int i = 0 ; i < list.size() ; i++) {
+				AddressElement addressElement = list.get(i);
 				if(!(addressElement.getCity().equals("ERROR") || addressElement.getDistrict().equals("ERROR"))) {
 					Map<String, String> map = Map.of("city", addressElement.getCity(), "district",
 							addressElement.getDistrict());
 					aptCoordsDtoList.addAll(aptMapper.getMarkers(map));
 				}
-			});
+			}
+			
+			/*list.stream().forEach(addressElement -> {
+				if(!(addressElement.getCity().equals("ERROR") || addressElement.getDistrict().equals("ERROR"))) {
+					Map<String, String> map = Map.of("city", addressElement.getCity(), "district",
+							addressElement.getDistrict());
+					aptCoordsDtoList.addAll(aptMapper.getMarkers(map));
+				}
+			});*/
+			
+			
 		}
+		Long endTime = System.currentTimeMillis();
+		
+		System.out.println(endTime - startTime);
+		
 		return aptCoordsDtoList;
 	}
 	

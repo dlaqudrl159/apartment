@@ -24,24 +24,17 @@ import lombok.RequiredArgsConstructor;
 public class AutoAptDataController {
 
 	private final AutoAptDataService autoAptDataService;
-	
+
 	private final Logger logger = LoggerFactory.getLogger(AutoAptDataController.class);
-	
+
 	@PostMapping("/data/allautoaptdatainsert")
 	public ResponseEntity<DataAutoInsertResponseDto> autoAllDataInsert() {
-		
 		return ResponseEntity.ok(autoAptDataService.allAutoAptDataInsert());
 	}
-	
+
 	@PostMapping("/data/autoaptdatainsert")
-	public ResponseEntity<DataAutoInsertResponseDto> autoDataInsert(@RequestBody ParentRegionName parentRegionName) throws java.text.ParseException{
-		try {
-			DataAutoInsertResponseDto response = autoAptDataService.autoAptDataInsert(parentRegionName);
-			return ResponseEntity.ok(response);
-		} catch (Exception e) {
-			logger.error("서버 Error 발생", e);
-			return ResponseEntity.internalServerError().body(new DataAutoInsertResponseDto("500", null, e.getMessage(), 0, LocalDateTime.now()));
-		}
+	public ResponseEntity<DataAutoInsertResponseDto> autoDataInsert(@RequestBody ParentRegionName parentRegionName) {
+		return ResponseEntity.ok(autoAptDataService.autoAptDataInsert(parentRegionName));
 	}
-	
+
 }
