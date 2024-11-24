@@ -3,11 +3,11 @@ package kr.co.dw.sidosigungu;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Addresses {
+public class Addresses2 {
 
 	private List<AddressElement> addresses;
 	
-	public Addresses(List<String> addresses) {
+	public Addresses2(List<String> addresses) {
         this.addresses = processAddresses(addresses);
     }
 	

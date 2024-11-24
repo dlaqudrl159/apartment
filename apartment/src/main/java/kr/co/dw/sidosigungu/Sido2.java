@@ -1,4 +1,4 @@
-package kr.co.dw.Domain;
+package kr.co.dw.sidosigungu;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,9 +7,9 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Region {
+public class Sido2 {
 
-	private String code;
-	private String name;
-	
+	private String korSido;
+	private String engSido;
+
 }

@@ -19,7 +19,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import kr.co.dw.Domain.ParentRegionName;
+import kr.co.dw.Domain.Sido;
 import kr.co.dw.Domain.RegionManager;
 import kr.co.dw.Dto.Common.AptCoordsDto;
 import kr.co.dw.Dto.Response.AutoCoordsDataResponse;
@@ -85,12 +85,12 @@ public class AutoCoordsDataServiceImpl implements AutoCoordsDataService{
 		
 		List<AutoCoordsDataResponse> totalresponse = new ArrayList<>();
 		
-		List<ParentRegionName> parentRegionNameLIst = RegionManager.getInstance().getParentRegionNameList();
+		List<Sido> parentRegionNameLIst = RegionManager.getSidos();
 		
 		for(int i = 0 ; i < parentRegionNameLIst.size() ; i++) {
-			AutoCoordsDataResponse response = CoordsInsert(parentRegionNameLIst.get(i).getEngParentName());
+			AutoCoordsDataResponse response = CoordsInsert(parentRegionNameLIst.get(i).getEngSido());
 			if("ERROR".equals(response.getStatus())) {
-				return new AutoCoordsDataResponse("ERROR", "01", parentRegionNameLIst.get(i).getEngParentName() + "지역 좌표 처리 중 오류 발생", null, totalresponse);
+				return new AutoCoordsDataResponse("ERROR", "01", parentRegionNameLIst.get(i).getEngSido() + "지역 좌표 처리 중 오류 발생", null, totalresponse);
 			}
 			totalresponse.add(response);
 		}
@@ -102,7 +102,7 @@ public class AutoCoordsDataServiceImpl implements AutoCoordsDataService{
 	@Override
 	public AutoCoordsDataResponse CoordsInsert(String parentEngRegionName) {
 		
-		ParentRegionName parentRegionName = RegionManager.getInstance().getParentName(parentEngRegionName);
+		Sido parentRegionName = RegionManager.getSido(parentEngRegionName);
 		List<AptCoordsDto> updateAptCoordsDtoList = getParentRegionAptCoordsDtoList(parentRegionName);
 		
 		List<AutoCoordsDataResponse> response = new ArrayList<>();
@@ -134,7 +134,7 @@ public class AutoCoordsDataServiceImpl implements AutoCoordsDataService{
 	}
 	
 	@Override
-	public List<AptCoordsDto> getParentRegionAptCoordsDtoList(ParentRegionName parentRegionName) {
+	public List<AptCoordsDto> getParentRegionAptCoordsDtoList(Sido parentRegionName) {
 		
 		List<AptCoordsDto> updateAptCoordsDtoList = autoCoordsDataMapper.getParentRegionAptCoordsDtoList(parentRegionName);
 		return updateAptCoordsDtoList;

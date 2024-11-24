@@ -44,7 +44,7 @@
     
     </insert>
     
-    <select id="getParentRegionAptCoordsDtoList" parameterType="ParentRegionName">
+    <select id="getParentRegionAptCoordsDtoList" parameterType="sido">
     select SIGUNGU,BUNGI,ROADNAME,APARTMENTNAME from 
     <choose>
     

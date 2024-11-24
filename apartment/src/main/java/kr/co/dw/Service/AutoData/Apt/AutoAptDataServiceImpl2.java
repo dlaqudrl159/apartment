@@ -8,6 +8,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,12 +21,10 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
-import org.mybatis.spring.SqlSessionTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -34,79 +33,58 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import kr.co.dw.Domain.Sido;
-import kr.co.dw.Domain.Sigungu;
-import kr.co.dw.Domain.RegionManager;
 import kr.co.dw.Dto.Common.AptTransactionDto;
+import kr.co.dw.Dto.Common.RegionYearDto;
 import kr.co.dw.Dto.Response.AutoAptDataRes;
+import kr.co.dw.Dto.Response.DataAutoInsertResponseDto;
 import kr.co.dw.Dto.Response.ProcessedRes;
-import kr.co.dw.Exception.CustomException;
-import kr.co.dw.Exception.ErrorCode.ErrorCode;
 import kr.co.dw.Mapper.AutoAptDataMapper;
-import kr.co.dw.Utils.AptUtils;
 import kr.co.dw.Utils.DateUtils;
+import kr.co.dw.sidosigungu.Constant;
+import kr.co.dw.sidosigungu.AutoAptDto;
+import kr.co.dw.sidosigungu.RegionManager;
+import kr.co.dw.sidosigungu.Sigungu2;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
-public class AutoAptDataServiceImpl implements AutoAptDataService {
-
-	private final Logger logger = LoggerFactory.getLogger(AutoAptDataServiceImpl.class);
+public class AutoAptDataServiceImpl2 implements AutoAptDataService2{
 
 	private final AutoAptDataMapper autoAptDataMapper;
 	private final SqlSessionFactory sqlSessionFactory;
 	
+	private final Logger logger = LoggerFactory.getLogger(AutoAptDataServiceImpl2.class);
 	
 	@Value("${api.apt.url}")
-	private String API_APT_URL;
-
+	private  String API_APT_URL;
+	
 	@Value("${api.apt.service-key}")
-	private String API_APT_SERVICE_KEY;
-
-	private final Integer DELETE_YEAR = 12;
-
+	private  String API_APT_SERVICE_KEY;
+	
 	@Override
 	public List<AutoAptDataRes> allAutoAptDataInsert() {
-
-		return null;// new DataAutoInsertResponseDto("SUCCESS", null, "전체 지역 처리 완료", totalCount,
-					// LocalDateTime.now(), totalResponse);
+		return null;
 	}
 
 	@Override
 	public AutoAptDataRes autoAptDataInsert(String korSido) {
-		
-		
-		return syncAptTransactionData(korSido);
-	}
-
-	public AutoAptDataRes syncAptTransactionData(String korSido) {
-		
-		List<ProcessedRes> processeds = processedAptData(korSido);
-		Map<Boolean, List<ProcessedRes>> processedsMap = createProcessedsMap(processeds);
+		AutoAptDto autoAptDto = RegionManager.getAutoAptDto(korSido);
+		List<String> dealYearMonths = DateUtils.makeDealYearMonthList(Constant.DELETE_YEAR); 
+		List<ProcessedRes> list = processedAptData(autoAptDto,dealYearMonths);
+		Map<Boolean, List<ProcessedRes>> processedsMap = createProcessedsMap(list);
 		List<ProcessedRes> successProcesseds = processedsMap.get(true); 
 		List<ProcessedRes> failProcesseds = processedsMap.get(false); 
+		test(successProcesseds,failProcesseds,korSido);
 		
-		deleteAndInsertData(successProcesseds,failProcesseds,korSido);
-		
-		return new AutoAptDataRes(200, korSido + "지역 데이터 처리(INSERT, DELETE) 성공", 
-				new Sido(korSido, AptUtils.toEngParentRegion(korSido)), 
-				failProcesseds, successProcesseds);
+		return null;//new AutoAptDataRes(200, "성공", failProcesseds, successProcesseds);
 	}
-	
-	@Transactional
-	public void deleteAndInsertData(List<ProcessedRes> successProcesseds, List<ProcessedRes> failProcesseds, String korSido) {
-		try {
-			String deleteDealYearMonth = DateUtils.makeDealYearMonth(DELETE_YEAR);
-			System.out.println(deleteDealYearMonth);
-			autoAptDataMapper.deleteAptData(failProcesseds, korSido, deleteDealYearMonth);
-			List<AptTransactionDto> AptTransactionDtos = createAptTransactionDtoList(successProcesseds);
-			System.out.println(AptTransactionDtos.size());
-			String result = aptTransactionDtoInsert(AptTransactionDtos,korSido);
-			System.out.println(result);
-		} catch (Exception e) {
-			logger.error("DB 처리 중 오류 발생: {}", e.getMessage());
-			throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
-		}
-		
+
+	public void test(List<ProcessedRes> successProcesseds, List<ProcessedRes> failProcesseds, String korSido) {
+		String deleteDealYearMonth = DateUtils.makeDealYearMonth(Constant.DELETE_YEAR);
+		autoAptDataMapper.deleteAptData(failProcesseds, korSido, deleteDealYearMonth);
+		List<AptTransactionDto> list = createAptTransactionDtoList(successProcesseds);
+		aptTransactionDtoInsert(list,korSido);
 		
 	}
 	
@@ -118,150 +96,42 @@ public class AutoAptDataServiceImpl implements AutoAptDataService {
 		return processeds.stream().collect(Collectors.groupingBy(processedDto -> processedDto.isSuccess()));
 	}
 	
-	public List<ProcessedRes> processedAptData(String korSido) {
+	public List<ProcessedRes> processedAptData(AutoAptDto autoAptDto, List<String> dealYearMonths) {
 		List<ProcessedRes> processeds = new ArrayList<>();
-		Sido sido = RegionManager.getSido(korSido);
-		List<Sigungu> sigungus = RegionManager.getSigungus(korSido);
-		List<String> dealYearMonths = DateUtils.makeDealYearMonthList(DELETE_YEAR);
-
 		for (String dealYearMonth : dealYearMonths) {
-			sigungus.forEach(sigungu -> {
-				ProcessedRes processedRes = new ProcessedRes(null, sigungu, dealYearMonth, sido);
-				processeds.add(callApi(processedRes)); 
+			autoAptDto.getSigungus().stream().forEach(sigungu -> {
+				ProcessedRes processedDto = null;//new ProcessedRes(null, sigungu, dealYearMonth, autoAptDto.getSiDo());
+				processeds.add(callApi(processedDto));
 			});
 		}
 		return processeds;
 	}
-
-	public ProcessedRes callApi(ProcessedRes processedRes) {
-
-		int MAX_RETRIES = 3;
-		int delayMs = 500;
-		Element root = null;
-		for (int tryCount = 1; tryCount <= MAX_RETRIES; tryCount++) {
-			try {
-
-				Thread.sleep(delayMs);
-				StringBuilder sb = getRTMSDataSvcAptTradeDev(processedRes.getSigungu(), processedRes.getDealYearMonth());
-				root = makeNodeList(sb);
-
-				if (isResultMsg(root)) {
-					NodeList nList = root.getElementsByTagName("item");
-					logger.info("code={} name={} dealyearmonth={}" , processedRes.getSigungu().getCode(), processedRes.getSigungu().getName(), processedRes.getDealYearMonth());
-					List<AptTransactionDto> list = makeAptTransactionDto(nList, processedRes.getSido().getKorSido(), processedRes.getSigungu().getName());
-					processedRes.addProcesedResData(list);
-					processedRes.setMessage("success");
-					return processedRes;
-				}
-
-			} catch (SAXException | ParserConfigurationException | IOException e) {
-				logger.error("국토교통부 Api호출 중 예외 발생 재시도 {}회 시군구:{} 코드:{} Error Message:{}", tryCount,
-						processedRes.getSigungu().getName(), processedRes.getSigungu().getCode(), e.getMessage());
-				processedRes.setMessage("fail");
-			} catch (InterruptedException e) {
-				Thread.currentThread().interrupt();
-				logger.error("국토교통부 Api호출 중 Thread Interrupted 발생 재시도 {}회 시군구:{} 코드:{} Error Message:{}", tryCount,
-						processedRes.getSigungu().getName(), processedRes.getSigungu().getCode(), e.getMessage());
-				processedRes.setMessage("fail");
-				return processedRes;
-			} catch (Exception e) {  // 추가된 부분
-	            logger.error("예상치 못한 예외 발생 재시도 {}회 시군구:{} 코드:{} Error Message:{}", tryCount,
-	                    processedRes.getSigungu().getName(), processedRes.getSigungu().getCode(), e.getMessage());
-	            processedRes.setMessage("fail");
-	        }
-
-			if (tryCount == MAX_RETRIES) {
-				isErrorMsg(root);
-				logger.error("국토교통부 Api호출 재시도 횟수 초과 재시도 {}회 시군구:{} 코드:{} 날짜:{}", tryCount,processedRes.getSigungu().getCode(), processedRes.getSigungu().getName(), processedRes.getDealYearMonth());
-				processedRes.setMessage("fail");
-			}
-			delayMs = delayMs * tryCount;
-		}
-		return processedRes;
-	}
-
-	public void isErrorMsg(Element eElement) {
-		String errMsg = eElement.getElementsByTagName("errMsg").item(0) == null ? "-" :
-			eElement.getElementsByTagName("errMsg").item(0).getTextContent();
-		
-		String returnAuthMsg = eElement.getElementsByTagName("returnAuthMsg").item(0) == null ? "-" :
-			eElement.getElementsByTagName("returnAuthMsg").item(0).getTextContent();
-		
-		String returnReasonCode = eElement.getElementsByTagName("returnReasonCode").item(0) == null ? "-" :
-			eElement.getElementsByTagName("returnReasonCode").item(0).getTextContent();
-		logger.error("errMsg={} returnAuthMsg={} returnReasonCode={}" , errMsg, returnAuthMsg, returnReasonCode);
-	}
 	
-	@Override
 	public boolean isResultMsg(Element eElement) {
 		String resultMsg = eElement.getElementsByTagName("resultMsg").item(0) == null ? "-"
 				: eElement.getElementsByTagName("resultMsg").item(0).getTextContent();
-		/*
-		 * String resultTotalCount = eElement.getElementsByTagName("totalCount").item(0)
-		 * == null ? "-" :
-		 * eElement.getElementsByTagName("totalCount").item(0).getTextContent(); String
-		 * resultCode = eElement.getElementsByTagName("resultCode").item(0) == null ?
-		 * "-" : eElement.getElementsByTagName("resultCode").item(0).getTextContent();
-		 * logger.info("resultMsg={} resultTotalCount={} resultCode={}", resultMsg,
-		 * resultTotalCount,resultCode); String errMsg =
-		 * eElement.getElementsByTagName("errMsg").item(0) == null ? "-" :
-		 * eElement.getElementsByTagName("errMsg").item(0).getTextContent(); String
-		 * returnAuthMsg = eElement.getElementsByTagName("returnAuthMsg").item(0) ==
-		 * null ? "-" :
-		 * eElement.getElementsByTagName("returnAuthMsg").item(0).getTextContent();
-		 * String returnReasonCode =
-		 * eElement.getElementsByTagName("returnReasonCode").item(0) == null ? "-" :
-		 * eElement.getElementsByTagName("returnReasonCode").item(0).getTextContent();
-		 * logger.error("errMsg={} returnAuthMsg={} returnReasonCode={}" , errMsg,
-		 * returnAuthMsg, returnReasonCode);
-		 */
-
+		/*String resultTotalCount = eElement.getElementsByTagName("totalCount").item(0) == null ? "-"
+				: eElement.getElementsByTagName("totalCount").item(0).getTextContent();
+		String resultCode = eElement.getElementsByTagName("resultCode").item(0) == null ? "-"
+				: eElement.getElementsByTagName("resultCode").item(0).getTextContent();
+		logger.info("resultMsg={} resultTotalCount={} resultCode={}", resultMsg, resultTotalCount,resultCode);
+		String errMsg = eElement.getElementsByTagName("errMsg").item(0) == null ? "-"
+				: eElement.getElementsByTagName("errMsg").item(0).getTextContent();
+		String returnAuthMsg = eElement.getElementsByTagName("returnAuthMsg").item(0) == null ? "-"
+				: eElement.getElementsByTagName("returnAuthMsg").item(0).getTextContent();
+		String returnReasonCode = eElement.getElementsByTagName("returnReasonCode").item(0) == null ? "-"
+				: eElement.getElementsByTagName("returnReasonCode").item(0).getTextContent();
+		logger.error("errMsg={} returnAuthMsg={} returnReasonCode={}" , errMsg, returnAuthMsg, returnReasonCode);*/
+		
 		return resultMsg != "-" ? true : false;
 	}
-
-	@Override
-	public StringBuilder getRTMSDataSvcAptTradeDev(Sigungu sigungu, String dealYearMonth) throws IOException {
-
-		StringBuilder sb = null;
-		StringBuilder urlBuilder = new StringBuilder(this.API_APT_URL); /* URL */
-
-		urlBuilder.append("?" + URLEncoder.encode("serviceKey", "UTF-8") + this.API_APT_SERVICE_KEY); /* Service Key */
-		urlBuilder.append("&" + URLEncoder.encode("LAWD_CD", "UTF-8") + "="
-				+ URLEncoder.encode(sigungu.getCode(), "UTF-8")); /* 각 지역별 코드 */
-		urlBuilder.append("&" + URLEncoder.encode("DEAL_YMD", "UTF-8") + "="
-				+ URLEncoder.encode(dealYearMonth/* DEAL_YMD */, "UTF-8")); /* 월 단위 신고자료 */
-		urlBuilder.append("&" + URLEncoder.encode("pageNo", "UTF-8") + "="
-				+ URLEncoder.encode("1", "UTF-8")); /* 페이지번호 */
-		urlBuilder.append("&" + URLEncoder.encode("numOfRows", "UTF-8") + "="
-				+ URLEncoder.encode("10000", "UTF-8")); /* 한 페이지 결과 수 */
-		URL url = new URL(urlBuilder.toString());
-		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-		conn.setRequestMethod("GET");
-		conn.setRequestProperty("Content-type", "application/json");
-
-		BufferedReader rd;
-		if (conn.getResponseCode() >= 200 && conn.getResponseCode() <= 300) {
-			rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-		} else {
-			rd = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
-		}
-		sb = new StringBuilder();
-		String line;
-		while ((line = rd.readLine()) != null) {
-			sb.append(line);
-		}
-		rd.close();
-		conn.disconnect();
-		return sb;
-	}
-
-	@Override
+	
 	public Element makeNodeList(StringBuilder sb) throws SAXException, IOException, ParserConfigurationException {
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder builder = null;
 		Document document = null;
 		Element root = null;
-
+		
 		builder = factory.newDocumentBuilder();
 		document = builder.parse(new InputSource(new StringReader(sb.toString())));
 		document.getDocumentElement().normalize();
@@ -269,8 +139,77 @@ public class AutoAptDataServiceImpl implements AutoAptDataService {
 
 		return root;
 	}
+	
+	public ProcessedRes callApi(ProcessedRes processedDto) {
+		
+		int MAX_RETRIES = 3;
+		int delayMs = 500;
+		
+		for(int tryCount = 1 ; tryCount <= MAX_RETRIES ; tryCount++) {
+			try {
+				
+				Thread.sleep(delayMs);
+				StringBuilder sb = null;//getRTMSDataSvcAptTradeDev(processedDto.getSigungu(), processedDto.getDealYearMonth());
+				Element root = makeNodeList(sb);
+				
+				if(isResultMsg(root)) { 
+					NodeList nList = root.getElementsByTagName("item");
+					logger.info("code={} name={}", processedDto.getSigungu().getCode(), processedDto.getSigungu().getName());
+					List<AptTransactionDto> list = makeAptTransactionDto(nList, processedDto.getSido().getKorSido(), processedDto.getSigungu().getName());
+					processedDto.addProcesedResData(list);
+					processedDto.setMessage("success");
+					return processedDto;
+				}
+				
+			} catch (SAXException | ParserConfigurationException | IOException e) {
+				logger.error("국토교통부 Api호출 중 예외 발생 재시도 {}회 시군구:{} 코드:{} Error Message:{}", tryCount,processedDto.getSigungu().getName(),processedDto.getSigungu().getCode(),e.getMessage());
+				processedDto.setMessage("fail");
+			} catch (InterruptedException e) {
+				Thread.currentThread().interrupt();
+				logger.error("국토교통부 Api호출 중 Thread Interrupted 발생 재시도 {}회 시군구:{} 코드:{} Error Message:{}", tryCount, processedDto.getSigungu().getName(),processedDto.getSigungu().getCode(),e.getMessage());
+				processedDto.setMessage("fail");
+				return processedDto;
+			}
+			
+			if(tryCount == MAX_RETRIES) {
+				logger.error("국토교통부 Api호출 재시도 횟수 초과 재시도 {}회" , tryCount);
+				processedDto.setMessage("fail");
+			}
+			delayMs = delayMs * tryCount;
+		}
+		return processedDto;
+	}
+	
+	public StringBuilder getRTMSDataSvcAptTradeDev(Sigungu2 sigungu , String dealYearMonth) throws IOException {
+		
+		StringBuilder sb = null;
+		StringBuilder urlBuilder = new StringBuilder(this.API_APT_URL); /*URL*/
+		
+        urlBuilder.append("?" + URLEncoder.encode("serviceKey","UTF-8") + this.API_APT_SERVICE_KEY); /*Service Key*/
+        urlBuilder.append("&" + URLEncoder.encode("LAWD_CD","UTF-8") + "=" + URLEncoder.encode(sigungu.getCode(), "UTF-8")); /*각 지역별 코드*/
+        urlBuilder.append("&" + URLEncoder.encode("DEAL_YMD","UTF-8") + "=" + URLEncoder.encode(dealYearMonth/*DEAL_YMD*/, "UTF-8")); /*월 단위 신고자료*/
+        urlBuilder.append("&" + URLEncoder.encode("pageNo","UTF-8") + "=" + URLEncoder.encode(Constant.API_PAGE_NO, "UTF-8")); /*페이지번호*/
+        urlBuilder.append("&" + URLEncoder.encode("numOfRows","UTF-8") + "=" + URLEncoder.encode(Constant.API_NUM_OF_ROWS, "UTF-8")); /*한 페이지 결과 수*/
+        URL url = new URL(urlBuilder.toString());
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestMethod("GET");
+        conn.setRequestProperty("Content-type", "application/json");
 
-	@Override
+        BufferedReader rd;
+        if(conn.getResponseCode() >= 200 && conn.getResponseCode() <= 300) {
+            rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+        } else {
+            rd = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
+        }
+        sb = new StringBuilder();
+        String line;
+        while ((line = rd.readLine()) != null) {
+            sb.append(line);
+        }
+        rd.close();
+        conn.disconnect();
+		return sb;
+	}
 	public List<AptTransactionDto> makeAptTransactionDto(NodeList nList, String sido, String sigungu) {
 		List<AptTransactionDto> aptTransactionDtoList = new ArrayList<>();
 		
@@ -355,34 +294,25 @@ public class AutoAptDataServiceImpl implements AutoAptDataService {
 		}
 		return aptTransactionDtoList;
 	}
-
-	@Override
 	public String getElementContent(Element element, String tagName) {
-		Node node = element.getElementsByTagName(tagName).item(0);
-		return node == null ? "-"
-				: node.getTextContent().replaceAll("\"", "").trim().isEmpty() ? "-"
-						: node.getTextContent().replaceAll("\"", "").trim();
+	    Node node = element.getElementsByTagName(tagName).item(0);
+	    return node == null ? "-" : 
+	           node.getTextContent().replaceAll("\"", "").trim().isEmpty() ? "-" : 
+	           node.getTextContent().replaceAll("\"", "").trim();
 	}
-
-	@Override
+	
 	public String makeRoadName(String roadName, String roadNameBonbun, String roadNameBubun) {
 		roadName = roadName.trim();
-		if (roadName.equals("-")) {
-			roadName = "";
-		}
-		if (roadNameBonbun.equals("-")) {
-			roadNameBonbun = "";
-		}
-		if (roadNameBubun.equals("-")) {
-			roadNameBubun = "";
-		}
-
+		if (roadName.equals("-")) {roadName = "";}
+		if (roadNameBonbun.equals("-")) {roadNameBonbun = "";}
+		if (roadNameBubun.equals("-")) {roadNameBubun = "";}
+		
 		roadNameBonbun = roadNameBonbun + "!";
 		roadNameBubun = roadNameBubun + "!";
-
+		
 		roadNameBonbun = roadNameBonbun.replace("0", " ").trim().replace(" ", "0").replace("!", "");
 		roadNameBubun = roadNameBubun.replace("0", " ").trim().replace(" ", "0").replace("!", "");
-
+		
 		if (roadNameBonbun.length() != 0) {
 			roadName = roadName + " " + roadNameBonbun;
 			if (roadNameBubun.length() != 0) {
@@ -399,8 +329,6 @@ public class AutoAptDataServiceImpl implements AutoAptDataService {
 		}
 		return roadName;
 	}
-
-	@Override
 	public String aptTransactionDtoInsert(List<AptTransactionDto> list, String korSido) {
 		if (list.isEmpty()) {
 	        return "LIST IS EMPTY";
@@ -442,5 +370,4 @@ public class AutoAptDataServiceImpl implements AutoAptDataService {
 		        }
 		    }
 	}
-
 }

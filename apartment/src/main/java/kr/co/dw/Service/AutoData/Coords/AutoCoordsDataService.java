@@ -7,7 +7,7 @@ import java.util.List;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 
-import kr.co.dw.Domain.ParentRegionName;
+import kr.co.dw.Domain.Sido;
 import kr.co.dw.Dto.Common.AptCoordsDto;
 import kr.co.dw.Dto.Response.AutoCoordsDataResponse;
 
@@ -23,7 +23,7 @@ public interface AutoCoordsDataService {
 
 	AutoCoordsDataResponse CoordsInsert(String parentEngRegionName);
 
-	List<AptCoordsDto> getParentRegionAptCoordsDtoList(ParentRegionName parentRegionName);
+	List<AptCoordsDto> getParentRegionAptCoordsDtoList(Sido parentRegionName);
 
 	AptCoordsDto getCoordsDto(AptCoordsDto aptCoordsDto);
 

@@ -19,11 +19,11 @@
     select SIGUNGU, BUNGI, APARTMENTNAME, LAT, LNG from COORDINATES where SIGUNGU like 
     
     <choose>
-        <when test="city == '세종특별자치시'">
-            #{city} || '%'
+        <when test="sido == '세종특별자치시'">
+            #{sido} || '%'
         </when>
         <otherwise>
-            #{city} || '%' AND SIGUNGU LIKE '%' || #{district} || '%'
+            #{sido} || '%' AND SIGUNGU LIKE '%' || #{sigungu} || '%'
         </otherwise>
     </choose>
     

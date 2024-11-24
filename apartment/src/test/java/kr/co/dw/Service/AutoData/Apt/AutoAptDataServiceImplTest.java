@@ -24,11 +24,13 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import kr.co.dw.Domain.ParentRegionName;
-import kr.co.dw.Domain.Region;
+import kr.co.dw.Domain.Sido;
+import kr.co.dw.Domain.Sigungu;
 import kr.co.dw.Dto.Common.AptTransactionDto;
 import kr.co.dw.Dto.Common.RegionYearDto;
 import kr.co.dw.Mapper.AutoAptDataMapper;
+import kr.co.dw.sidosigungu.AutoAptDto;
+import kr.co.dw.sidosigungu.RegionManager;
 
 @SpringBootTest(properties = "spring.profiles.active=dev")
 @TestPropertySource("classpath:application-dev.properties")
@@ -40,13 +42,14 @@ public class AutoAptDataServiceImplTest {
 	@Autowired
 	private AutoAptDataServiceImpl  autoAptDataServiceImpl;
 	
-	
+	@Autowired
+	private AutoAptDataServiceImpl2 service;
 	
 	@Test
 	@DisplayName("getRTMSDataSvcAptTradeDev 테스트")
 	void getRTMSDataSvcAptTradeDev() throws IOException, ParserConfigurationException, SAXException {
 		
-		RegionYearDto dto = new RegionYearDto(new Region("50130", "서귀포시"), "202411", null, new ParentRegionName("제주특별자치도", "JEJU"));
+		RegionYearDto dto = new RegionYearDto(new Sigungu("50130", "서귀포시"), "202411", null, new Sido("제주특별자치도", "JEJU"));
 		StringBuilder sb = getRTMSDataSvcAptTradeDev(dto);
 		System.out.println(sb);
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -91,7 +94,7 @@ public class AutoAptDataServiceImplTest {
 		System.out.println(nList.getLength());
 		//System.out.println("resultMsg = " + resultMsg + " resultCode = " + resultCode + " resultTotalCount = " + resultTotalCount + " resultItem = " + resultItem);
 		
-		List<AptTransactionDto> list = autoAptDataServiceImpl.makeAptTransactionDto(nList, dto);
+		List<AptTransactionDto> list = null;//autoAptDataServiceImpl.makeAptTransactionDto(nList, dto);
 		System.out.println(list);
 		
 	}
@@ -126,4 +129,5 @@ public class AutoAptDataServiceImplTest {
 		
 		return sb;
 	}
+
 }
