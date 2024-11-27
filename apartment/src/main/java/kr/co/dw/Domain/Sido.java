@@ -1,4 +1,4 @@
-package kr.co.dw.sidosigungu;
+package kr.co.dw.Domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Sido {
 
-	private String korName;
-	private String engName;
+	private String korSido;
+	private String engSido;
 	
 }

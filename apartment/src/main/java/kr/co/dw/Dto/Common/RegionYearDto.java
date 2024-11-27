@@ -1,8 +1,9 @@
 package kr.co.dw.Dto.Common;
 
-import kr.co.dw.Domain.ParentRegionName;
-import kr.co.dw.Domain.Region;
+import kr.co.dw.Domain.Sido;
+import kr.co.dw.Domain.Sigungu;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,10 +12,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class RegionYearDto {
 
-	private Region region;
+	private Sigungu region;
 	private String year;
 	private String message;
-	private ParentRegionName parentRegionName;
+	private Sido parentRegionName;
 	private final String PAGE_NO = "1";
 	private final String NUM_OF_ROWS = "10000";
 }

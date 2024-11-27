@@ -9,33 +9,31 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import kr.co.dw.Domain.ParentRegionName;
-import kr.co.dw.Domain.Region;
+import kr.co.dw.Domain.Sido;
+import kr.co.dw.Domain.Sigungu;
 import kr.co.dw.Dto.Common.AptTransactionDto;
 import kr.co.dw.Dto.Common.RegionYearDto;
-import kr.co.dw.Dto.Response.DataAutoInsertResponseDto;
+import kr.co.dw.Dto.Response.AutoAptDataRes;
 
 public interface AutoAptDataService {
 
-	DataAutoInsertResponseDto allAutoAptDataInsert();
+	List<AutoAptDataRes> allAutoAptDataInsert();
 
-	DataAutoInsertResponseDto autoAptDataInsert(ParentRegionName parentRegionName);
+	AutoAptDataRes autoAptDataInsert(String korSido);
 	
-	StringBuilder getRTMSDataSvcAptTradeDev(RegionYearDto regionYearDto) throws IOException;
+	StringBuilder getRTMSDataSvcAptTradeDev(Sigungu sigungu, String dealYearMonth) throws IOException;
 	
 	boolean isResultMsg(Element eElement);
 	
 	Element makeNodeList(StringBuilder sb) throws SAXException, IOException, ParserConfigurationException;
 	
-	List<AptTransactionDto> makeAptTransactionDto(NodeList nList, RegionYearDto regionYearDto);
-	
 	String getElementContent(Element element, String tagName);
 	
 	String makeRoadName(String roadName, String roadNameBonbun, String roadNameBubun);
 	
-	String aptTransactionDtoInsert(List<AptTransactionDto> list, ParentRegionName parentRegionName);
+	String aptTransactionDtoInsert(List<AptTransactionDto> list, String korSido);
 
-	void deleteByRegionYear(ParentRegionName parentRegionName, String deleteYearMonth);
+	List<AptTransactionDto> makeAptTransactionDto(NodeList nList, String sido, String sigungu);
 
 	
 	

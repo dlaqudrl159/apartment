@@ -3,50 +3,203 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.co.dw.Mapper.AutoAptDataMapper">
-    
-    <resultMap type="AptCoordsDto" id="newAptCoordsDto">
-  	<!-- 1:1로 DTO의 멤버변수를 매핑-->
-  	<result column="sigungu" property="SIGUNGU"/>
-  	<result column="bungi" property="BUNGI"/>
-  	<result column="apartmentname" property="APARTMENTNAME"/>
-  	<result column="roadname" property="ROADNAME"/>
-  	<result column="lat" property="LAT"/>
-  	<result column="lng" property="LNG"/>
-	</resultMap>   
-    
-    <insert id="dataInsert" parameterType="hashMap">
-    
-    insert into ${regionName} (SIGUNGU, BUNGI, BONBUN, BUBUN, APARTMENTNAME,AREAFOREXCLUSIVEUSE,DEALYEARMONTH,DEALDAY,DEALAMOUNT,APARTMENTDONG,FLOOR,BUYERGBN,SELLERGBN,BUILDYEAR,ROADNAME,CANCLEDEALDAY,REQGBN,RDEALERLAWDNM,REGISTRATIONDATE,SGGCD) 
-    values 
-    (
-    #{aptTransactionDto.SIGUNGU},
-    #{aptTransactionDto.BUNGI},
-    #{aptTransactionDto.BONBUN},
-    #{aptTransactionDto.BUBUN},
-    #{aptTransactionDto.APARTMENTNAME},
-    #{aptTransactionDto.AREAFOREXCLUSIVEUSE},
-    #{aptTransactionDto.DEALYEARMONTH},
-    #{aptTransactionDto.DEALDAY},
-    #{aptTransactionDto.DEALAMOUNT},
-    #{aptTransactionDto.APARTMENTDONG},
-    #{aptTransactionDto.FLOOR},
-    #{aptTransactionDto.BUYERGBN},
-    #{aptTransactionDto.SELLERGBN},
-    #{aptTransactionDto.BUILDYEAR},
-    #{aptTransactionDto.ROADNAME},
-    #{aptTransactionDto.CANCLEDEALDAY},
-    #{aptTransactionDto.REQGBN},
-    #{aptTransactionDto.RDEALERLAWDNM},
-    #{aptTransactionDto.REGISTRATIONDATE},
-    #{aptTransactionDto.SGGCD}
-    )
-    
-    </insert>
-    
-    <delete id="deleteByRegionYear">
-    
-    delete from ${regionName} where DEALYEARMONTH >= #{year}
-    
-    </delete>
-    
+
+	<resultMap type="AptCoordsDto" id="newAptCoordsDto">
+		<!-- 1:1로 DTO의 멤버변수를 매핑 -->
+		<result column="sigungu" property="SIGUNGU" />
+		<result column="bungi" property="BUNGI" />
+		<result column="apartmentname" property="APARTMENTNAME" />
+		<result column="roadname" property="ROADNAME" />
+		<result column="lat" property="LAT" />
+		<result column="lng" property="LNG" />
+	</resultMap>
+
+	<insert id="dataInsert" parameterType="hashMap">
+
+		insert into ${regionName}
+		(SIGUNGU, BUNGI, BONBUN, BUBUN,
+		APARTMENTNAME,AREAFOREXCLUSIVEUSE,DEALYEARMONTH,DEALDAY,DEALAMOUNT,APARTMENTDONG,FLOOR,BUYERGBN,SELLERGBN,BUILDYEAR,ROADNAME,CANCLEDEALDAY,REQGBN,RDEALERLAWDNM,REGISTRATIONDATE,SGGCD)
+		values
+		(
+		#{aptTransactionDto.SIGUNGU},
+		#{aptTransactionDto.BUNGI},
+		#{aptTransactionDto.BONBUN},
+		#{aptTransactionDto.BUBUN},
+		#{aptTransactionDto.APARTMENTNAME},
+		#{aptTransactionDto.AREAFOREXCLUSIVEUSE},
+		#{aptTransactionDto.DEALYEARMONTH},
+		#{aptTransactionDto.DEALDAY},
+		#{aptTransactionDto.DEALAMOUNT},
+		#{aptTransactionDto.APARTMENTDONG},
+		#{aptTransactionDto.FLOOR},
+		#{aptTransactionDto.BUYERGBN},
+		#{aptTransactionDto.SELLERGBN},
+		#{aptTransactionDto.BUILDYEAR},
+		#{aptTransactionDto.ROADNAME},
+		#{aptTransactionDto.CANCLEDEALDAY},
+		#{aptTransactionDto.REQGBN},
+		#{aptTransactionDto.RDEALERLAWDNM},
+		#{aptTransactionDto.REGISTRATIONDATE},
+		#{aptTransactionDto.SGGCD}
+		)
+
+	</insert>
+
+	<delete id="deleteByRegionYear">
+
+		delete from ${regionName} where DEALYEARMONTH >=
+		#{year}
+
+	</delete>
+
+	<delete id="deleteAptData">
+
+		delete from
+
+		<choose>
+
+			<when test="korSido == '서울특별시'">SEOUL</when>
+			<when test="korSido == '부산광역시'">BUSAN</when>
+			<when test="korSido == '대구광역시'">DAEGU</when>
+			<when test="korSido == '인천광역시'">INCHEON</when>
+			<when test="korSido == '광주광역시'">GWANGJU</when>
+			<when test="korSido == '대전광역시'">DAEJEON</when>
+			<when test="korSido == '울산광역시'">ULSAN</when>
+			<when test="korSido == '세종특별자치시'">SEJONG</when>
+			<when test="korSido == '경기도'">GYEONGGIDO</when>
+			<when test="korSido == '강원특별자치시'">GANGWONDO</when>
+			<when test="korSido == '충청북도'">CHUNGCHEONGBUKDO</when>
+			<when test="korSido == '충청남도'">CHUNGCHEONGNAMDO</when>
+			<when test="korSido == '전북특별자치도'">JEOLLABUKDO</when>
+			<when test="korSido == '경상북도'">GYEONGSANGBUKDO</when>
+			<when test="korSido == '경상남도'">GYEONGSANGNAMDO</when>
+			<when test="korSido == '제주특별자치도'">JEJU</when>
+
+			<otherwise>
+				${korSido}
+			</otherwise>
+		</choose>
+		where (dealyearmonth >= #{deleteDealYearMonth})
+
+		<if test="failProcesseds != null and failProcesseds.size() > 0">
+			AND NOT (
+			<foreach collection="failProcesseds" item="processedDto"
+				separator="OR">
+
+				(dealyearmonth = #{processedDto.dealYearMonth} AND sggcd = #{processedDto.sigungu.code})
+
+			</foreach>
+			)
+		</if>
+
+	</delete>
+	<insert id="dataInsert2" parameterType="hashMap">
+
+		insert into
+		<choose>
+
+			<when test="korSido == '서울특별시'">SEOUL</when>
+			<when test="korSido == '부산광역시'">BUSAN</when>
+			<when test="korSido == '대구광역시'">DAEGU</when>
+			<when test="korSido == '인천광역시'">INCHEON</when>
+			<when test="korSido == '광주광역시'">GWANGJU</when>
+			<when test="korSido == '대전광역시'">DAEJEON</when>
+			<when test="korSido == '울산광역시'">ULSAN</when>
+			<when test="korSido == '세종특별자치시'">SEJONG</when>
+			<when test="korSido == '경기도'">GYEONGGIDO</when>
+			<when test="korSido == '강원특별자치시'">GANGWONDO</when>
+			<when test="korSido == '충청북도'">CHUNGCHEONGBUKDO</when>
+			<when test="korSido == '충청남도'">CHUNGCHEONGNAMDO</when>
+			<when test="korSido == '전북특별자치도'">JEOLLABUKDO</when>
+			<when test="korSido == '경상북도'">GYEONGSANGBUKDO</when>
+			<when test="korSido == '경상남도'">GYEONGSANGNAMDO</when>
+			<when test="korSido == '제주특별자치도'">JEJU</when>
+
+			<otherwise>
+				${korSido}
+			</otherwise>
+		</choose>
+		(SIGUNGU, BUNGI, BONBUN, BUBUN,
+		APARTMENTNAME,AREAFOREXCLUSIVEUSE,DEALYEARMONTH,DEALDAY,DEALAMOUNT,APARTMENTDONG,FLOOR,BUYERGBN,SELLERGBN,BUILDYEAR,ROADNAME,CANCLEDEALDAY,REQGBN,RDEALERLAWDNM,REGISTRATIONDATE,SGGCD)
+		values
+		(
+		#{aptTransactionDto.SIGUNGU},
+		#{aptTransactionDto.BUNGI},
+		#{aptTransactionDto.BONBUN},
+		#{aptTransactionDto.BUBUN},
+		#{aptTransactionDto.APARTMENTNAME},
+		#{aptTransactionDto.AREAFOREXCLUSIVEUSE},
+		#{aptTransactionDto.DEALYEARMONTH},
+		#{aptTransactionDto.DEALDAY},
+		#{aptTransactionDto.DEALAMOUNT},
+		#{aptTransactionDto.APARTMENTDONG},
+		#{aptTransactionDto.FLOOR},
+		#{aptTransactionDto.BUYERGBN},
+		#{aptTransactionDto.SELLERGBN},
+		#{aptTransactionDto.BUILDYEAR},
+		#{aptTransactionDto.ROADNAME},
+		#{aptTransactionDto.CANCLEDEALDAY},
+		#{aptTransactionDto.REQGBN},
+		#{aptTransactionDto.RDEALERLAWDNM},
+		#{aptTransactionDto.REGISTRATIONDATE},
+		#{aptTransactionDto.SGGCD}
+		)
+
+	</insert>
+	
+	
+	<insert id="AptTransactionDtosInsert">
+
+		insert into
+		<choose>
+
+			<when test="korSido == '서울특별시'">SEOUL</when>
+			<when test="korSido == '부산광역시'">BUSAN</when>
+			<when test="korSido == '대구광역시'">DAEGU</when>
+			<when test="korSido == '인천광역시'">INCHEON</when>
+			<when test="korSido == '광주광역시'">GWANGJU</when>
+			<when test="korSido == '대전광역시'">DAEJEON</when>
+			<when test="korSido == '울산광역시'">ULSAN</when>
+			<when test="korSido == '세종특별자치시'">SEJONG</when>
+			<when test="korSido == '경기도'">GYEONGGIDO</when>
+			<when test="korSido == '강원특별자치시'">GANGWONDO</when>
+			<when test="korSido == '충청북도'">CHUNGCHEONGBUKDO</when>
+			<when test="korSido == '충청남도'">CHUNGCHEONGNAMDO</when>
+			<when test="korSido == '전북특별자치도'">JEOLLABUKDO</when>
+			<when test="korSido == '경상북도'">GYEONGSANGBUKDO</when>
+			<when test="korSido == '경상남도'">GYEONGSANGNAMDO</when>
+			<when test="korSido == '제주특별자치도'">JEJU</when>
+
+			<otherwise>
+				${korSido}
+			</otherwise>
+		</choose>
+		(SIGUNGU, BUNGI, BONBUN, BUBUN,
+		APARTMENTNAME,AREAFOREXCLUSIVEUSE,DEALYEARMONTH,DEALDAY,DEALAMOUNT,APARTMENTDONG,FLOOR,BUYERGBN,SELLERGBN,BUILDYEAR,ROADNAME,CANCLEDEALDAY,REQGBN,RDEALERLAWDNM,REGISTRATIONDATE,SGGCD)
+		values
+		(
+		#{aptTransactionDto.SIGUNGU},
+		#{aptTransactionDto.BUNGI},
+		#{aptTransactionDto.BONBUN},
+		#{aptTransactionDto.BUBUN},
+		#{aptTransactionDto.APARTMENTNAME},
+		#{aptTransactionDto.AREAFOREXCLUSIVEUSE},
+		#{aptTransactionDto.DEALYEARMONTH},
+		#{aptTransactionDto.DEALDAY},
+		#{aptTransactionDto.DEALAMOUNT},
+		#{aptTransactionDto.APARTMENTDONG},
+		#{aptTransactionDto.FLOOR},
+		#{aptTransactionDto.BUYERGBN},
+		#{aptTransactionDto.SELLERGBN},
+		#{aptTransactionDto.BUILDYEAR},
+		#{aptTransactionDto.ROADNAME},
+		#{aptTransactionDto.CANCLEDEALDAY},
+		#{aptTransactionDto.REQGBN},
+		#{aptTransactionDto.RDEALERLAWDNM},
+		#{aptTransactionDto.REGISTRATIONDATE},
+		#{aptTransactionDto.SGGCD}
+		)
+
+	</insert>
+	
 </mapper>	

@@ -1,9 +1,8 @@
 package kr.co.dw.Dto.Response;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
-import kr.co.dw.Dto.Common.RegionYearDto;
+import kr.co.dw.Domain.Sido;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,12 +10,12 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class DataAutoInsertResponseDto {
+public class AutoAptDataRes {
 
 	private int status;
 	private String message;
-	private Integer totalCount;
-	private LocalDateTime processedAt;
-	private List<RegionYearDto> processDetails;
+	private Sido sido;
+	private List<ProcessedRes> failprocessed;
+	private List<ProcessedRes> successprocessed;
 	
 }
