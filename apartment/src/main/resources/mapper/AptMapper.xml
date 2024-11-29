@@ -31,7 +31,7 @@
     
     </select>
     
-    <select id = "getAptTrancsactionHistory">
+    <select id = "getAptTrancsactionHistory" resultType="list">
     
     select * from <choose>
 

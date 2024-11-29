@@ -27,7 +27,7 @@ public class AptController {
 	
 	@GetMapping("/api/getMarkerData")
 	private ResponseEntity<List<AptTransactionResponse>> getMarkerData(AptCoordsDto aptCoordsDto){
-		return ResponseEntity.status(HttpStatus.OK).body(aptService.getAptTransactionResponseDtolist(aptCoordsDto));
+		return ResponseEntity.status(HttpStatus.OK).body(aptService.getAptTransactionResponses(aptCoordsDto));
 	}
 	
 	@GetMapping("/api/getCategoryClickData")
@@ -39,8 +39,6 @@ public class AptController {
 	private void getRoadNameList(@RequestParam("ex1") String ex1, @RequestParam("ex2") String ex2, @RequestParam("ex3") String ex3) {
 		System.out.println(ex1 + System.lineSeparator() + ex2 + System.lineSeparator() + ex3);
 	}
-	
-	
 	
 	
 }

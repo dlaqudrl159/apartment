@@ -10,14 +10,8 @@ public interface AptService {
 
 	List<AptCoordsDto> getMarkers(List<String> addresses);
 
-	List<AptTransactionResponse> getAptTransactionResponseDtolist(AptCoordsDto aptCoordsDto);
+	List<AptTransactionResponse> getAptTransactionResponses(AptCoordsDto aptCoordsDto);
 
 	List<Integer> getTransactionYears(List<AptTransactionDto> getAptTrancsactionHistory);
-
-	
-
-	
-
-	
 
 }

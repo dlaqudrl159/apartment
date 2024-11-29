@@ -31,6 +31,9 @@ public class AptTransactionDto {
 	private String SGGCD;
 	
 	public int getYear() {
+		if(DEALYEARMONTH == null) {
+			
+		}
 		return Integer.parseInt(DEALYEARMONTH.substring(0, 4));
 	}
 	
