@@ -85,12 +85,12 @@ public class AutoCoordsDataServiceImpl implements AutoCoordsDataService{
 		
 		List<AutoCoordsDataResponse> totalresponse = new ArrayList<>();
 		
-		List<Sido> parentRegionNameLIst = RegionManager.getSidos();
+		List<Sido> sidos = RegionManager.getSidos();
 		
-		for(int i = 0 ; i < parentRegionNameLIst.size() ; i++) {
-			AutoCoordsDataResponse response = CoordsInsert(parentRegionNameLIst.get(i).getEngSido());
+		for(int i = 0 ; i < sidos.size() ; i++) {
+			AutoCoordsDataResponse response = CoordsInsert(sidos.get(i).getEngSido());
 			if("ERROR".equals(response.getStatus())) {
-				return new AutoCoordsDataResponse("ERROR", "01", parentRegionNameLIst.get(i).getEngSido() + "지역 좌표 처리 중 오류 발생", null, totalresponse);
+				return new AutoCoordsDataResponse("ERROR", "01", sidos.get(i).getEngSido() + "지역 좌표 처리 중 오류 발생", null, totalresponse);
 			}
 			totalresponse.add(response);
 		}

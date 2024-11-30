@@ -1,39 +1,22 @@
 package kr.co.dw.Service.AutoData.Apt;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.StringReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
-import java.util.List;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
 
+<<<<<<< HEAD
 import kr.co.dw.Domain.Sido;
 import kr.co.dw.Domain.Sigungu;
 import kr.co.dw.Dto.Common.AptTransactionDto;
 import kr.co.dw.Dto.Common.RegionYearDto;
 import kr.co.dw.Mapper.AutoAptDataMapper;
+=======
+>>>>>>> 2f3c5e43916cd53bd5b589e712c0685fc9837ab4
 
 @SpringBootTest(properties = "spring.profiles.active=dev")
 @TestPropertySource("classpath:application-dev.properties")
 public class AutoAptDataServiceImplTest {
 
+<<<<<<< HEAD
 	@Autowired
 	private AutoAptDataMapper autoAptDataMapper;
 	
@@ -125,4 +108,6 @@ public class AutoAptDataServiceImplTest {
 		return sb;
 	}
 
+=======
+>>>>>>> 2f3c5e43916cd53bd5b589e712c0685fc9837ab4
 }

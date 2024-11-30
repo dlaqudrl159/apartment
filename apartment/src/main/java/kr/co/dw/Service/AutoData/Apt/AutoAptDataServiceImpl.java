@@ -37,7 +37,7 @@ import kr.co.dw.Domain.Sido;
 import kr.co.dw.Domain.Sigungu;
 import kr.co.dw.Domain.RegionManager;
 import kr.co.dw.Dto.Common.AptTransactionDto;
-import kr.co.dw.Dto.Response.AutoAptDataRes;
+import kr.co.dw.Dto.Response.AutoAptDataResponse;
 import kr.co.dw.Dto.Response.ProcessedRes;
 import kr.co.dw.Exception.CustomException;
 import kr.co.dw.Exception.ErrorCode.ErrorCode;
@@ -65,20 +65,20 @@ public class AutoAptDataServiceImpl implements AutoAptDataService {
 	private final Integer DELETE_YEAR = 12;
 
 	@Override
-	public List<AutoAptDataRes> allAutoAptDataInsert() {
+	public List<AutoAptDataResponse> allAutoAptDataInsert() {
 
 		return null;// new DataAutoInsertResponseDto("SUCCESS", null, "전체 지역 처리 완료", totalCount,
 					// LocalDateTime.now(), totalResponse);
 	}
 
 	@Override
-	public AutoAptDataRes autoAptDataInsert(String korSido) {
+	public AutoAptDataResponse autoAptDataInsert(String korSido) {
 		
 		
 		return syncAptTransactionData(korSido);
 	}
 
-	public AutoAptDataRes syncAptTransactionData(String korSido) {
+	public AutoAptDataResponse syncAptTransactionData(String korSido) {
 		
 		List<ProcessedRes> processeds = processedAptData(korSido);
 		Map<Boolean, List<ProcessedRes>> processedsMap = createProcessedsMap(processeds);
@@ -87,8 +87,8 @@ public class AutoAptDataServiceImpl implements AutoAptDataService {
 		
 		deleteAndInsertData(successProcesseds,failProcesseds,korSido);
 		
-		return new AutoAptDataRes(200, korSido + "지역 데이터 처리(INSERT, DELETE) 성공", 
-				new Sido(korSido, AptUtils.toEngParentRegion(korSido)), 
+		return new AutoAptDataResponse(200, korSido + "지역 데이터 처리(INSERT, DELETE) 성공", 
+				new Sido(korSido, AptUtils.toEngSido(korSido)), 
 				failProcesseds, successProcesseds);
 	}
 	
@@ -96,12 +96,9 @@ public class AutoAptDataServiceImpl implements AutoAptDataService {
 	public void deleteAndInsertData(List<ProcessedRes> successProcesseds, List<ProcessedRes> failProcesseds, String korSido) {
 		try {
 			String deleteDealYearMonth = DateUtils.makeDealYearMonth(DELETE_YEAR);
-			System.out.println(deleteDealYearMonth);
 			autoAptDataMapper.deleteAptData(failProcesseds, korSido, deleteDealYearMonth);
 			List<AptTransactionDto> AptTransactionDtos = createAptTransactionDtoList(successProcesseds);
-			System.out.println(AptTransactionDtos.size());
 			String result = aptTransactionDtoInsert(AptTransactionDtos,korSido);
-			System.out.println(result);
 		} catch (Exception e) {
 			logger.error("DB 처리 중 오류 발생: {}", e.getMessage());
 			throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);

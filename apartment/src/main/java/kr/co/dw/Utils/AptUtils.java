@@ -15,40 +15,40 @@ public class AptUtils {
 		return tableName;
 	}
 	
-	public static String toEngParentRegion(String korParentRegion) {
-		if(korParentRegion.equals("서울특별시")) {
+	public static String toEngSido(String korSido) {
+		if(korSido.equals("서울특별시")) {
 			return "SEOUL";
-		}else if(korParentRegion.equals("부산광역시")) {
+		}else if(korSido.equals("부산광역시")) {
 			return "BUSAN";
-		}else if(korParentRegion.equals("대구광역시")) {
+		}else if(korSido.equals("대구광역시")) {
 			return "DAEGU";
-		}else if(korParentRegion.equals("인천광역시")) {
+		}else if(korSido.equals("인천광역시")) {
 			return "INCHEON";
-		}else if(korParentRegion.equals("광주광역시")) {
+		}else if(korSido.equals("광주광역시")) {
 			return "GWANGJU";
-		}else if(korParentRegion.equals("대전광역시")) {
+		}else if(korSido.equals("대전광역시")) {
 			return "DAEJEON";
-		}else if(korParentRegion.equals("울산광역시")) {
+		}else if(korSido.equals("울산광역시")) {
 			return "ULSAN";
-		}else if(korParentRegion.equals("세종특별자치시")) {
+		}else if(korSido.equals("세종특별자치시")) {
 			return "SEJONG";
-		}else if(korParentRegion.equals("경기도")) {
+		}else if(korSido.equals("경기도")) {
 			return "GYEONGGIDO";
-		}else if(korParentRegion.equals("충청북도")) {
+		}else if(korSido.equals("충청북도")) {
 			return "CHUNGCHEONGBUKDO";
-		}else if(korParentRegion.equals("충청남도")) {
+		}else if(korSido.equals("충청남도")) {
 			return "CHUNGCHEONGNAMDO";
-		}else if(korParentRegion.equals("전라남도")) {
+		}else if(korSido.equals("전라남도")) {
 			return "JEOLLANAMDO";
-		}else if(korParentRegion.equals("경상북도")) {
+		}else if(korSido.equals("경상북도")) {
 			return "GYEONGSANGBUKDO";
-		}else if(korParentRegion.equals("경상남도")) {
+		}else if(korSido.equals("경상남도")) {
 			return "GYEONGSANGNAMDO";
-		}else if(korParentRegion.equals("제주특별자치도")) {
+		}else if(korSido.equals("제주특별자치도")) {
 			return "JEJU";
-		}else if(korParentRegion.equals("강원특별자치도")) {
+		}else if(korSido.equals("강원특별자치도")) {
 			return "GANGWONDO";
-		}else if(korParentRegion.equals("전북특별자치도")) {
+		}else if(korSido.equals("전북특별자치도")) {
 			return "JEOLLABUKDO";
 		}
 		return "ERROR";

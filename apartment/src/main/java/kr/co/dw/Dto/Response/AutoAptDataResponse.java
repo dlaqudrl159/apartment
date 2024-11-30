@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AutoAptDataRes {
+public class AutoAptDataResponse {
 
 	private int status;
 	private String message;

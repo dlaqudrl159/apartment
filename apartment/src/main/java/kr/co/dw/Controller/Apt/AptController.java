@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import kr.co.dw.Dto.Common.AptCoordsDto;
-import kr.co.dw.Dto.Response.AptTransactionResponseDto;
+import kr.co.dw.Dto.Response.AptTransactionResponse;
 import kr.co.dw.Service.Apt.AptService;
 import lombok.RequiredArgsConstructor;
 
@@ -22,12 +22,12 @@ public class AptController {
 	@GetMapping("/api/getMarkers")
 	private ResponseEntity<List<AptCoordsDto>> getMarkers(@RequestParam("addresses")  List<String> addresses) {
 		System.out.println(addresses);
-		return new ResponseEntity<>(aptService.getMarkers(addresses), HttpStatus.OK);
+		return ResponseEntity.status(HttpStatus.OK).body(aptService.getMarkers(addresses));
 	}
 	
 	@GetMapping("/api/getMarkerData")
-	private ResponseEntity<List<AptTransactionResponseDto>> getMarkerData(AptCoordsDto aptCoordsDto){
-		return new ResponseEntity<List<AptTransactionResponseDto>>(aptService.getAptTransactionResponseDtolist(aptCoordsDto), HttpStatus.OK);
+	private ResponseEntity<List<AptTransactionResponse>> getMarkerData(AptCoordsDto aptCoordsDto){
+		return ResponseEntity.status(HttpStatus.OK).body(aptService.getAptTransactionResponses(aptCoordsDto));
 	}
 	
 	@GetMapping("/api/getCategoryClickData")
@@ -39,8 +39,6 @@ public class AptController {
 	private void getRoadNameList(@RequestParam("ex1") String ex1, @RequestParam("ex2") String ex2, @RequestParam("ex3") String ex3) {
 		System.out.println(ex1 + System.lineSeparator() + ex2 + System.lineSeparator() + ex3);
 	}
-	
-	
 	
 	
 }

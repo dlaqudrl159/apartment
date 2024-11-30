@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import kr.co.dw.Domain.Sido;
-import kr.co.dw.Dto.Response.AutoAptDataRes;
+import kr.co.dw.Dto.Response.AutoAptDataResponse;
 import kr.co.dw.Service.AutoData.Apt.AutoAptDataService;
 import lombok.RequiredArgsConstructor;
 
@@ -20,15 +20,15 @@ public class AutoAptDataController {
 
 	private final AutoAptDataService autoAptDataService;
 	
-	private final Logger logger = LoggerFactory.getLogger(AutoAptDataController.class);
+	//private final Logger logger = LoggerFactory.getLogger(AutoAptDataController.class);
 
 	@PostMapping("/data/allautoaptdatainsert")
-	public ResponseEntity<List<AutoAptDataRes>> autoAllDataInsert() {
+	public ResponseEntity<List<AutoAptDataResponse>> autoAllDataInsert() {
 		return ResponseEntity.ok(autoAptDataService.allAutoAptDataInsert());
 	}
 
 	@PostMapping("/data/autoaptdatainsert")
-	public ResponseEntity<AutoAptDataRes> autoDataInsert(@RequestBody Sido Sido) {
+	public ResponseEntity<AutoAptDataResponse> autoDataInsert(@RequestBody Sido Sido) {
 		System.out.println(Sido);
 		return ResponseEntity.ok(autoAptDataService.autoAptDataInsert(Sido.getKorSido()));
 	}
