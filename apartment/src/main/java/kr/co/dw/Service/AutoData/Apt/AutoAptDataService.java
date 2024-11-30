@@ -12,6 +12,7 @@ import org.xml.sax.SAXException;
 import kr.co.dw.Domain.Sigungu;
 import kr.co.dw.Dto.Common.AptTransactionDto;
 import kr.co.dw.Dto.Response.AutoAptDataResponse;
+import kr.co.dw.Dto.Response.ProcessedRes;
 
 public interface AutoAptDataService {
 
@@ -19,20 +20,8 @@ public interface AutoAptDataService {
 
 	AutoAptDataResponse autoAptDataInsert(String korSido);
 	
-	StringBuilder getRTMSDataSvcAptTradeDev(Sigungu sigungu, String dealYearMonth) throws IOException;
-	
-	boolean isResultMsg(Element eElement);
-	
-	Element makeNodeList(StringBuilder sb) throws SAXException, IOException, ParserConfigurationException;
-	
-	String getElementContent(Element element, String tagName);
-	
-	String makeRoadName(String roadName, String roadNameBonbun, String roadNameBubun);
-	
-	String aptTransactionDtoInsert(List<AptTransactionDto> list, String korSido);
+	AutoAptDataResponse syncAptTransactionData(String korSido);
 
-	List<AptTransactionDto> makeAptTransactionDto(NodeList nList, String sido, String sigungu);
-
-	
+	List<ProcessedRes> processedAptData(String korSido);
 	
 }

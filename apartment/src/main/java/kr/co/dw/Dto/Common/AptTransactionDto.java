@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 public class AptTransactionDto {
 
 	
-	private static final Logger logger = LoggerFactory.getLogger(AptTransactionDto.class);
+	private final Logger logger = LoggerFactory.getLogger(AptTransactionDto.class);
 
 	
 	private String SIGUNGU;

@@ -93,6 +93,7 @@
 		</if>
 
 	</delete>
+	
 	<insert id="dataInsert2" parameterType="hashMap">
 
 		insert into
@@ -146,7 +147,6 @@
 		)
 
 	</insert>
-	
 	
 	<insert id="AptTransactionDtosInsert">
 

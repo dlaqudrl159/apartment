@@ -11,8 +11,6 @@ import kr.co.dw.Dto.Response.ProcessedRes;
 @Mapper
 public interface AutoAptDataMapper {
 
-	void deleteByRegionYear(@Param("regionName") String regionName, @Param("year") String year);
-
 	void deleteAptData(@Param("failProcesseds") List<ProcessedRes> failProcesseds, @Param("korSido") String korSido, @Param("deleteDealYearMonth") String deleteDealYearMonth);
 
 	void AptTransactionDtosInsert(@Param("aptTransactionDto") AptTransactionDto aptTransactionDto, @Param("korSido") String korSido);

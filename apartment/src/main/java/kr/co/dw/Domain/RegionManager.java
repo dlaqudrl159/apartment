@@ -10,7 +10,6 @@ import kr.co.dw.Exception.ErrorCode.ErrorCode;
 
 public class RegionManager {
 
-	
 	private static final Logger logger = LoggerFactory.getLogger(RegionManager.class);
 	
 	public static final List<Sido> SIDOS = List.of(new Sido("서울특별시", "SEOUL"),

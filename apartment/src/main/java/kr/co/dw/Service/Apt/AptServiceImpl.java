@@ -21,7 +21,6 @@ import kr.co.dw.Exception.CustomException;
 import kr.co.dw.Exception.ErrorCode.ErrorCode;
 import kr.co.dw.Mapper.AptMapper;
 import kr.co.dw.Repository.Apt.AptRepository;
-import kr.co.dw.Utils.AptUtils;
 import lombok.RequiredArgsConstructor;
 
 @Service
