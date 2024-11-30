@@ -29,8 +29,6 @@ import kr.co.dw.Domain.Sigungu;
 import kr.co.dw.Dto.Common.AptTransactionDto;
 import kr.co.dw.Dto.Common.RegionYearDto;
 import kr.co.dw.Mapper.AutoAptDataMapper;
-import kr.co.dw.sidosigungu.AutoAptDto;
-import kr.co.dw.sidosigungu.RegionManager;
 
 @SpringBootTest(properties = "spring.profiles.active=dev")
 @TestPropertySource("classpath:application-dev.properties")
@@ -41,9 +39,6 @@ public class AutoAptDataServiceImplTest {
 	
 	@Autowired
 	private AutoAptDataServiceImpl  autoAptDataServiceImpl;
-	
-	@Autowired
-	private AutoAptDataServiceImpl2 service;
 	
 	@Test
 	@DisplayName("getRTMSDataSvcAptTradeDev 테스트")

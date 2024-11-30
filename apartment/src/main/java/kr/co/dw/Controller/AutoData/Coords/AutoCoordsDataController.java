@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 import kr.co.dw.Dto.Response.AutoCoordsDataResponse;
 import kr.co.dw.Service.AutoData.Coords.AutoCoordsDataService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequiredArgsConstructor

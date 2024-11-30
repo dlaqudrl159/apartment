@@ -3,7 +3,6 @@ package kr.co.dw.Dto.Common;
 import kr.co.dw.Domain.Sido;
 import kr.co.dw.Domain.Sigungu;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
