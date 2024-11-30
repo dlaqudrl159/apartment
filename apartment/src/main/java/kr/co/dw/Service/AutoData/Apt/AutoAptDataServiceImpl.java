@@ -88,7 +88,7 @@ public class AutoAptDataServiceImpl implements AutoAptDataService {
 		deleteAndInsertData(successProcesseds,failProcesseds,korSido);
 		
 		return new AutoAptDataResponse(200, korSido + "지역 데이터 처리(INSERT, DELETE) 성공", 
-				new Sido(korSido, AptUtils.toEngSido(korSido)), 
+				new Sido(korSido, RegionManager.toEngSido(korSido)), 
 				failProcesseds, successProcesseds);
 	}
 	

@@ -13,9 +13,12 @@ import org.springframework.stereotype.Service;
 
 import kr.co.dw.Domain.Addresses;
 import kr.co.dw.Domain.Addresses.Address;
+import kr.co.dw.Domain.RegionManager;
 import kr.co.dw.Dto.Common.AptCoordsDto;
 import kr.co.dw.Dto.Common.AptTransactionDto;
 import kr.co.dw.Dto.Response.AptTransactionResponse;
+import kr.co.dw.Exception.CustomException;
+import kr.co.dw.Exception.ErrorCode.ErrorCode;
 import kr.co.dw.Mapper.AptMapper;
 import kr.co.dw.Repository.Apt.AptRepository;
 import kr.co.dw.Utils.AptUtils;
@@ -45,6 +48,29 @@ public class AptServiceImpl implements AptService {
 		return aptCoordsDtos;
 	}
 
+	@Override
+	public List<AptTransactionResponse> getAptTransactionResponses(AptCoordsDto aptCoordsDto) {
+		try {
+			List<AptTransactionResponse> aptTransactionResponses = new ArrayList<>();
+			String korsido = RegionManager.splitSigungu(aptCoordsDto.getSIGUNGU()); 
+			if(korsido == null) {
+				logger.error("시군구에서 시도를 추출하는데 실패했습니다 파라미터 aptCoordsDto 확인 요망 aptCoordsDto={} sigungu={}" , aptCoordsDto, aptCoordsDto.getSIGUNGU());
+				throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
+			}
+			List<AptTransactionDto> aptTransactionHistory = aptRepository.getAptTrancsactionHistory(aptCoordsDto, korsido);
+			if (hasTransactionHistory(aptTransactionHistory)) {
+				aptTransactionResponses.addAll(processTransactionHistory(aptTransactionHistory, aptCoordsDto)); 
+			} else {
+				aptTransactionResponses.addAll(processEmptyTransactionHistory(aptCoordsDto));
+			}
+			return aptTransactionResponses;
+		} catch (Exception e) {
+			logger.error("aptCoordsDto={} 거래내역 조회 중 실패 errorMessage={}",aptCoordsDto, e.getMessage());
+			throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR, "아파트 거래내역 조회 실패");
+		}
+		
+	}
+	
 	private boolean hasTransactionHistory(List<AptTransactionDto> history) {
 	    return !history.isEmpty();
 	}
@@ -89,33 +115,18 @@ public class AptServiceImpl implements AptService {
 		});
 		return responses;
 	}
-	
-	@Override
-	public List<AptTransactionResponse> getAptTransactionResponses(AptCoordsDto aptCoordsDto) {
-
-		List<AptTransactionResponse> aptTransactionResponses = new ArrayList<>();
-		String korsido = AptUtils.SplitSigungu(aptCoordsDto.getSIGUNGU());
-
-		List<AptTransactionDto> aptTransactionHistory = aptRepository.getAptTrancsactionHistory(aptCoordsDto, korsido);
-		if (hasTransactionHistory(aptTransactionHistory)) {
-			aptTransactionResponses.addAll(processTransactionHistory(aptTransactionHistory, aptCoordsDto)); 
-		} else {
-			aptTransactionResponses.addAll(processEmptyTransactionHistory(aptCoordsDto));
-		}
-		return aptTransactionResponses;
-	}
 
 	private Map<String, List<AptTransactionDto>> createMapByRoadName(List<AptTransactionDto> AptTransactionHistory) {
 		return AptTransactionHistory.stream()
 				.collect(Collectors.groupingBy(aptTransactionDto -> aptTransactionDto.getROADNAME()));
 	}
-	@Override
-	public List<Integer> getTransactionYears(List<AptTransactionDto> aptTransactionHistory) {
+	
+	private List<Integer> getTransactionYears(List<AptTransactionDto> aptTransactionHistory) {
 		return aptTransactionHistory.stream().map(aptTransactionDtos -> aptTransactionDtos.getYear())
 				.distinct().sorted(Comparator.reverseOrder()).collect(Collectors.toList());
 	}
 	
-	public List<String> getRoadNames(AptCoordsDto aptCoordsDto) {
+	private List<String> getRoadNames(AptCoordsDto aptCoordsDto) {
 		
 		List<String> roadName = aptRepository.getRoadName(aptCoordsDto);
 		
