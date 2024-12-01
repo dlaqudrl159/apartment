@@ -22,8 +22,6 @@ public class AutoCoordsDataController {
 
 	private final AutoCoordsDataService autoCoordsDataService;
 	
-	private final Logger looger = LoggerFactory.getLogger(AutoCoordsDataService.class);
-	
 	@GetMapping("/data/autoallCoordsdatainsert")
 	public ResponseEntity<AutoCoordsDataResponse> autoallCoordsdatainsert() {
 		
@@ -33,18 +31,14 @@ public class AutoCoordsDataController {
 	}
 	
 	@GetMapping("/data/autoCoordsdatainsert")
-	public ResponseEntity<AutoCoordsDataResponse> autoCoordsInsert(@RequestParam(value = "parentEngRegionName") String parentEngRegionName) throws MalformedURLException, IOException, ParseException, InterruptedException {
+	public ResponseEntity<AutoCoordsDataResponse> autoCoordsInsert(@RequestParam(value = "korSido") String korSido) throws MalformedURLException, IOException, ParseException, InterruptedException {
 		
-		if(parentEngRegionName == null || parentEngRegionName.trim().isEmpty()) {
+		if(korSido == null || korSido.trim().isEmpty()) {
 			//return new ResponseEntity<String>("파라미터가 null 이거나 빈칸입니다.", HttpStatus.BAD_REQUEST);
 			return null;
 		}
-		AutoCoordsDataResponse response = autoCoordsDataService.CoordsInsert(parentEngRegionName);
-		
-		looger.info(response.toString());
-		
+		AutoCoordsDataResponse response = autoCoordsDataService.CoordsInsert(korSido);
 		return new ResponseEntity<AutoCoordsDataResponse>(response, HttpStatus.OK);
-		
 	}
 	
 

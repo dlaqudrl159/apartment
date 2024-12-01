@@ -14,7 +14,7 @@ public interface AptMapper {
 
 	List<AptCoordsDto> getMarkers(Map<String, String> map);
 
-	List<AptTransactionDto> getAptTrancsactionHistory(@Param("aptCoordsDto") AptCoordsDto aptCoordsDto,@Param("korSido") String korSido);
+	List<AptTransactionDto> getAptTransactionHistory(@Param("aptCoordsDto") AptCoordsDto aptCoordsDto,@Param("korSido") String korSido);
 	
 	List<String> getRoadName(@Param("aptCoordsDto") AptCoordsDto aptCoordsDto);
 

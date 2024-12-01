@@ -20,8 +20,6 @@ public class AutoAptDataController {
 
 	private final AutoAptDataService autoAptDataService;
 	
-	//private final Logger logger = LoggerFactory.getLogger(AutoAptDataController.class);
-
 	@PostMapping("/data/allautoaptdatainsert")
 	public ResponseEntity<List<AutoAptDataResponse>> autoAllDataInsert() {
 		return ResponseEntity.ok(autoAptDataService.allAutoAptDataInsert());
@@ -29,7 +27,6 @@ public class AutoAptDataController {
 
 	@PostMapping("/data/autoaptdatainsert")
 	public ResponseEntity<AutoAptDataResponse> autoDataInsert(@RequestBody Sido Sido) {
-		System.out.println(Sido);
 		return ResponseEntity.ok(autoAptDataService.autoAptDataInsert(Sido.getKorSido()));
 	}
 }

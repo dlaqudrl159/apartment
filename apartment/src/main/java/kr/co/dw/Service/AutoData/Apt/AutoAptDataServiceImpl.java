@@ -44,8 +44,8 @@ import kr.co.dw.Exception.CustomException;
 import kr.co.dw.Exception.ErrorCode.ErrorCode;
 import kr.co.dw.Mapper.AutoAptDataMapper;
 import kr.co.dw.Repository.Auto.AutoAptDataRepository;
-import kr.co.dw.Service.AutoData.Apt.AptDataPaser.AptDataParserService;
 import kr.co.dw.Service.AutoData.Apt.OpenApi.OpenApiService;
+import kr.co.dw.Service.ParserAndConverter.ParserAndConverter;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -54,10 +54,8 @@ public class AutoAptDataServiceImpl implements AutoAptDataService {
 
 	private final Logger logger = LoggerFactory.getLogger(AutoAptDataServiceImpl.class);
 
-	private final AutoAptDataMapper autoAptDataMapper;
-	private final AptDataParserService aptDataParserService;
+	private final ParserAndConverter aptDataParserService;
 	private final OpenApiService openApiService;
-	private final SqlSessionFactory sqlSessionFactory;
 	private final AutoAptDataRepository autoAptDataRepository;
 	
 	@Value("${api.apt.url}")
@@ -68,9 +66,14 @@ public class AutoAptDataServiceImpl implements AutoAptDataService {
 
 	@Override
 	public List<AutoAptDataResponse> allAutoAptDataInsert() {
-
-		return null;// new DataAutoInsertResponseDto("SUCCESS", null, "전체 지역 처리 완료", totalCount,
-					// LocalDateTime.now(), totalResponse);
+		List<Sido> sidos = RegionManager.getSidos();
+		List<AutoAptDataResponse> AutoAptDataResponses = new ArrayList<>();
+		
+		sidos.forEach(sido -> {
+			AutoAptDataResponses.add(autoAptDataInsert(sido.getKorSido()));
+		});
+		
+		return AutoAptDataResponses;
 	}
 
 	@Override
@@ -89,7 +92,7 @@ public class AutoAptDataServiceImpl implements AutoAptDataService {
 		List<ProcessedRes> failProcesseds = processedsMap.get(false); 
 		
 		autoAptDataRepository.deleteAndInsertData(successProcesseds,failProcesseds,korSido);
-		
+		logger.info("korSido={} 전체 행정구역 거래내역 데이터 삭제 입력 완료",korSido);
 		return new AutoAptDataResponse(200, korSido + "지역 데이터 처리(INSERT, DELETE) 성공", 
 				new Sido(korSido, RegionManager.toEngSido(korSido)), 
 				failProcesseds, successProcesseds);
@@ -99,6 +102,10 @@ public class AutoAptDataServiceImpl implements AutoAptDataService {
 	public List<ProcessedRes> processedAptData(String korSido) {
 		List<ProcessedRes> processeds = new ArrayList<>();
 		Sido sido = RegionManager.getSido(korSido);
+		if(sido == null) {
+			logger.error("korSido 파라미터 시도 객체 변환 실패 파라미터 확인 요망 korSido={}", korSido);
+			throw new CustomException(ErrorCode.EMPTY_OR_NULL_Parameter);
+		}
 		List<Sigungu> sigungus = RegionManager.getSigungus(korSido);
 		List<String> dealYearMonths = aptDataParserService.createDealYearMonths(Constant.DELETE_YEAR);
 

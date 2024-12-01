@@ -56,7 +56,7 @@ public class AptServiceImpl implements AptService {
 				logger.error("시군구에서 시도를 추출하는데 실패했습니다 파라미터 aptCoordsDto 확인 요망 aptCoordsDto={} sigungu={}" , aptCoordsDto, aptCoordsDto.getSIGUNGU());
 				throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
 			}
-			List<AptTransactionDto> aptTransactionHistory = aptRepository.getAptTrancsactionHistory(aptCoordsDto, korsido);
+			List<AptTransactionDto> aptTransactionHistory = aptRepository.getAptTransactionHistory(aptCoordsDto, korsido);
 			if (hasTransactionHistory(aptTransactionHistory)) {
 				aptTransactionResponses.addAll(processTransactionHistory(aptTransactionHistory, aptCoordsDto)); 
 			} else {
@@ -64,7 +64,7 @@ public class AptServiceImpl implements AptService {
 			}
 			return aptTransactionResponses;
 		} catch (Exception e) {
-			logger.error("aptCoordsDto={} 거래내역 조회 중 실패 errorMessage={}",aptCoordsDto, e.getMessage());
+			logger.error("aptCoordsDto={} 거래내역 조회 중 실패 e.getMessage={}",aptCoordsDto, e.getMessage());
 			throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR, "아파트 거래내역 조회 실패");
 		}
 		
@@ -124,12 +124,4 @@ public class AptServiceImpl implements AptService {
 		return aptTransactionHistory.stream().map(aptTransactionDtos -> aptTransactionDtos.getYear())
 				.distinct().sorted(Comparator.reverseOrder()).collect(Collectors.toList());
 	}
-	
-	private List<String> getRoadNames(AptCoordsDto aptCoordsDto) {
-		
-		List<String> roadName = aptRepository.getRoadName(aptCoordsDto);
-		
-		return roadName;
-	}
-	
 }

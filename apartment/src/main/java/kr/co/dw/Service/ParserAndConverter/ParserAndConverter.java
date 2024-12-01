@@ -1,4 +1,4 @@
-package kr.co.dw.Service.AutoData.Apt.AptDataPaser;
+package kr.co.dw.Service.ParserAndConverter;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -29,9 +29,9 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class AptDataParserService {
+public class ParserAndConverter {
 	
-	private static final Logger logger = LoggerFactory.getLogger(AptDataParserService.class);
+	private static final Logger logger = LoggerFactory.getLogger(ParserAndConverter.class);
 
 	
 	public void isErrorMsg(Element eElement) {

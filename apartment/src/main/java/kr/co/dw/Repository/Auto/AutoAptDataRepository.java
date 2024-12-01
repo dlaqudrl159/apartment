@@ -16,7 +16,7 @@ import kr.co.dw.Dto.Response.ProcessedRes;
 import kr.co.dw.Exception.CustomException;
 import kr.co.dw.Exception.ErrorCode.ErrorCode;
 import kr.co.dw.Mapper.AutoAptDataMapper;
-import kr.co.dw.Service.AutoData.Apt.AptDataPaser.AptDataParserService;
+import kr.co.dw.Service.ParserAndConverter.ParserAndConverter;
 import lombok.RequiredArgsConstructor;
 
 @Repository
@@ -28,7 +28,7 @@ public class AutoAptDataRepository {
 
 	
 	private final AutoAptDataMapper autoAptDataMapper;
-	private final AptDataParserService aptDataParserSerivce;
+	private final ParserAndConverter aptDataParserSerivce;
 	//private final SqlSessionFactory sqlSessionFactory;
 	private final SqlSessionTemplate batchSqlSessionTemplate;
 	
@@ -49,42 +49,23 @@ public class AutoAptDataRepository {
 		if (list.isEmpty()) {
 			
 	    }
-		//SqlSession sqlSession = null;
-		
 		try {
-			//sqlSession = this.sqlSessionFactory.openSession(ExecutorType.BATCH);
 			int count = 0;
 			for (AptTransactionDto aptTransactionDto : list) {
-				
-				Map<String, Object> map = new HashMap<>();
-				map.put("aptTransactionDto", aptTransactionDto);
-				map.put("korSido", korSido);
 				autoAptDataMapper.AptTransactionDtosInsert(aptTransactionDto, korSido);
-				//sqlSession.insert("kr.co.dw.Mapper.AutoAptDataMapper.dataInsert2", map);
 				if (++count % Constant.BATCH_SIZE == 0) {
 					batchSqlSessionTemplate.flushStatements();
-	                //sqlSession.flushStatements();
 	                logger.debug("Batch processed: {}/{}", count, list.size());
 	            }
 			}
-				
 			if (count % Constant.BATCH_SIZE != 0) {
 				batchSqlSessionTemplate.flushStatements();
-				//sqlSession.flushStatements();
 			}
-				//sqlSession.commit();
 				logger.info("Total processed: {}", count);
 			} catch (Exception e) {
 		        logger.error("데이터 입력 실패: {}", e.getMessage());
-		        /*if (sqlSession != null) {
-		            sqlSession.rollback();
-		        }*/
 		        new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
-			} /*finally {
-		        if (sqlSession != null) {
-		            sqlSession.close();
-		        }
-		    }*/
+			}
 	}
 	
 }

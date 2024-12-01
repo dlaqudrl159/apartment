@@ -21,7 +21,7 @@ import org.xml.sax.SAXException;
 import kr.co.dw.Domain.Sigungu;
 import kr.co.dw.Dto.Common.AptTransactionDto;
 import kr.co.dw.Dto.Response.ProcessedRes;
-import kr.co.dw.Service.AutoData.Apt.AptDataPaser.AptDataParserService;
+import kr.co.dw.Service.ParserAndConverter.ParserAndConverter;
 import lombok.RequiredArgsConstructor;
 
 
@@ -40,7 +40,7 @@ public class OpenApiService {
 	@Value("${api.apt.service-key}")
 	private String API_APT_SERVICE_KEY;
 	
-	private final AptDataParserService aptDataParserService;
+	private final ParserAndConverter aptDataParserService;
 	
 	public ProcessedRes callRTMSDataSvcAptTradeDev(ProcessedRes processedRes) {
 
