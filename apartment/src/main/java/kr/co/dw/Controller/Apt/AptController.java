@@ -39,6 +39,4 @@ public class AptController {
 	private void getRoadNameList(@RequestParam("ex1") String ex1, @RequestParam("ex2") String ex2, @RequestParam("ex3") String ex3) {
 		System.out.println(ex1 + System.lineSeparator() + ex2 + System.lineSeparator() + ex3);
 	}
-	
-	
 }

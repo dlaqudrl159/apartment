@@ -71,4 +71,5 @@
 		#{aptCoordsDto.BUNGI}
 
 	</select>
+	
 </mapper>	

@@ -71,7 +71,7 @@ public class AptServiceImpl implements AptService {
 	}
 	
 	private boolean hasTransactionHistory(List<AptTransactionDto> history) {
-	    return !history.isEmpty();
+	    return !(history == null && history.isEmpty());
 	}
 	
 	private AptCoordsDto createResponseAptCoords(AptCoordsDto aptCoordsDto, String roadName) {

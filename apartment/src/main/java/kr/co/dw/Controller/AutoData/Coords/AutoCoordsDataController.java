@@ -9,6 +9,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,7 +24,7 @@ public class AutoCoordsDataController {
 
 	private final AutoCoordsDataService autoCoordsDataService;
 	
-	@GetMapping("/data/autoallCoordsdatainsert")
+	@PostMapping("/data/autoallCoordsdatainsert")
 	public ResponseEntity<AutoCoordsDataResponse> autoallCoordsdatainsert() {
 		
 		AutoCoordsDataResponse response = autoCoordsDataService.allCoordsInsert();
@@ -30,8 +32,8 @@ public class AutoCoordsDataController {
 		return new ResponseEntity<AutoCoordsDataResponse>(response, HttpStatus.OK);
 	}
 	
-	@GetMapping("/data/autoCoordsdatainsert")
-	public ResponseEntity<AutoCoordsDataResponse> autoCoordsInsert(@RequestParam(value = "korSido") String korSido) throws MalformedURLException, IOException, ParseException, InterruptedException {
+	@PostMapping("/data/autoCoordsdatainsert")
+	public ResponseEntity<AutoCoordsDataResponse> autoCoordsInsert(@RequestBody String korSido) throws MalformedURLException, IOException, ParseException, InterruptedException {
 		
 		if(korSido == null || korSido.trim().isEmpty()) {
 			//return new ResponseEntity<String>("파라미터가 null 이거나 빈칸입니다.", HttpStatus.BAD_REQUEST);
