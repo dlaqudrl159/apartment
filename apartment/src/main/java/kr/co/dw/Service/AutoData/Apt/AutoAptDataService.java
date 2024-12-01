@@ -9,32 +9,19 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import kr.co.dw.Domain.Sido;
 import kr.co.dw.Domain.Sigungu;
 import kr.co.dw.Dto.Common.AptTransactionDto;
-import kr.co.dw.Dto.Common.RegionYearDto;
-import kr.co.dw.Dto.Response.AutoAptDataRes;
+import kr.co.dw.Dto.Response.AutoAptDataResponse;
+import kr.co.dw.Dto.Response.ProcessedRes;
 
 public interface AutoAptDataService {
 
-	List<AutoAptDataRes> allAutoAptDataInsert();
+	List<AutoAptDataResponse> allAutoAptDataInsert();
 
-	AutoAptDataRes autoAptDataInsert(String korSido);
+	AutoAptDataResponse autoAptDataInsert(String korSido);
 	
-	StringBuilder getRTMSDataSvcAptTradeDev(Sigungu sigungu, String dealYearMonth) throws IOException;
-	
-	boolean isResultMsg(Element eElement);
-	
-	Element makeNodeList(StringBuilder sb) throws SAXException, IOException, ParserConfigurationException;
-	
-	String getElementContent(Element element, String tagName);
-	
-	String makeRoadName(String roadName, String roadNameBonbun, String roadNameBubun);
-	
-	String aptTransactionDtoInsert(List<AptTransactionDto> list, String korSido);
+	AutoAptDataResponse syncAptTransactionData(String korSido);
 
-	List<AptTransactionDto> makeAptTransactionDto(NodeList nList, String sido, String sigungu);
-
-	
+	List<ProcessedRes> processedAptData(String korSido);
 	
 }

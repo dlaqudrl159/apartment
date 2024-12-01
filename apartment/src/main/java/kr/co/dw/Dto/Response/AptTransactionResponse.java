@@ -11,10 +11,10 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AptTransactionResponseDto {
+public class AptTransactionResponse {
 
 	private List<Integer> years;
-	private List<AptTransactionDto> aptTransactionDtoList;
+	private List<AptTransactionDto> aptTransactionDtos;
 	private AptCoordsDto aptCoordsDto;
 	
 }

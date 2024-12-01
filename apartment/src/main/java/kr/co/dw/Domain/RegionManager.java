@@ -2,8 +2,16 @@ package kr.co.dw.Domain;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import kr.co.dw.Exception.CustomException;
+import kr.co.dw.Exception.ErrorCode.ErrorCode;
+
 public class RegionManager {
 
+	private static final Logger logger = LoggerFactory.getLogger(RegionManager.class);
+	
 	public static final List<Sido> SIDOS = List.of(new Sido("서울특별시", "SEOUL"),
 			new Sido("부산광역시", "BUSAN"), new Sido("대구광역시", "DAEGU"),
 			new Sido("인천광역시", "INCHEON"), new Sido("광주광역시", "GWANGJU"),
@@ -306,12 +314,63 @@ public class RegionManager {
 			default:
 				return null;
 			}
-		
-		
 	}
 
+	public static String splitSigungu(String sigungu) {
+		
+		if(sigungu == null || sigungu.trim().isEmpty()) {
+			logger.error("시군구에서 시도를 추출하는데 실패했습니다 시군구 값이 null이거나 비어있습니다. sigungu={}" , sigungu);
+			throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
+		}
+		String[] arr = sigungu.split(" ");
+		if (arr.length < 1) {
+			logger.error("시군구의 length가 1보다 작습니다 올바르지 않은 시군구 형식입니다 sigungu={}", sigungu);
+			throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
+		}
+		String sido = arr[0];
+		
+		return sido;
+	}
 
-
+	public static String toEngSido(String korSido) {
+		
+		if(korSido.equals("서울특별시")) {
+			return "SEOUL";
+		}else if(korSido.equals("부산광역시")) {
+			return "BUSAN";
+		}else if(korSido.equals("대구광역시")) {
+			return "DAEGU";
+		}else if(korSido.equals("인천광역시")) {
+			return "INCHEON";
+		}else if(korSido.equals("광주광역시")) {
+			return "GWANGJU";
+		}else if(korSido.equals("대전광역시")) {
+			return "DAEJEON";
+		}else if(korSido.equals("울산광역시")) {
+			return "ULSAN";
+		}else if(korSido.equals("세종특별자치시")) {
+			return "SEJONG";
+		}else if(korSido.equals("경기도")) {
+			return "GYEONGGIDO";
+		}else if(korSido.equals("충청북도")) {
+			return "CHUNGCHEONGBUKDO";
+		}else if(korSido.equals("충청남도")) {
+			return "CHUNGCHEONGNAMDO";
+		}else if(korSido.equals("전라남도")) {
+			return "JEOLLANAMDO";
+		}else if(korSido.equals("경상북도")) {
+			return "GYEONGSANGBUKDO";
+		}else if(korSido.equals("경상남도")) {
+			return "GYEONGSANGNAMDO";
+		}else if(korSido.equals("제주특별자치도")) {
+			return "JEJU";
+		}else if(korSido.equals("강원특별자치도")) {
+			return "GANGWONDO";
+		}else if(korSido.equals("전북특별자치도")) {
+			return "JEOLLABUKDO";
+		}
+		return null;
+	}
 	
 
 }
