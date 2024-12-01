@@ -50,6 +50,7 @@
 			<when test="korSido == '충청북도'">CHUNGCHEONGBUKDO</when>
 			<when test="korSido == '충청남도'">CHUNGCHEONGNAMDO</when>
 			<when test="korSido == '전북특별자치도'">JEOLLABUKDO</when>
+			<when test="korSido == '전라남도'">JEOLLANAMDO</when>
 			<when test="korSido == '경상북도'">GYEONGSANGBUKDO</when>
 			<when test="korSido == '경상남도'">GYEONGSANGNAMDO</when>
 			<when test="korSido == '제주특별자치도'">JEJU</when>
