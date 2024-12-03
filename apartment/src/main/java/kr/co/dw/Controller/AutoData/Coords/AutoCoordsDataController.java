@@ -14,7 +14,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import kr.co.dw.Domain.Sido;
 import kr.co.dw.Dto.Response.AutoCoordsDataResponse;
+import kr.co.dw.Exception.CustomException;
+import kr.co.dw.Exception.ErrorCode.ErrorCode;
 import kr.co.dw.Service.AutoData.Coords.AutoCoordsDataService;
 import lombok.RequiredArgsConstructor;
 
@@ -23,6 +26,8 @@ import lombok.RequiredArgsConstructor;
 public class AutoCoordsDataController {
 
 	private final AutoCoordsDataService autoCoordsDataService;
+	
+	private final Logger logger = LoggerFactory.getLogger(AutoCoordsDataController.class);
 	
 	@PostMapping("/data/autoallCoordsdatainsert")
 	public ResponseEntity<AutoCoordsDataResponse> autoallCoordsdatainsert() {
@@ -33,16 +38,18 @@ public class AutoCoordsDataController {
 	}
 	
 	@PostMapping("/data/autoCoordsdatainsert")
-	public ResponseEntity<AutoCoordsDataResponse> autoCoordsInsert(@RequestBody String korSido) throws MalformedURLException, IOException, ParseException, InterruptedException {
-		
-		if(korSido == null || korSido.trim().isEmpty()) {
-			//return new ResponseEntity<String>("파라미터가 null 이거나 빈칸입니다.", HttpStatus.BAD_REQUEST);
-			return null;
+	public ResponseEntity<AutoCoordsDataResponse> autoCoordsInsert(@RequestBody Sido sido) throws MalformedURLException, IOException, ParseException, InterruptedException {
+
+		if(sido.getKorSido() == null && sido.getKorSido().isEmpty()) {
+			logger.error("Sido파라미터가 NULL 이거나 isEmpty Sido={}", sido);
+			throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
 		}
-		AutoCoordsDataResponse response = autoCoordsDataService.CoordsInsert(korSido);
+		AutoCoordsDataResponse response = autoCoordsDataService.CoordsInsert(sido.getKorSido());
 		return new ResponseEntity<AutoCoordsDataResponse>(response, HttpStatus.OK);
 	}
 	
-
-	
+	@PostMapping("/data/notExistTransactionCoordsDelete")
+	public void notExistTransactionCoordsDelete(@RequestBody Sido sido) {
+		autoCoordsDataService.notExistTransactionCoordsDelete(sido.getKorSido());
+	}
 }

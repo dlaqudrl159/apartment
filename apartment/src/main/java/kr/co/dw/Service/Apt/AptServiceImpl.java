@@ -18,6 +18,8 @@ import kr.co.dw.Dto.Common.AptCoordsDto;
 import kr.co.dw.Dto.Common.AptTransactionDto;
 import kr.co.dw.Dto.Response.AptTransactionResponse;
 import kr.co.dw.Exception.CustomException;
+import kr.co.dw.Exception.CustomExceptions.DatabaseException;
+import kr.co.dw.Exception.CustomExceptions.ParserAndConverterException;
 import kr.co.dw.Exception.ErrorCode.ErrorCode;
 import kr.co.dw.Mapper.AptMapper;
 import kr.co.dw.Repository.Apt.AptRepository;
@@ -33,18 +35,26 @@ public class AptServiceImpl implements AptService {
 
 	@Override
 	public List<AptCoordsDto> getMarkers(List<String> addresses) {
-		List<AptCoordsDto> aptCoordsDtos = new ArrayList<>();
-		List<Address> aAddresses = new Addresses(addresses).getList();
-		if (!aAddresses.isEmpty()) {
-			for (int i = 0; i < aAddresses.size(); i++) {
-				Address address = aAddresses.get(i);
-				if (!(address.getSido().equals("ERROR") || address.getSigungu().equals("ERROR"))) {
-					Map<String, String> map = Map.of("sido", address.getSido(), "sigungu", address.getSigungu());
-					aptCoordsDtos.addAll(aptRepository.getMarkers(map));
+		try {
+			List<AptCoordsDto> aptCoordsDtos = new ArrayList<>();
+			List<Address> aAddresses = new Addresses(addresses).getList();
+			if (!aAddresses.isEmpty()) {
+				for (int i = 0; i < aAddresses.size(); i++) {
+					Address address = aAddresses.get(i);
+					if (!(address.getSido().equals("ERROR") || address.getSigungu().equals("ERROR"))) {
+						Map<String, String> map = Map.of("sido", address.getSido(), "sigungu", address.getSigungu());
+						aptCoordsDtos.addAll(aptRepository.getMarkers(map));
+					}
 				}
 			}
+			return aptCoordsDtos;
+		} catch (DatabaseException e) {
+			logger.error("마커 좌표 목록 조회 중 데이터베이스 오류 발생 addresses: {}",addresses, e);
+			throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
+		} catch (Exception e) {
+			logger.error("마커 좌표 목록 조회 중 예상치 못한 오류 발생 addresses: {}",addresses, e);
+			throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
 		}
-		return aptCoordsDtos;
 	}
 
 	@Override
@@ -52,26 +62,28 @@ public class AptServiceImpl implements AptService {
 		try {
 			List<AptTransactionResponse> aptTransactionResponses = new ArrayList<>();
 			String korsido = RegionManager.splitSigungu(aptCoordsDto.getSIGUNGU()); 
-			if(korsido == null) {
-				logger.error("시군구에서 시도를 추출하는데 실패했습니다 파라미터 aptCoordsDto 확인 요망 aptCoordsDto={} sigungu={}" , aptCoordsDto, aptCoordsDto.getSIGUNGU());
-				throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
-			}
 			List<AptTransactionDto> aptTransactionHistory = aptRepository.getAptTransactionHistory(aptCoordsDto, korsido);
-			if (hasTransactionHistory(aptTransactionHistory)) {
+			if (!hasTransactionHistory(aptTransactionHistory)) {
 				aptTransactionResponses.addAll(processTransactionHistory(aptTransactionHistory, aptCoordsDto)); 
 			} else {
 				aptTransactionResponses.addAll(processEmptyTransactionHistory(aptCoordsDto));
 			}
 			return aptTransactionResponses;
+		} catch (ParserAndConverterException e) {
+			logger.error("aptCoordsDto={} 파싱 또는 변환 중 오류 발생" ,aptCoordsDto, e);
+			throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR, "아파트 거래내역 조회 실패");
+		} catch (DatabaseException e) {
+			logger.error("aptCoordsDto={} 거래내역 조회 중 데이터베이스 오류 발생" ,aptCoordsDto, e);
+			throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR, "아파트 거래내역 조회 실패");
 		} catch (Exception e) {
-			logger.error("aptCoordsDto={} 거래내역 조회 중 실패 e.getMessage={}",aptCoordsDto, e.getMessage());
+			logger.error("aptCoordsDto={} 거래내역 조회 중 예상치 못한 오류 발생", aptCoordsDto, e);
 			throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR, "아파트 거래내역 조회 실패");
 		}
 		
 	}
 	
 	private boolean hasTransactionHistory(List<AptTransactionDto> history) {
-	    return !(history == null && history.isEmpty());
+	    return history.isEmpty();
 	}
 	
 	private AptCoordsDto createResponseAptCoords(AptCoordsDto aptCoordsDto, String roadName) {
@@ -94,12 +106,10 @@ public class AptServiceImpl implements AptService {
 	private List<AptTransactionResponse> processEmptyTransactionHistory(AptCoordsDto aptCoordsDto) {
 	    List<AptTransactionResponse> responses = new ArrayList<>();
 	    List<String> roadNames = aptRepository.getRoadName(aptCoordsDto);
-	    
 	    roadNames.forEach(roadName -> {
 	        AptCoordsDto aptHistoryCoords = createResponseAptCoords(aptCoordsDto, roadName);
 	        responses.add(new AptTransactionResponse(List.of(2024), null, aptHistoryCoords));
 	    });
-	    
 	    return responses;
 	}
 	
