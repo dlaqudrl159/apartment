@@ -30,13 +30,13 @@ public class AutoAptDataController {
 	}
 
 	@PostMapping("/data/autoaptdatainsert")
-	public ResponseEntity<AutoAptDataResponse> autoDataInsert(@RequestBody Sido Sido) {
+	public ResponseEntity<AutoAptDataResponse> autoDataInsert(@RequestBody Sido sido) {
 		
-		if(Sido.getKorSido() == null && Sido.getKorSido().isEmpty()) {
-			logger.error("Sido파라미터가 NULL 이거나 isEmpty Sido={}", Sido);
+		if(sido == null || sido.getKorSido() == null || sido.getKorSido().trim().isEmpty()) {
+			logger.error("Sido 파라미터 요청이 NULL 이거나 비어있습니다 sido={}", sido);
 			throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
 		}
 		
-		return ResponseEntity.ok(autoAptDataService.autoAptDataInsert(Sido.getKorSido()));
+		return ResponseEntity.ok(autoAptDataService.autoAptDataInsert(sido.getKorSido()));
 	}
 }

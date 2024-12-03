@@ -29,7 +29,6 @@ public class AutoAptDataRepository {
 	
 	private final AutoAptDataMapper autoAptDataMapper;
 	private final ParserAndConverter aptDataParserSerivce;
-	//private final SqlSessionFactory sqlSessionFactory;
 	private final SqlSessionTemplate batchSqlSessionTemplate;
 	
 	@Transactional

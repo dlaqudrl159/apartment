@@ -13,28 +13,22 @@ import kr.co.dw.Dto.Response.AutoCoordsDataResponse;
 
 public interface AutoCoordsDataService {
 
-	JSONObject geocodersearchaddress(String searchAddr, String searchType) throws IOException, ParseException;
-
-	JSONObject getparcel(AptCoordsDto aptCoordsDto) throws IOException, ParseException;
-
-	JSONObject getroadname(AptCoordsDto aptCoordsDto) throws IOException, ParseException;
-
 	AutoCoordsDataResponse allCoordsInsert();
 
-	AutoCoordsDataResponse CoordsInsert(String parentEngRegionName);
+	AutoCoordsDataResponse CoordsInsert(String korSido);
 
-	List<AptCoordsDto> getParentRegionAptCoordsDtoList(Sido parentRegionName);
-
-	AptCoordsDto getCoordsDto(AptCoordsDto aptCoordsDto);
-
-	boolean IsCoordsExist(AptCoordsDto aptCoordsDto);
+	boolean isCoordsExist(AptCoordsDto aptCoordsDto);
 
 	AptCoordsDto processCoords(AptCoordsDto aptCoordsDto) throws IOException, ParseException;
-
+	
 	void setCoordinates(AptCoordsDto aptCoordsDto, JSONObject response);
 
 	String truncateCoordinate(String coordinate);
 
 	void setNoDataCoordinates(AptCoordsDto aptCoordsDto);
+
+	void notExistTransactionCoordsDelete(String korSido);
+
+	
 	
 }

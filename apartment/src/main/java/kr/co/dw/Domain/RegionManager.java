@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import kr.co.dw.Exception.CustomException;
+import kr.co.dw.Exception.CustomExceptions.ParserAndConverterException;
 import kr.co.dw.Exception.ErrorCode.ErrorCode;
 
 public class RegionManager {
@@ -318,18 +319,14 @@ public class RegionManager {
 
 	public static String splitSigungu(String sigungu) {
 		
-		if(sigungu == null || sigungu.trim().isEmpty()) {
-			logger.error("시군구에서 시도를 추출하는데 실패했습니다 시군구 값이 null이거나 비어있습니다. sigungu={}" , sigungu);
-			throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
+		try {
+			String[] arr = sigungu.split(" ");
+			String sido = arr[0];
+			return sido;
+		} catch (Exception e) {
+			logger.error("시군구에서 시도를 추출하는데 실패했습니다 sigungu={}" , sigungu, e);
+			throw new ParserAndConverterException(ErrorCode.PARSER_AND_CONVERTER_ERROR, "시군구에서 시도를 추출하는데 실패했습니다.");
 		}
-		String[] arr = sigungu.split(" ");
-		if (arr.length < 1) {
-			logger.error("시군구의 length가 1보다 작습니다 올바르지 않은 시군구 형식입니다 sigungu={}", sigungu);
-			throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
-		}
-		String sido = arr[0];
-		
-		return sido;
 	}
 
 	public static String toEngSido(String korSido) {

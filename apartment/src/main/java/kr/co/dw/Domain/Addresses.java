@@ -3,6 +3,8 @@ package kr.co.dw.Domain;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import kr.co.dw.Exception.CustomException;
+import kr.co.dw.Exception.ErrorCode.ErrorCode;
 import lombok.Data;
 
 public class Addresses {
