@@ -31,8 +31,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ParserAndConverter {
 	
-	private static final Logger logger = LoggerFactory.getLogger(ParserAndConverter.class);
-
+	private final Logger logger = LoggerFactory.getLogger(ParserAndConverter.class);
 	
 	public void isErrorMsg(Element eElement) {
 		String errMsg = eElement.getElementsByTagName("errMsg").item(0) == null ? "-" :
@@ -97,10 +96,10 @@ public class ParserAndConverter {
 		String apiExcluUseAr = "excluUseAr";
 		String apiEstateAgentSggNm = "estateAgentSggNm";
 		String apiJibun = "jibun";
-		String apiLandCd = "landCd";
+		//String apiLandCd = "landCd";
 		String apiFloor = "floor";
 		String apiCdealDay = "cdealDay";
-		String apiCdealType = "cdealType";
+		//String apiCdealType = "cdealType";
 		String apiRoadNm = "roadNm";
 		String apiBonbun = "bonbun";
 		String apiBubun = "bubun";
@@ -128,10 +127,10 @@ public class ParserAndConverter {
 				String AreaforExcusiveUse = getElementContent(eElement,apiExcluUseAr);
 				String RdealerLawdnm = getElementContent(eElement,apiEstateAgentSggNm);
 				String Jibun = getElementContent(eElement,apiJibun);
-				String RegionalCode = getElementContent(eElement,apiLandCd);
+				//String RegionalCode = getElementContent(eElement,apiLandCd);
 				String Floor = getElementContent(eElement,apiFloor);
 				String CancleDealDay = getElementContent(eElement,apiCdealDay);
-				String CancleDealType = getElementContent(eElement,apiCdealType);
+				//String CancleDealType = getElementContent(eElement,apiCdealType);
 				String RoadName = getElementContent(eElement,apiRoadNm);
 				String Bonbun = getElementContent(eElement,apiBonbun);
 				String Bubun = getElementContent(eElement,apiBubun);

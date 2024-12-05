@@ -1,13 +1,10 @@
 package kr.co.dw.Service.AutoData.Coords;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.util.List;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 
-import kr.co.dw.Domain.Sido;
 import kr.co.dw.Dto.Common.AptCoordsDto;
 import kr.co.dw.Dto.Response.AutoCoordsDataResponse;
 

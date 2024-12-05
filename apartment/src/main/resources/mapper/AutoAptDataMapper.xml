@@ -57,7 +57,7 @@
 
 	</delete>
 	
-	<insert id="AptTransactionDtosInsert">
+	<insert id="insertAptData">
 
 		insert into
 		<choose>

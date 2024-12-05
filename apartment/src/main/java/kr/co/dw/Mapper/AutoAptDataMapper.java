@@ -13,7 +13,7 @@ public interface AutoAptDataMapper {
 
 	void deleteAptData(@Param("failProcesseds") List<ProcessedRes> failProcesseds, @Param("korSido") String korSido, @Param("deleteDealYearMonth") String deleteDealYearMonth);
 
-	void AptTransactionDtosInsert(@Param("aptTransactionDto") AptTransactionDto aptTransactionDto, @Param("korSido") String korSido);
+	void insertAptData(@Param("aptTransactionDto") AptTransactionDto aptTransactionDto, @Param("korSido") String korSido);
 	
 	
 }

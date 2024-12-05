@@ -14,7 +14,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import kr.co.dw.Dto.Common.AptCoordsDto;
-import kr.co.dw.Exception.CustomException;
 import kr.co.dw.Exception.CustomExceptions.DatabaseException;
 import kr.co.dw.Mapper.AptMapper;
 import kr.co.dw.Repository.Apt.AptRepository;

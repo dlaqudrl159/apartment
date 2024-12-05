@@ -12,9 +12,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import kr.co.dw.Domain.RegionManager;
 import kr.co.dw.Dto.Common.AptCoordsDto;
 import kr.co.dw.Exception.CustomException;
 import kr.co.dw.Exception.CustomExceptions.DatabaseException;
+import kr.co.dw.Exception.CustomExceptions.ParserAndConverterException;
 import kr.co.dw.Exception.ErrorCode.ErrorCode;
 import kr.co.dw.Repository.Apt.AptRepository;
 
@@ -77,7 +79,7 @@ public class AptServiceImplTest {
 	@Test
 	void getAptTransactionResponses_데이터베이스_예외_발생() {
 		// given
-		AptCoordsDto aptCoordsDto = new AptCoordsDto(null, null, null, null, null, null);
+		AptCoordsDto aptCoordsDto = new AptCoordsDto("", null, null, null, null, null);
 		// when
 		when(aptRepository.getAptTransactionHistory(any(),any())).thenThrow(new DatabaseException(ErrorCode.DATABASE_ERROR));
 		// then
@@ -88,7 +90,7 @@ public class AptServiceImplTest {
 	@Test
 	void getAptTransactionResponses_예상치_못한_예외_발생() {
 		// given
-		AptCoordsDto aptCoordsDto = new AptCoordsDto(null, null, null, null, null, null);
+		AptCoordsDto aptCoordsDto = new AptCoordsDto("", null, null, null, null, null);
 		// when
 		when(aptRepository.getAptTransactionHistory(any(),any())).thenThrow(new RuntimeException("에러"));
 		// then
@@ -101,6 +103,16 @@ public class AptServiceImplTest {
 	void getAptTransactionResponses_파라미터_null_발생() {
 		// given
 		AptCoordsDto aptCoordsDto = null;
+		// then
+		assertThrows(CustomException.class, () -> {
+			aptServiceImpl.getAptTransactionResponses(aptCoordsDto);
+		});
+	}
+	
+	@Test
+	void getAptTransactionResponses_sigungu_null_발생() {
+		// given
+		AptCoordsDto aptCoordsDto = new AptCoordsDto(null, null, null, null, null, null);;
 		// then
 		assertThrows(CustomException.class, () -> {
 			aptServiceImpl.getAptTransactionResponses(aptCoordsDto);

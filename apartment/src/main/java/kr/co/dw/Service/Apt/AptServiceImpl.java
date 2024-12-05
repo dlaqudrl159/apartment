@@ -21,7 +21,6 @@ import kr.co.dw.Exception.CustomException;
 import kr.co.dw.Exception.CustomExceptions.DatabaseException;
 import kr.co.dw.Exception.CustomExceptions.ParserAndConverterException;
 import kr.co.dw.Exception.ErrorCode.ErrorCode;
-import kr.co.dw.Mapper.AptMapper;
 import kr.co.dw.Repository.Apt.AptRepository;
 import lombok.RequiredArgsConstructor;
 

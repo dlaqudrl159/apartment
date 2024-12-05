@@ -24,15 +24,11 @@ import kr.co.dw.Dto.Response.ProcessedRes;
 import kr.co.dw.Service.ParserAndConverter.ParserAndConverter;
 import lombok.RequiredArgsConstructor;
 
-
-
 @Service
 @RequiredArgsConstructor
 public class OpenApiService {
-
 	
 	private static final Logger logger = LoggerFactory.getLogger(OpenApiService.class);
-
 	
 	@Value("${api.apt.url}")
 	private String API_APT_URL;
@@ -49,8 +45,10 @@ public class OpenApiService {
 		Element root = null;
 		for (int tryCount = 1; tryCount <= MAX_RETRIES; tryCount++) {
 			try {
-
-				Thread.sleep(delayMs);
+				if(tryCount > 1) {
+					Thread.sleep(delayMs);
+				}
+				
 				StringBuilder sb = getRTMSDataSvcAptTradeDev(processedRes.getSigungu(), processedRes.getDealYearMonth());
 				root = aptDataParserService.createNodeList(sb);
 

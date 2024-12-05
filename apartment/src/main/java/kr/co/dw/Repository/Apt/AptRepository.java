@@ -28,7 +28,7 @@ public class AptRepository {
 			List<AptCoordsDto> aptCoordsDtos = aptMapper.getMarkers(map);
 			return aptCoordsDtos;
 		} catch (Exception e) {
-			logger.error("마커 좌표 목록 조회 중 데이터베이스 오류 발생 요청 map={}", map, e);
+			logger.error("마커 좌표 목록 조회 중 데이터베이스 오류 발생 map={}", map, e);
 			throw new DatabaseException(ErrorCode.DATABASE_ERROR);
 		}
 	}
