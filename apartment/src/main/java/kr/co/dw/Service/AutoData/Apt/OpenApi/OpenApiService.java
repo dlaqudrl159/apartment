@@ -28,7 +28,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class OpenApiService {
 	
-	private static final Logger logger = LoggerFactory.getLogger(OpenApiService.class);
+	private final Logger logger = LoggerFactory.getLogger(OpenApiService.class);
 	
 	@Value("${api.apt.url}")
 	private String API_APT_URL;
@@ -55,25 +55,25 @@ public class OpenApiService {
 				if (aptDataParserService.isResultMsg(root)) {
 					NodeList nList = root.getElementsByTagName("item");
 					logger.info("code={} name={} dealyearmonth={}" , processedRes.getSigungu().getCode(), processedRes.getSigungu().getName(), processedRes.getDealYearMonth());
-					List<AptTransactionDto> list = aptDataParserService.createAptTransactionDto(nList, processedRes.getSido().getKorSido(), processedRes.getSigungu().getName());
+					List<AptTransactionDto> list = aptDataParserService.createAptTransactionDtos(nList, processedRes.getSido().getKorSido(), processedRes.getSigungu().getName());
 					processedRes.addProcesedResData(list);
 					processedRes.setMessage("success");
 					return processedRes;
 				}
 
 			} catch (SAXException | ParserConfigurationException | IOException e) {
-				logger.error("국토교통부 Api호출 중 예외 발생 재시도 {}회 시군구:{} 코드:{} Error Message:{}", tryCount,
-						processedRes.getSigungu().getName(), processedRes.getSigungu().getCode(), e.getMessage());
+				logger.error("국토교통부 Api호출 중 예외 발생 재시도 {}회 시군구:{} 코드:{}", tryCount,
+						processedRes.getSigungu().getName(), processedRes.getSigungu().getCode(), e);
 				processedRes.setMessage("fail");
 			} catch (InterruptedException e) {
 				Thread.currentThread().interrupt();
-				logger.error("국토교통부 Api호출 중 Thread Interrupted 발생 재시도 {}회 시군구:{} 코드:{} Error Message:{}", tryCount,
-						processedRes.getSigungu().getName(), processedRes.getSigungu().getCode(), e.getMessage());
+				logger.error("국토교통부 Api호출 중 Thread Interrupted 발생 재시도 {}회 시군구:{} 코드:{}", tryCount,
+						processedRes.getSigungu().getName(), processedRes.getSigungu().getCode(), e);
 				processedRes.setMessage("fail");
 				return processedRes;
 			} catch (Exception e) {  // 추가된 부분
-	            logger.error("예상치 못한 예외 발생 재시도 {}회 시군구:{} 코드:{} Error Message:{}", tryCount,
-	                    processedRes.getSigungu().getName(), processedRes.getSigungu().getCode(), e.getMessage());
+	            logger.error("예상치 못한 예외 발생 재시도 {}회 시군구:{} 코드:{}", tryCount,
+	                    processedRes.getSigungu().getName(), processedRes.getSigungu().getCode(), e);
 	            processedRes.setMessage("fail");
 	        }
 
