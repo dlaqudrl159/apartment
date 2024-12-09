@@ -44,9 +44,9 @@
 		</choose>
 		where (dealyearmonth >= #{deleteDealYearMonth})
 
-		<if test="failProcesseds != null and failProcesseds.size() > 0">
+		<if test="failProcessedAutoAptDataDtos != null and failProcessedAutoAptDataDtos.size() > 0">
 			AND NOT (
-			<foreach collection="failProcesseds" item="processedDto"
+			<foreach collection="failProcessedAutoAptDataDtos" item="processedDto"
 				separator="OR">
 
 				(dealyearmonth = #{processedDto.dealYearMonth} AND sggcd = #{processedDto.sigungu.code})

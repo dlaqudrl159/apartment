@@ -16,7 +16,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mybatis.spring.SqlSessionTemplate;
 
 import kr.co.dw.Dto.Common.AptTransactionDto;
-import kr.co.dw.Dto.Response.ProcessedRes;
+import kr.co.dw.Dto.Common.ProcessedAutoAptDataDto;
 import kr.co.dw.Exception.CustomExceptions.DatabaseException;
 import kr.co.dw.Exception.ErrorCode.ErrorCode;
 import kr.co.dw.Mapper.AutoAptDataMapper;
@@ -46,7 +46,7 @@ public class AutoAptDataRepositoryTest {
 	@Test
 	void deleteAptData_오류_발생() {
 		// given
-		List<ProcessedRes> failProcesseds = new ArrayList<>(); 
+		List<ProcessedAutoAptDataDto> failProcesseds = new ArrayList<>(); 
 		String korSido = "서울특별시";
 		String deleteDealYearMonth = "202411";
 		// when

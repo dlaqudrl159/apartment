@@ -25,7 +25,6 @@ public class AutoCoordsDataResponse {
 	 * @param aptCoordsDto
 	 */
 	public AutoCoordsDataResponse(String status, String code, String message, AptCoordsDto aptCoordsDto) {
-		super();
 		this.status = status;
 		this.code = code;
 		this.message = message;

@@ -19,7 +19,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.annotation.Rollback;
 
 import kr.co.dw.Dto.Common.AptTransactionDto;
-import kr.co.dw.Dto.Response.ProcessedRes;
+import kr.co.dw.Dto.Common.ProcessedAutoAptDataDto;
 import kr.co.dw.Exception.CustomException;
 import kr.co.dw.Exception.CustomExceptions.DatabaseException;
 import kr.co.dw.Exception.ErrorCode.ErrorCode;
@@ -84,8 +84,8 @@ public class AutoAptDataServiceImplTest {
 	void syncAptTransactionData_오류_발생_테스트3() {
 		// given
 		String korSido = "서울특별시";
-		List<ProcessedRes> successProcesseds = new ArrayList<>();
-		List<ProcessedRes> failProcesseds = new ArrayList<>();
+		List<ProcessedAutoAptDataDto> successProcesseds = new ArrayList<>();
+		List<ProcessedAutoAptDataDto> failProcesseds = new ArrayList<>();
 		// when
 		
 		when(aptDataParserService.createProcessedsMap(any())).thenReturn(Map.of(false,failProcesseds,true,successProcesseds));

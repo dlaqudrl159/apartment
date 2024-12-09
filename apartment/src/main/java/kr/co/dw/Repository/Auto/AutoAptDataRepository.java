@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import kr.co.dw.Constant.Constant;
 import kr.co.dw.Dto.Common.AptTransactionDto;
-import kr.co.dw.Dto.Response.ProcessedRes;
+import kr.co.dw.Dto.Common.ProcessedAutoAptDataDto;
 import kr.co.dw.Exception.CustomException;
 import kr.co.dw.Exception.CustomExceptions.DatabaseException;
 import kr.co.dw.Exception.ErrorCode.ErrorCode;
@@ -27,9 +27,9 @@ public class AutoAptDataRepository {
 	private final AutoAptDataMapper autoAptDataMapper;
 	private final SqlSessionTemplate batchSqlSessionTemplate;
 	
-	public void deleteAptData(List<ProcessedRes> failProcesseds, String korSido, String deleteDealYearMonth) {
+	public void deleteAptData(List<ProcessedAutoAptDataDto> failProcessedAutoAptDataDtos, String korSido, String deleteDealYearMonth) {
 		try {
-			autoAptDataMapper.deleteAptData(failProcesseds, korSido, deleteDealYearMonth);
+			autoAptDataMapper.deleteAptData(failProcessedAutoAptDataDtos, korSido, deleteDealYearMonth);
 		} catch (Exception e) {
 			logger.error("아파트 거래 내역 삭제(delete) 중 데이터베이스 오류 발생 korSido={} deleteDealYearMonth={}", korSido, deleteDealYearMonth, e);
 			throw new DatabaseException(ErrorCode.DATABASE_ERROR);

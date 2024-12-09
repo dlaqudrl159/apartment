@@ -42,7 +42,7 @@ public class AutoCoordsDataController {
 			logger.error("Sido파라미터가 NULL 이거나 isEmpty Sido={}", sido);
 			throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
 		}
-		AutoCoordsDataResponse response = autoCoordsDataService.CoordsInsert(sido.getKorSido());
+		AutoCoordsDataResponse response = autoCoordsDataService.coordsInsert(sido.getKorSido());
 		return new ResponseEntity<AutoCoordsDataResponse>(response, HttpStatus.OK);
 	}
 	

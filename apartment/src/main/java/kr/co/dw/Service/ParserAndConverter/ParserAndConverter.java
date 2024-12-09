@@ -25,7 +25,8 @@ import org.xml.sax.SAXException;
 
 import kr.co.dw.Constant.Constant;
 import kr.co.dw.Dto.Common.AptTransactionDto;
-import kr.co.dw.Dto.Response.ProcessedRes;
+import kr.co.dw.Dto.Common.ProcessedAutoAptDataDto;
+import kr.co.dw.Exception.CustomException;
 import kr.co.dw.Exception.CustomExceptions.ParserAndConverterException;
 import kr.co.dw.Exception.ErrorCode.ErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -194,41 +195,79 @@ public class ParserAndConverter {
 	}
 	
 	public Element createNodeList(StringBuilder sb) throws SAXException, IOException, ParserConfigurationException {
-		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-		DocumentBuilder builder = null;
-		Document document = null;
-		Element root = null;
+		
+		try {
+			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder builder = null;
+			Document document = null;
+			Element root = null;
 
-		builder = factory.newDocumentBuilder();
-		document = builder.parse(new InputSource(new StringReader(sb.toString())));
-		document.getDocumentElement().normalize();
-		root = document.getDocumentElement();
+			builder = factory.newDocumentBuilder();
+			document = builder.parse(new InputSource(new StringReader(sb.toString())));
+			document.getDocumentElement().normalize();
+			root = document.getDocumentElement();
 
-		return root;
+			return root;
+		} catch (SAXException e) {
+			logger.error("NodeList 생성 중(국토교통부 API 응답) XML 파싱 오류 발생", e);
+			throw e;
+		} catch (IOException e) {
+			logger.error("NodeList 생성 중(국토교통부 API 응답) XML StringReader 읽기 작업 오류 발생", e);
+			throw e;
+		} catch (ParserConfigurationException e) {
+			logger.error("NodeList 생성 중(국토교통부 API 응답) DocumentBuilder 생성 오류 발생", e);
+			throw e;
+		} catch (Exception e) {
+			logger.error("NodeList 생성 중(국토교통부 API 응답) 예상치 못한 오류 발생", e);
+			throw new CustomException(ErrorCode.PARSER_AND_CONVERTER_ERROR);
+		}
 	}
 	
 	public String createDealYearMonth(int num) {
-		LocalDate now = LocalDate.now();
-		String yearMonth = now.minusMonths(num).format(DateTimeFormatter.ofPattern("yyyyMM"));
-		return yearMonth;
+		try {
+			LocalDate now = LocalDate.now();
+			String yearMonth = now.minusMonths(num).format(DateTimeFormatter.ofPattern("yyyyMM"));
+			return yearMonth;
+		} catch (Exception e) {
+			logger.error("거래년월 생성 중 오류 발생", e);
+			throw new CustomException(ErrorCode.PARSER_AND_CONVERTER_ERROR);
+		}
+		
 	}
 	
 	public List<String> createDealYearMonths(int num) {
-	    List<String> dealYearMonths = new ArrayList<>();
+		try {
+			List<String> dealYearMonths = new ArrayList<>();
+		    
+		    for(int i = 0; i <= num; i++) {
+		        String yearMonth = createDealYearMonth(i);
+		        dealYearMonths.add(yearMonth);
+		    }
+		    
+		    return dealYearMonths;
+		} catch (Exception e) {
+			logger.error("거래년월 목록 생성 중 오류 발생", e);
+			throw new CustomException(ErrorCode.PARSER_AND_CONVERTER_ERROR);
+		}
 	    
-	    for(int i = 0; i <= num; i++) {
-	        String yearMonth = createDealYearMonth(i);
-	        dealYearMonths.add(yearMonth);
-	    }
-	    
-	    return dealYearMonths;
 	}
 	
-	public List<AptTransactionDto> createSuccessedAptTransactionDtos(List<ProcessedRes> successProcesseds) {
-		return successProcesseds.stream().flatMap(successProcessed -> successProcessed.getProcesedResData().stream()).collect(Collectors.toList());
+	public List<AptTransactionDto> createSuccessedAptTransactionDtos(List<ProcessedAutoAptDataDto> successProcessedAutoAptDataDtos) {
+		
+		try {
+			return successProcessedAutoAptDataDtos.stream().flatMap(successProcessedAutoAptDataDto -> successProcessedAutoAptDataDto.getProcesedAptDatas().stream()).collect(Collectors.toList());
+		} catch (Exception e) {
+			logger.error("국토교통부 API 호출 성공 거래내역 추출 중 오류 발생", e);
+			throw new CustomException(ErrorCode.PARSER_AND_CONVERTER_ERROR);
+		}
 	}
 	
-	public Map<Boolean, List<ProcessedRes>> createProcessedsMap(List<ProcessedRes> processeds) {
-		return processeds.stream().collect(Collectors.groupingBy(processedDto -> processedDto.isSuccess()));
+	public Map<Boolean, List<ProcessedAutoAptDataDto>> createProcessedsMap(List<ProcessedAutoAptDataDto> processedAutoAptDataDtos) {
+		try {
+			return processedAutoAptDataDtos.stream().collect(Collectors.groupingBy(processedAutoAptDataDto -> processedAutoAptDataDto.isSuccess()));
+		} catch (Exception e) {
+			logger.error("국토교통부 API 호출 성공 또는 실패 분류 중 오류 발생", e);
+			throw new CustomException(ErrorCode.PARSER_AND_CONVERTER_ERROR);
+		}
 	}
 }

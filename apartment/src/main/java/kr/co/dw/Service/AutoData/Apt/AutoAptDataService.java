@@ -2,8 +2,8 @@ package kr.co.dw.Service.AutoData.Apt;
 
 import java.util.List;
 
+import kr.co.dw.Dto.Common.ProcessedAutoAptDataDto;
 import kr.co.dw.Dto.Response.AutoAptDataResponse;
-import kr.co.dw.Dto.Response.ProcessedRes;
 
 public interface AutoAptDataService {
 
@@ -13,6 +13,6 @@ public interface AutoAptDataService {
 	
 	AutoAptDataResponse syncAptTransactionData(String korSido);
 
-	List<ProcessedRes> processedAptData(String korSido);
+	List<ProcessedAutoAptDataDto> processedAptData(String korSido);
 	
 }

@@ -12,8 +12,10 @@ public interface AutoCoordsDataService {
 
 	AutoCoordsDataResponse allCoordsInsert();
 
-	AutoCoordsDataResponse CoordsInsert(String korSido);
+	AutoCoordsDataResponse coordsInsert(String korSido);
 
+	AutoCoordsDataResponse syncCoordinateData(String korSido);
+	
 	boolean isCoordsExist(AptCoordsDto aptCoordsDto);
 
 	AptCoordsDto processCoords(AptCoordsDto aptCoordsDto) throws IOException, ParseException;
@@ -25,7 +27,5 @@ public interface AutoCoordsDataService {
 	void setNoDataCoordinates(AptCoordsDto aptCoordsDto);
 
 	void notExistTransactionCoordsDelete(String korSido);
-
-	
 	
 }
