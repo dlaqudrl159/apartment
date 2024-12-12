@@ -33,7 +33,7 @@ public class AutoAptDataController {
 	public ResponseEntity<AutoAptDataResponse> autoDataInsert(@RequestBody Sido sido) {
 		
 		if(sido == null || sido.getKorSido() == null || sido.getKorSido().trim().isEmpty()) {
-			logger.error("Sido 파라미터 요청이 NULL 이거나 비어있습니다 sido={}", sido);
+			logger.error("Sido 파라미터 요청이 NULL 이거나 비어있습니다 sido: {}", sido);
 			throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
 		}
 		

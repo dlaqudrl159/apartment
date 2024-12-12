@@ -39,8 +39,8 @@ public class AutoCoordsDataController {
 	@PostMapping("/data/autoCoordsdatainsert")
 	public ResponseEntity<AutoCoordsDataResponse> autoCoordsInsert(@RequestBody Sido sido) {
 
-		if(sido.getKorSido() == null && sido.getKorSido().isEmpty()) {
-			logger.error("Sido파라미터가 NULL 이거나 isEmpty Sido={}", sido);
+		if(sido == null || sido.getKorSido() == null || sido.getKorSido().trim().isEmpty()) {
+			logger.error("Sido 파라미터 요청이 NULL 이거나 비어있습니다 sido: {}", sido);
 			throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
 		}
 		AutoCoordsDataResponse response = autoCoordsDataService.coordsInsert(sido.getKorSido());

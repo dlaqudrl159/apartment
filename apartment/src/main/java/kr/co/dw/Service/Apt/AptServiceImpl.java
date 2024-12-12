@@ -133,4 +133,10 @@ public class AptServiceImpl implements AptService {
 		return aptTransactionHistory.stream().map(aptTransactionDtos -> aptTransactionDtos.getYear())
 				.distinct().sorted(Comparator.reverseOrder()).collect(Collectors.toList());
 	}
+
+	@Override
+	public void getCategoryClickData(String sido, String sigungu, String dong, String apartmentName) {
+		// TODO Auto-generated method stub
+		
+	}
 }

@@ -11,4 +11,6 @@ public interface AptService {
 
 	List<AptTransactionResponse> getAptTransactionResponses(AptCoordsDto aptCoordsDto);
 
+	void getCategoryClickData(String sido, String sigungu, String dong, String apartmentName);
+
 }

@@ -29,7 +29,7 @@ public class AptController {
 	public ResponseEntity<List<AptCoordsDto>> getMarkers(@RequestParam("addresses")  List<String> addresses) {
 		
 		if(addresses == null || addresses.isEmpty()) {
-			logger.error("주소목록 요청이 null 이거나 비어있습니다 addresses={}", addresses);
+			logger.error("주소목록 요청이 NULL 이거나 비어있습니다 addresses: {}", addresses);
 			throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
 		}
 		
@@ -39,7 +39,7 @@ public class AptController {
 	@GetMapping("/api/getMarkerData")
 	public ResponseEntity<List<AptTransactionResponse>> getMarkerData(AptCoordsDto aptCoordsDto){
 		if(aptCoordsDto == null) {
-			logger.error("aptCoordsDto={} 아파트 정보가 null 입니다", aptCoordsDto);
+			logger.error("aptCoordsDto: {} 아파트 정보가 NULL 입니다", aptCoordsDto);
 			throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
 		}
 		return ResponseEntity.status(HttpStatus.OK).body(aptService.getAptTransactionResponses(aptCoordsDto));
@@ -48,6 +48,7 @@ public class AptController {
 	@GetMapping("/api/getCategoryClickData")
 	public void getCategoryClickData(@RequestParam("eex1") String Sido, @RequestParam("eex2") String Sigungu, @RequestParam("eex3") String Dong, @RequestParam(required = false, value = "eex4") String ApartmentName) {
 		System.out.println(Sido + System.lineSeparator() + Sigungu + System.lineSeparator() + Dong + System.lineSeparator() + ApartmentName);
+		aptService.getCategoryClickData(Sido, Sigungu, Dong, ApartmentName);
 	}
 	
 	@GetMapping("/api/getRoadNameList")
