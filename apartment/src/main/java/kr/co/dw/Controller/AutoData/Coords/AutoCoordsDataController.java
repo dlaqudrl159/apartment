@@ -2,6 +2,7 @@ package kr.co.dw.Controller.AutoData.Coords;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.List;
 
 import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
@@ -28,15 +29,15 @@ public class AutoCoordsDataController {
 	private final Logger logger = LoggerFactory.getLogger(AutoCoordsDataController.class);
 	
 	@PostMapping("/data/autoallCoordsdatainsert")
-	public ResponseEntity<AutoCoordsDataResponse> autoallCoordsdatainsert() {
+	public ResponseEntity<List<AutoCoordsDataResponse>> autoallCoordsdatainsert() {
 		
-		AutoCoordsDataResponse response = autoCoordsDataService.allCoordsInsert();
+		List<AutoCoordsDataResponse> response = autoCoordsDataService.allCoordsInsert();
 		
-		return new ResponseEntity<AutoCoordsDataResponse>(response, HttpStatus.OK);
+		return new ResponseEntity<List<AutoCoordsDataResponse>>(response, HttpStatus.OK);
 	}
 	
 	@PostMapping("/data/autoCoordsdatainsert")
-	public ResponseEntity<AutoCoordsDataResponse> autoCoordsInsert(@RequestBody Sido sido) throws MalformedURLException, IOException, ParseException, InterruptedException {
+	public ResponseEntity<AutoCoordsDataResponse> autoCoordsInsert(@RequestBody Sido sido) {
 
 		if(sido.getKorSido() == null && sido.getKorSido().isEmpty()) {
 			logger.error("Sido파라미터가 NULL 이거나 isEmpty Sido={}", sido);

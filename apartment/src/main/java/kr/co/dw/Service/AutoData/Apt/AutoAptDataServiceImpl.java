@@ -39,10 +39,16 @@ public class AutoAptDataServiceImpl implements AutoAptDataService {
 		List<Sido> sidos = RegionManager.getSidos();
 		List<AutoAptDataResponse> AutoAptDataResponses = new ArrayList<>();
 		
-		sidos.forEach(sido -> {
-			AutoAptDataResponses.add(syncAptTransactionData(sido.getKorSido()));
-		});
-		
+		for(int i = 0 ; i < sidos.size() ; i++) {
+			String korSido = sidos.get(i).getKorSido();
+			try {
+				AutoAptDataResponses.add(syncAptTransactionData(korSido));
+			} catch (Exception e) {
+				logger.error("korSido: {} 지역 데이터 삭제 입력(delete, insert) 실패" , korSido, e);
+				AutoAptDataResponses.add(new AutoAptDataResponse(500, korSido + " 지역 데이터 삭제 입력(delete, insert) 실패",
+						new Sido(korSido, RegionManager.toEngSido(korSido)), null, null));
+			}
+		}
 		return AutoAptDataResponses;
 	}
 
@@ -85,7 +91,7 @@ public class AutoAptDataServiceImpl implements AutoAptDataService {
 		List<ProcessedAutoAptDataDto> processedAutoAptDataDtos = new ArrayList<>();
 		Sido sido = RegionManager.getSido(korSido);
 		if(sido == null) {
-			logger.error("korSido 파라미터 시도 객체 변환 실패 파라미터 확인 요망 korSido={}", korSido);
+			logger.error("korSido 파라미터 시도 객체 변환 실패 파라미터 확인 요망 korSido: {}", korSido);
 			throw new CustomException(ErrorCode.EMPTY_OR_NULL_Parameter);
 		}
 		List<Sigungu> sigungus = RegionManager.getSigungus(korSido);
