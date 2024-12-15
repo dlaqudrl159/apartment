@@ -16,6 +16,7 @@ import kr.co.dw.Domain.Addresses.Address;
 import kr.co.dw.Domain.RegionManager;
 import kr.co.dw.Dto.Common.AptCoordsDto;
 import kr.co.dw.Dto.Common.AptTransactionDto;
+import kr.co.dw.Dto.Common.SearchRoadNamesDto;
 import kr.co.dw.Dto.Response.AptTransactionResponse;
 import kr.co.dw.Exception.CustomException;
 import kr.co.dw.Exception.CustomExceptions.DatabaseException;
@@ -137,6 +138,18 @@ public class AptServiceImpl implements AptService {
 	@Override
 	public void getCategoryClickData(String sido, String sigungu, String dong, String apartmentName) {
 		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public SearchRoadNamesDto getRoadNames(SearchRoadNamesDto searchRoadNamesDto) {
+		// TODO Auto-generated method stub
+		try {
+			return aptRepository.getRoadNames(searchRoadNamesDto);
+		} catch (Exception e) {
+			logger.error("도로주소명 검색 중 오류 발생 searchRoadNamesDto: {}", searchRoadNamesDto , e);
+			throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
+		}
 		
 	}
 }

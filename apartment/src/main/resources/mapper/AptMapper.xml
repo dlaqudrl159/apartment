@@ -73,4 +73,13 @@
 
 	</select>
 	
+	<select id="getRoadNames">
+	
+	select * from COORDINATES where 
+	SIGUNGU LIKE '%' || #{searchRoadNamesDto.korSido } || '%' AND
+	SIGUNGU LIKE '%' || #{searchRoadNamesDto.sigungu} || '%' AND 
+	ROADNAME LIKE '%' || #{searchRoadNamesDto.roadName} || '%'
+	
+	</select>
+	
 </mapper>	

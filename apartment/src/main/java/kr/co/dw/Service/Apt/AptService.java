@@ -3,6 +3,7 @@ package kr.co.dw.Service.Apt;
 import java.util.List;
 
 import kr.co.dw.Dto.Common.AptCoordsDto;
+import kr.co.dw.Dto.Common.SearchRoadNamesDto;
 import kr.co.dw.Dto.Response.AptTransactionResponse;
 
 public interface AptService {
@@ -12,5 +13,7 @@ public interface AptService {
 	List<AptTransactionResponse> getAptTransactionResponses(AptCoordsDto aptCoordsDto);
 
 	void getCategoryClickData(String sido, String sigungu, String dong, String apartmentName);
+
+	SearchRoadNamesDto getRoadNames(SearchRoadNamesDto searchRoadNamesDto);
 
 }

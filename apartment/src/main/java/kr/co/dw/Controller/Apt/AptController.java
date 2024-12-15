@@ -7,10 +7,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import kr.co.dw.Dto.Common.AptCoordsDto;
+import kr.co.dw.Dto.Common.SearchRoadNamesDto;
 import kr.co.dw.Dto.Response.AptTransactionResponse;
 import kr.co.dw.Exception.CustomException;
 import kr.co.dw.Exception.ErrorCode.ErrorCode;
@@ -51,8 +54,10 @@ public class AptController {
 		aptService.getCategoryClickData(Sido, Sigungu, Dong, ApartmentName);
 	}
 	
-	@GetMapping("/api/getRoadNameList")
-	public void getRoadNameList(@RequestParam("ex1") String ex1, @RequestParam("ex2") String ex2, @RequestParam("ex3") String ex3) {
-		System.out.println(ex1 + System.lineSeparator() + ex2 + System.lineSeparator() + ex3);
+	@PostMapping("/api/getRoadNames")
+	public ResponseEntity<SearchRoadNamesDto> getRoadNames(@RequestBody SearchRoadNamesDto searchRoadNamesDto) {
+		System.out.println(searchRoadNamesDto);
+		
+		return ResponseEntity.status(HttpStatus.OK).body(aptService.getRoadNames(searchRoadNamesDto));
 	}
 }
