@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import kr.co.dw.Dto.Common.AptCoordsDto;
 import kr.co.dw.Dto.Common.AptTransactionDto;
+import kr.co.dw.Dto.Common.SearchAptDataDto;
 import kr.co.dw.Dto.Common.SearchRoadNamesDto;
 import kr.co.dw.Exception.CustomExceptions.DatabaseException;
 import kr.co.dw.Exception.ErrorCode.ErrorCode;
@@ -67,5 +68,12 @@ public class AptRepository {
 			throw new DatabaseException(ErrorCode.DATABASE_ERROR);
 		}
 		
+	}
+
+	public SearchAptDataDto getCategoryClickData(SearchAptDataDto searchAptDatDto) {
+		List<AptCoordsDto> aptCoordsDtos = aptMapper.getCategoryClickData(searchAptDatDto);
+		aptCoordsDtos = aptCoordsDtos.stream().sorted(Comparator.comparing(t -> t.getAPARTMENTNAME())).toList();
+		searchAptDatDto.setAptCoordsDto(aptCoordsDtos);
+		return searchAptDatDto;
 	}
 }

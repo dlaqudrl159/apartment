@@ -67,19 +67,45 @@
 
 	<select id="getRoadName">
 
-		select RoadName from COORDINATES where SIGUNGU = #{aptCoordsDto.SIGUNGU} and
-		APARTMENTNAME = #{aptCoordsDto.APARTMENTNAME} and BUNGI =
+		select RoadName from COORDINATES where SIGUNGU =
+		#{aptCoordsDto.SIGUNGU} and
+		APARTMENTNAME =
+		#{aptCoordsDto.APARTMENTNAME} and BUNGI =
 		#{aptCoordsDto.BUNGI}
 
 	</select>
-	
+
 	<select id="getRoadNames">
-	
-	select * from COORDINATES where 
-	SIGUNGU LIKE '%' || #{searchRoadNamesDto.korSido } || '%' AND
-	SIGUNGU LIKE '%' || #{searchRoadNamesDto.sigungu} || '%' AND 
-	ROADNAME LIKE '%' || #{searchRoadNamesDto.roadName} || '%'
-	
+
+		select * from COORDINATES where
+		SIGUNGU LIKE '%' || #{searchRoadNamesDto.korSido } || '%' AND
+		SIGUNGU LIKE '%' || #{searchRoadNamesDto.sigungu} || '%' AND
+		ROADNAME LIKE '%' || #{searchRoadNamesDto.roadName} || '%'
+
 	</select>
-	
+
+	<select id="getCategoryClickData">
+		select * from COORDINATES where
+		<if test="searchAptDataDto.searchType == 'jibun'">
+			SIGUNGU LIKE '%' || #{searchAptDataDto.korSido } || '%' AND
+			SIGUNGU LIKE '%' || #{searchAptDataDto.sigungu } || '%' AND
+			SIGUNGU LIKE '%' || #{searchAptDataDto.dongORroadName } || '%' 
+			<if test="searchAptDataDto.apartmentname != ''">
+			AND	APARTMENTNAME LIKE '%' || #{searchAptDataDto.apartmentname} || '%'
+			</if>
+		</if>
+
+		<if test="searchAptDataDto.searchType == 'road'">
+			SIGUNGU LIKE '%' || #{searchAptDataDto.korSido } || '%' AND
+			SIGUNGU LIKE '%' || #{searchAptDataDto.sigungu } || '%' AND
+			ROADNAME = #{searchAptDataDto.dongORroadName} 
+			<if test="searchAptDataDto.apartmentname != ''">
+			AND	APARTMENTNAME LIKE '%' || #{searchAptDataDto.apartmentname} || '%'
+			</if>
+
+		</if>
+
+
+	</select>
+
 </mapper>	
