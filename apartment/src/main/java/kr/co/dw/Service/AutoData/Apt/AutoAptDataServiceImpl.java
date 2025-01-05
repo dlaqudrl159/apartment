@@ -1,9 +1,13 @@
 package kr.co.dw.Service.AutoData.Apt;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.session.ExecutorType;
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,6 +37,7 @@ public class AutoAptDataServiceImpl implements AutoAptDataService {
 	private final ParserAndConverter aptDataParserService;
 	private final OpenApiService openApiService;
 	private final AutoAptDataRepository autoAptDataRepository;
+	private final SqlSessionFactory sqlSessionFactory;
 
 	@Override
 	public List<AutoAptDataResponse> allAutoAptDataInsert() {
@@ -58,7 +63,6 @@ public class AutoAptDataServiceImpl implements AutoAptDataService {
 		return syncAptTransactionData(korSido);
 	}
 
-	@Transactional
 	@Override
 	public AutoAptDataResponse syncAptTransactionData(String korSido) {
 		try {
@@ -106,26 +110,36 @@ public class AutoAptDataServiceImpl implements AutoAptDataService {
 		return processedAutoAptDataDtos;
 	}
 
+	@Transactional
 	public void batchProcessAptTransactionDtos(List<AptTransactionDto> aptTransactionDtos, String korSido) {
 		if (aptTransactionDtos.isEmpty()) {
 			return;
 	    }
+		SqlSession sqlSession = this.sqlSessionFactory.openSession(ExecutorType.BATCH);
 		try {
 			int count = 0;
+			
 			for (AptTransactionDto aptTransactionDto : aptTransactionDtos) {
-				autoAptDataRepository.insertAptData(aptTransactionDto, korSido);
+				Map<String, Object> map = new HashMap<>();
+				map.put("aptTransactionDto", aptTransactionDto);
+				map.put("korSido", korSido);
+				sqlSession.insert("kr.co.dw.Mapper.AutoAptDataMapper.insertAptData", map);
 				if (++count % Constant.BATCH_SIZE == 0) {
-					autoAptDataRepository.flushBatch();
-	                logger.debug("korSido: {} Batch processed: {}/{}", korSido, count, aptTransactionDtos.size());
+					sqlSession.flushStatements();
+	                logger.info("korSido: {} Batch processed: {}/{}", korSido, count, aptTransactionDtos.size());
 	            }
 			}
 			if (count % Constant.BATCH_SIZE != 0) {
-				autoAptDataRepository.flushBatch();
+				sqlSession.flushStatements();
 			}
+				sqlSession.commit();
 				logger.info("korSido: {} Total processed: {}", korSido, count);
 			} catch (Exception e) {
 		        logger.error("아파트 거래내역 배치 처리 중 오류 발생: {}", e);
+		        sqlSession.rollback();
 		        throw e;
+			} finally {
+				sqlSession.close();
 			}
 	}
 	

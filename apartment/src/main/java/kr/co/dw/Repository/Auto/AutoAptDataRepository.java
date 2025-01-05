@@ -1,10 +1,12 @@
 package kr.co.dw.Repository.Auto;
 
 import java.util.List;
+import java.util.Map;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +27,8 @@ public class AutoAptDataRepository {
 	private final Logger logger = LoggerFactory.getLogger(AutoAptDataRepository.class);
 	
 	private final AutoAptDataMapper autoAptDataMapper;
+	
+	@Qualifier("batchSqlSessionTemplate")
 	private final SqlSessionTemplate batchSqlSessionTemplate;
 	
 	public void deleteAptData(List<ProcessedAutoAptDataDto> failProcessedAutoAptDataDtos, String korSido, String deleteDealYearMonth) {
@@ -38,7 +42,7 @@ public class AutoAptDataRepository {
 	
 	public void insertAptData(AptTransactionDto aptTransactionDto, String korSido) {
 		try {
-			autoAptDataMapper.insertAptData(aptTransactionDto, korSido);
+			batchSqlSessionTemplate.insert("kr.co.dw.Mapper.AutoAptDataMapper.insertAptData", Map.of("aptTransactionDto", aptTransactionDto, "korSido", korSido));
 		} catch (Exception e) {
 			logger.error("아파트 거래 내역 삽입(insert) 중 데이터베이스 오류 발생 korSido={}", korSido, e);
 			throw new DatabaseException(ErrorCode.DATABASE_ERROR);
