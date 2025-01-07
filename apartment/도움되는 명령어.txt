@@ -73,3 +73,7 @@ try_files는 어떤 파일을 찾을 때 명시된 순서로 찾으며, 가장 �
 
 #심볼릭링크 만들기
 $ sudo ln -s /etc/nginx/sites-available/myapp.conf /etc/nginx/sites-enabled/myapp.conf
+
+nohup java -Xms512m -Xmx512m -jar apartment-1.jar --spring.profiles.active=prod &
+
+nohup java -Xms512m -Xmx512m -Xlog:gc*=debug:file=/home/ubuntu/logs/gc.log:time,uptime,level,tags -jar apartment-1.jar --spring.profiles.active=prod &

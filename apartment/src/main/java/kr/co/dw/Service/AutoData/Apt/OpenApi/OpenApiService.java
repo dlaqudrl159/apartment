@@ -54,7 +54,7 @@ public class OpenApiService {
 
 				if (aptDataParserService.isResultMsg(root)) {
 					NodeList nList = root.getElementsByTagName("item");
-					logger.info("code={} name={} dealyearmonth={}" , processedAutoAptDataDto.getSigungu().getCode(), processedAutoAptDataDto.getSigungu().getName(), processedAutoAptDataDto.getDealYearMonth());
+					logger.info("code: {} name: {}", processedAutoAptDataDto.getSigungu().getCode(), processedAutoAptDataDto.getSigungu().getName());
 					List<AptTransactionDto> list = aptDataParserService.createAptTransactionDtos(nList, processedAutoAptDataDto.getSido().getKorSido(), processedAutoAptDataDto.getSigungu().getName());
 					processedAutoAptDataDto.addProcesedResData(list);
 					processedAutoAptDataDto.setMessage("success");

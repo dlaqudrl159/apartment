@@ -78,7 +78,13 @@ public class AutoAptDataServiceImpl implements AutoAptDataService {
 			List<AptTransactionDto> aptTransactionDtos = aptDataParserService.createSuccessedAptTransactionDtos(successProcessedAutoAptDataDtos);
 			
 			batchProcessAptTransactionDtos(aptTransactionDtos, korSido);
-			
+			long heapSize = Runtime.getRuntime().totalMemory();
+			long heapMaxSize = Runtime.getRuntime().maxMemory();
+			long heapFreeSize = Runtime.getRuntime().freeMemory();
+			logger.info("Heap Status - Total: {} MB, Max: {} MB, Free: {} MB", 
+				    heapSize / (1024*1024), 
+				    heapMaxSize / (1024*1024), 
+				    heapFreeSize / (1024*1024));
 			logger.info("korSido: {} 전체 행정구역 거래내역 데이터 삭제 입력 완료", korSido);
 			return new AutoAptDataResponse(200, korSido + "지역 데이터 삭제 입력(delete, insert) 성공", 
 					new Sido(korSido, RegionManager.toEngSido(korSido)), 
@@ -102,6 +108,7 @@ public class AutoAptDataServiceImpl implements AutoAptDataService {
 		List<String> dealYearMonths = aptDataParserService.createDealYearMonths(Constant.DELETE_YEAR);
 
 		for (String dealYearMonth : dealYearMonths) {
+			logger.info("dealyearmonth: {}", dealYearMonth);
 			sigungus.forEach(sigungu -> {
 				ProcessedAutoAptDataDto processedAutoAptDataDto = new ProcessedAutoAptDataDto(null, sigungu, dealYearMonth, sido);
 				processedAutoAptDataDtos.add(openApiService.callRTMSDataSvcAptTradeDev(processedAutoAptDataDto)); 
