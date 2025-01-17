@@ -20,19 +20,15 @@ import org.xml.sax.SAXException;
 
 import kr.co.dw.Domain.Sigungu;
 import kr.co.dw.Dto.Common.AptTransactionDto;
-import kr.co.dw.Dto.Response.ProcessedRes;
+import kr.co.dw.Dto.Common.ProcessedAutoAptDataDto;
 import kr.co.dw.Service.ParserAndConverter.ParserAndConverter;
 import lombok.RequiredArgsConstructor;
-
-
 
 @Service
 @RequiredArgsConstructor
 public class OpenApiService {
-
 	
-	private static final Logger logger = LoggerFactory.getLogger(OpenApiService.class);
-
+	private final Logger logger = LoggerFactory.getLogger(OpenApiService.class);
 	
 	@Value("${api.apt.url}")
 	private String API_APT_URL;
@@ -42,51 +38,53 @@ public class OpenApiService {
 	
 	private final ParserAndConverter aptDataParserService;
 	
-	public ProcessedRes callRTMSDataSvcAptTradeDev(ProcessedRes processedRes) {
+	public ProcessedAutoAptDataDto callRTMSDataSvcAptTradeDev(ProcessedAutoAptDataDto processedAutoAptDataDto) {
 
 		int MAX_RETRIES = 3;
 		int delayMs = 500;
 		Element root = null;
 		for (int tryCount = 1; tryCount <= MAX_RETRIES; tryCount++) {
 			try {
-
-				Thread.sleep(delayMs);
-				StringBuilder sb = getRTMSDataSvcAptTradeDev(processedRes.getSigungu(), processedRes.getDealYearMonth());
+				if(tryCount > 1) {
+					Thread.sleep(delayMs);
+				}
+				
+				StringBuilder sb = getRTMSDataSvcAptTradeDev(processedAutoAptDataDto.getSigungu(), processedAutoAptDataDto.getDealYearMonth());
 				root = aptDataParserService.createNodeList(sb);
 
 				if (aptDataParserService.isResultMsg(root)) {
 					NodeList nList = root.getElementsByTagName("item");
-					logger.info("code={} name={} dealyearmonth={}" , processedRes.getSigungu().getCode(), processedRes.getSigungu().getName(), processedRes.getDealYearMonth());
-					List<AptTransactionDto> list = aptDataParserService.createAptTransactionDto(nList, processedRes.getSido().getKorSido(), processedRes.getSigungu().getName());
-					processedRes.addProcesedResData(list);
-					processedRes.setMessage("success");
-					return processedRes;
+					logger.info("code: {} name: {}", processedAutoAptDataDto.getSigungu().getCode(), processedAutoAptDataDto.getSigungu().getName());
+					List<AptTransactionDto> list = aptDataParserService.createAptTransactionDtos(nList, processedAutoAptDataDto.getSido().getKorSido(), processedAutoAptDataDto.getSigungu().getName());
+					processedAutoAptDataDto.addProcesedResData(list);
+					processedAutoAptDataDto.setMessage("success");
+					return processedAutoAptDataDto;
 				}
 
 			} catch (SAXException | ParserConfigurationException | IOException e) {
-				logger.error("국토교통부 Api호출 중 예외 발생 재시도 {}회 시군구:{} 코드:{} Error Message:{}", tryCount,
-						processedRes.getSigungu().getName(), processedRes.getSigungu().getCode(), e.getMessage());
-				processedRes.setMessage("fail");
+				logger.error("국토교통부 Api호출 중 예외 발생 재시도 {}회 시군구:{} 코드:{}", tryCount,
+						processedAutoAptDataDto.getSigungu().getName(), processedAutoAptDataDto.getSigungu().getCode(), e);
+				processedAutoAptDataDto.setMessage("fail");
 			} catch (InterruptedException e) {
 				Thread.currentThread().interrupt();
-				logger.error("국토교통부 Api호출 중 Thread Interrupted 발생 재시도 {}회 시군구:{} 코드:{} Error Message:{}", tryCount,
-						processedRes.getSigungu().getName(), processedRes.getSigungu().getCode(), e.getMessage());
-				processedRes.setMessage("fail");
-				return processedRes;
+				logger.error("국토교통부 Api호출 중 Thread Interrupted 발생 재시도 {}회 시군구:{} 코드:{}", tryCount,
+						processedAutoAptDataDto.getSigungu().getName(), processedAutoAptDataDto.getSigungu().getCode(), e);
+				processedAutoAptDataDto.setMessage("fail");
+				return processedAutoAptDataDto;
 			} catch (Exception e) {  // 추가된 부분
-	            logger.error("예상치 못한 예외 발생 재시도 {}회 시군구:{} 코드:{} Error Message:{}", tryCount,
-	                    processedRes.getSigungu().getName(), processedRes.getSigungu().getCode(), e.getMessage());
-	            processedRes.setMessage("fail");
+	            logger.error("예상치 못한 예외 발생 재시도 {}회 시군구:{} 코드:{}", tryCount,
+	            		processedAutoAptDataDto.getSigungu().getName(), processedAutoAptDataDto.getSigungu().getCode(), e);
+	            processedAutoAptDataDto.setMessage("fail");
 	        }
 
 			if (tryCount == MAX_RETRIES) {
 				aptDataParserService.isErrorMsg(root);
-				logger.error("국토교통부 Api호출 재시도 횟수 초과 재시도 {}회 시군구:{} 코드:{} 날짜:{}", tryCount,processedRes.getSigungu().getCode(), processedRes.getSigungu().getName(), processedRes.getDealYearMonth());
-				processedRes.setMessage("fail");
+				logger.error("국토교통부 Api호출 재시도 횟수 초과 재시도 {}회 시군구:{} 코드:{} 날짜:{}", tryCount,processedAutoAptDataDto.getSigungu().getCode(), processedAutoAptDataDto.getSigungu().getName(), processedAutoAptDataDto.getDealYearMonth());
+				processedAutoAptDataDto.setMessage("fail");
 			}
 			delayMs = delayMs * tryCount;
 		}
-		return processedRes;
+		return processedAutoAptDataDto;
 	}
 	
 	public StringBuilder getRTMSDataSvcAptTradeDev(Sigungu sigungu, String dealYearMonth) throws IOException {

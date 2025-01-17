@@ -2,16 +2,15 @@ package kr.co.dw.Controller.AutoData.Coords;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.List;
 
 import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import kr.co.dw.Domain.Sido;
@@ -30,21 +29,21 @@ public class AutoCoordsDataController {
 	private final Logger logger = LoggerFactory.getLogger(AutoCoordsDataController.class);
 	
 	@PostMapping("/data/autoallCoordsdatainsert")
-	public ResponseEntity<AutoCoordsDataResponse> autoallCoordsdatainsert() {
+	public ResponseEntity<List<AutoCoordsDataResponse>> autoallCoordsdatainsert() {
 		
-		AutoCoordsDataResponse response = autoCoordsDataService.allCoordsInsert();
+		List<AutoCoordsDataResponse> response = autoCoordsDataService.allCoordsInsert();
 		
-		return new ResponseEntity<AutoCoordsDataResponse>(response, HttpStatus.OK);
+		return new ResponseEntity<List<AutoCoordsDataResponse>>(response, HttpStatus.OK);
 	}
 	
 	@PostMapping("/data/autoCoordsdatainsert")
-	public ResponseEntity<AutoCoordsDataResponse> autoCoordsInsert(@RequestBody Sido sido) throws MalformedURLException, IOException, ParseException, InterruptedException {
+	public ResponseEntity<AutoCoordsDataResponse> autoCoordsInsert(@RequestBody Sido sido) {
 
-		if(sido.getKorSido() == null && sido.getKorSido().isEmpty()) {
-			logger.error("Sido파라미터가 NULL 이거나 isEmpty Sido={}", sido);
+		if(sido == null || sido.getKorSido() == null || sido.getKorSido().trim().isEmpty()) {
+			logger.error("Sido 파라미터 요청이 NULL 이거나 비어있습니다 sido: {}", sido);
 			throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
 		}
-		AutoCoordsDataResponse response = autoCoordsDataService.CoordsInsert(sido.getKorSido());
+		AutoCoordsDataResponse response = autoCoordsDataService.coordsInsert(sido.getKorSido());
 		return new ResponseEntity<AutoCoordsDataResponse>(response, HttpStatus.OK);
 	}
 	

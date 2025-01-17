@@ -23,218 +23,251 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+import kr.co.dw.Constant.Constant;
 import kr.co.dw.Dto.Common.AptTransactionDto;
-import kr.co.dw.Dto.Response.ProcessedRes;
+import kr.co.dw.Dto.Common.ProcessedAutoAptDataDto;
+import kr.co.dw.Exception.CustomException;
+import kr.co.dw.Exception.CustomExceptions.ParserAndConverterException;
+import kr.co.dw.Exception.ErrorCode.ErrorCode;
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class ParserAndConverter {
 	
-	private static final Logger logger = LoggerFactory.getLogger(ParserAndConverter.class);
-
+	private final Logger logger = LoggerFactory.getLogger(ParserAndConverter.class);
 	
 	public void isErrorMsg(Element eElement) {
-		String errMsg = eElement.getElementsByTagName("errMsg").item(0) == null ? "-" :
-			eElement.getElementsByTagName("errMsg").item(0).getTextContent();
+		try {
+			String errMsg = eElement.getElementsByTagName("errMsg").item(0) == null ? "-" :
+				eElement.getElementsByTagName("errMsg").item(0).getTextContent();
+			
+			String returnAuthMsg = eElement.getElementsByTagName("returnAuthMsg").item(0) == null ? "-" :
+				eElement.getElementsByTagName("returnAuthMsg").item(0).getTextContent();
+			
+			String returnReasonCode = eElement.getElementsByTagName("returnReasonCode").item(0) == null ? "-" :
+				eElement.getElementsByTagName("returnReasonCode").item(0).getTextContent();
+			logger.error("errMsg={} returnAuthMsg={} returnReasonCode={}" , errMsg, returnAuthMsg, returnReasonCode);
+		} catch (Exception e) {
+			logger.error("국토교통부 API 에러 응답 출력 오류 발생" , e);
+			throw new ParserAndConverterException(ErrorCode.PARSER_AND_CONVERTER_ERROR);
+		}
 		
-		String returnAuthMsg = eElement.getElementsByTagName("returnAuthMsg").item(0) == null ? "-" :
-			eElement.getElementsByTagName("returnAuthMsg").item(0).getTextContent();
-		
-		String returnReasonCode = eElement.getElementsByTagName("returnReasonCode").item(0) == null ? "-" :
-			eElement.getElementsByTagName("returnReasonCode").item(0).getTextContent();
-		logger.error("errMsg={} returnAuthMsg={} returnReasonCode={}" , errMsg, returnAuthMsg, returnReasonCode);
 	}
 	
 	public boolean isResultMsg(Element eElement) {
-		String resultMsg = eElement.getElementsByTagName("resultMsg").item(0) == null ? "-"
-				: eElement.getElementsByTagName("resultMsg").item(0).getTextContent();
-		/*
-		 * String resultTotalCount = eElement.getElementsByTagName("totalCount").item(0)
-		 * == null ? "-" :
-		 * eElement.getElementsByTagName("totalCount").item(0).getTextContent(); String
-		 * resultCode = eElement.getElementsByTagName("resultCode").item(0) == null ?
-		 * "-" : eElement.getElementsByTagName("resultCode").item(0).getTextContent();
-		 * logger.info("resultMsg={} resultTotalCount={} resultCode={}", resultMsg,
-		 * resultTotalCount,resultCode); String errMsg =
-		 * eElement.getElementsByTagName("errMsg").item(0) == null ? "-" :
-		 * eElement.getElementsByTagName("errMsg").item(0).getTextContent(); String
-		 * returnAuthMsg = eElement.getElementsByTagName("returnAuthMsg").item(0) ==
-		 * null ? "-" :
-		 * eElement.getElementsByTagName("returnAuthMsg").item(0).getTextContent();
-		 * String returnReasonCode =
-		 * eElement.getElementsByTagName("returnReasonCode").item(0) == null ? "-" :
-		 * eElement.getElementsByTagName("returnReasonCode").item(0).getTextContent();
-		 * logger.error("errMsg={} returnAuthMsg={} returnReasonCode={}" , errMsg,
-		 * returnAuthMsg, returnReasonCode);
-		 */
+		try {
+			String resultMsg = eElement.getElementsByTagName("resultMsg").item(0) == null ? "-"
+					: eElement.getElementsByTagName("resultMsg").item(0).getTextContent();
 
-		return resultMsg != "-" ? true : false;
+			return resultMsg != "-" ? true : false;
+		} catch (Exception e) {
+			logger.error("국토교통부 API 성공 응답 출력 오류 발생", e);
+			throw new ParserAndConverterException(ErrorCode.PARSER_AND_CONVERTER_ERROR);
+		}
+		
 	}
 	
 	public String getElementContent(Element element, String tagName) {
-		Node node = element.getElementsByTagName(tagName).item(0);
-		return node == null ? "-"
-				: node.getTextContent().replaceAll("\"", "").trim().isEmpty() ? "-"
-						: node.getTextContent().replaceAll("\"", "").trim();
+		try {
+			Node node = element.getElementsByTagName(tagName).item(0);
+			return node == null ? "-"
+					: node.getTextContent().replaceAll("\"", "").trim().isEmpty() ? "-"
+							: node.getTextContent().replaceAll("\"", "").trim();
+		} catch (Exception e) {
+			logger.error("국토교통부 API XML 응답 태그 내용 추출 중 오류 발생", e);
+			throw new ParserAndConverterException(ErrorCode.PARSER_AND_CONVERTER_ERROR);
+		}
+		
 	}
 	
-	public List<AptTransactionDto> createAptTransactionDto(NodeList nList, String sido, String sigungu) {
-		List<AptTransactionDto> aptTransactionDtos = new ArrayList<>();
-		
-		String apiDealAmount = "dealAmount";
-		String apiDealingGbn = "dealingGbn";
-		String apiBuildYear = "buildYear";
-		String apiDealYear = "dealYear";
-		String apiAptDong = "aptDong";
-		String apiRgstDate = "rgstDate";
-		String apiSlerGbn = "slerGbn";
-		String apiBuyerGbn = "buyerGbn";
-		String apiUmdNm = "umdNm";
-		String apiAptNm = "aptNm";
-		String apiDealMonth = "dealMonth";
-		String apiDealDay = "dealDay";
-		String apiExcluUseAr = "excluUseAr";
-		String apiEstateAgentSggNm = "estateAgentSggNm";
-		String apiJibun = "jibun";
-		String apiLandCd = "landCd";
-		String apiFloor = "floor";
-		String apiCdealDay = "cdealDay";
-		String apiCdealType = "cdealType";
-		String apiRoadNm = "roadNm";
-		String apiBonbun = "bonbun";
-		String apiBubun = "bubun";
-		String apiRoadNmBonbun = "roadNmBonbun";
-		String apiRoadNmBubun = "roadNmBubun";
-		String apiSggCd = "sggCd";
-		
-		
-		for(int i = 0 ; i < nList.getLength(); i++) {
-			Node nNode = nList.item(i);
-			if(nNode.getNodeType() == Node.ELEMENT_NODE) {
-				Element eElement = (Element) nNode;
-				String DealAmount = getElementContent(eElement,apiDealAmount);
-				String ReqgbN = getElementContent(eElement,apiDealingGbn);
-				String BuildYear = getElementContent(eElement,apiBuildYear);
-				String DealYear = getElementContent(eElement,apiDealYear);
-				String ApartmentDong = getElementContent(eElement,apiAptDong);
-				String RegistartionDate = getElementContent(eElement,apiRgstDate);
-				String SellerGBN = getElementContent(eElement,apiSlerGbn);
-				String BuyerGBN = getElementContent(eElement,apiBuyerGbn);
-				String Dong = getElementContent(eElement,apiUmdNm);
-				String ApartmentName = getElementContent(eElement,apiAptNm);
-				String DealMonth = getElementContent(eElement,apiDealMonth);
-				String DealDay = getElementContent(eElement,apiDealDay);
-				String AreaforExcusiveUse = getElementContent(eElement,apiExcluUseAr);
-				String RdealerLawdnm = getElementContent(eElement,apiEstateAgentSggNm);
-				String Jibun = getElementContent(eElement,apiJibun);
-				String RegionalCode = getElementContent(eElement,apiLandCd);
-				String Floor = getElementContent(eElement,apiFloor);
-				String CancleDealDay = getElementContent(eElement,apiCdealDay);
-				String CancleDealType = getElementContent(eElement,apiCdealType);
-				String RoadName = getElementContent(eElement,apiRoadNm);
-				String Bonbun = getElementContent(eElement,apiBonbun);
-				String Bubun = getElementContent(eElement,apiBubun);
-				String RoadNameBonbun = getElementContent(eElement,apiRoadNmBonbun);
-				String RoadNameBubun = getElementContent(eElement,apiRoadNmBubun);
-				String SggCd = getElementContent(eElement,apiSggCd);
-				
-				aptTransactionDtos.add(new AptTransactionDto(sido + " " + sigungu + " " +  Dong,
-						Jibun,
-						Bonbun,
-						Bubun,
-						ApartmentName,
-						AreaforExcusiveUse,
-						DealYear + String.format("%02d", Integer.parseInt(DealMonth)),
-						DealDay,
-						DealAmount,
-						ApartmentDong,
-						Floor,
-						BuyerGBN,
-						SellerGBN,
-						BuildYear,
-						createRoadName(RoadName, RoadNameBonbun, RoadNameBubun),
-						CancleDealDay,
-						ReqgbN,
-						RdealerLawdnm,
-						RegistartionDate,
-						SggCd));			
-				}
+	public List<AptTransactionDto> createAptTransactionDtos(NodeList nList, String sido, String sigungu) {
+		try {
+			List<AptTransactionDto> aptTransactionDtos = new ArrayList<>();
+			
+			for(int i = 0 ; i < nList.getLength(); i++) {
+				Node nNode = nList.item(i);
+				if(nNode.getNodeType() == Node.ELEMENT_NODE) {
+					Element eElement = (Element) nNode;
+					aptTransactionDtos.add(createAptTransactionDto(eElement, sido, sigungu));			
+					}
+			}
+			return aptTransactionDtos;
+		} catch (Exception e) {
+			logger.error("아파트 거래내역 목록 DTO 생성 중 오류 발생 sido: {} sigungu: {}" , sido, sigungu, e);
+			throw new ParserAndConverterException(ErrorCode.PARSER_AND_CONVERTER_ERROR);
 		}
-		return aptTransactionDtos;
+	}
+	
+	public AptTransactionDto createAptTransactionDto(Element eElement, String sido, String sigungu) {
+		
+		try {
+			String DealAmount = getElementContent(eElement,Constant.API_DEAL_AMOUNT);
+			String ReqgbN = getElementContent(eElement,Constant.API_DEALING_GBN);
+			String BuildYear = getElementContent(eElement,Constant.API_BUILD_YEAR);
+			String DealYear = getElementContent(eElement,Constant.API_DEAL_YEAR);
+			String ApartmentDong = getElementContent(eElement,Constant.API_APT_DONG);
+			String RegistartionDate = getElementContent(eElement,Constant.API_RGST_DATE);
+			String SellerGBN = getElementContent(eElement,Constant.API_SLER_GBN);
+			String BuyerGBN = getElementContent(eElement,Constant.API_BUYER_GBN);
+			String Dong = getElementContent(eElement,Constant.API_UMD_NM);
+			String ApartmentName = getElementContent(eElement,Constant.API_APT_NM);
+			String DealMonth = getElementContent(eElement,Constant.API_DEAL_MONTH);
+			String DealDay = getElementContent(eElement,Constant.API_DEAL_DAY);
+			String AreaforExcusiveUse = getElementContent(eElement,Constant.API_EXCLU_USEAR);
+			String RdealerLawdnm = getElementContent(eElement,Constant.API_ESTATE_AGENT_SGG_NM);
+			String Jibun = getElementContent(eElement,Constant.API_JIBUN);
+			//String RegionalCode = getElementContent(eElement,Constant.API_LAND_CD);
+			String Floor = getElementContent(eElement,Constant.API_FLOOR);
+			String CancleDealDay = getElementContent(eElement,Constant.API_CDEAL_DAY);
+			//String CancleDealType = getElementContent(eElement,Constant.API_CDEAL_TYPE);
+			String RoadName = getElementContent(eElement,Constant.API_ROAD_NM);
+			String Bonbun = getElementContent(eElement,Constant.API_BONBUN);
+			String Bubun = getElementContent(eElement,Constant.API_BUBUN);
+			String RoadNameBonbun = getElementContent(eElement,Constant.API_ROAD_NM_BONBUN);
+			String RoadNameBubun = getElementContent(eElement,Constant.API_ROAD_NM_BUBUN);
+			String SggCd = getElementContent(eElement,Constant.API_SGGCD);
+			return new AptTransactionDto(sido + " " + sigungu + " " +  Dong,
+					Jibun,
+					Bonbun,
+					Bubun,
+					ApartmentName,
+					AreaforExcusiveUse,
+					DealYear + String.format("%02d", Integer.parseInt(DealMonth)),
+					DealDay,
+					DealAmount,
+					ApartmentDong,
+					Floor,
+					BuyerGBN,
+					SellerGBN,
+					BuildYear,
+					createRoadName(RoadName, RoadNameBonbun, RoadNameBubun),
+					CancleDealDay,
+					ReqgbN,
+					RdealerLawdnm,
+					RegistartionDate,
+					SggCd);
+		} catch (Exception e) {
+			logger.error("단일 아파트 거래내역 DTO 생성 중 오류 발생 sido: {} sigungu: {}",sido, sigungu, e);
+			throw new ParserAndConverterException(ErrorCode.PARSER_AND_CONVERTER_ERROR);
+		}
 	}
 	
 	public String createRoadName(String roadName, String roadNameBonbun, String roadNameBubun) {
-		roadName = roadName.trim();
-		if (roadName.equals("-")) {
-			roadName = "";
-		}
-		if (roadNameBonbun.equals("-")) {
-			roadNameBonbun = "";
-		}
-		if (roadNameBubun.equals("-")) {
-			roadNameBubun = "";
-		}
-
-		roadNameBonbun = roadNameBonbun + "!";
-		roadNameBubun = roadNameBubun + "!";
-
-		roadNameBonbun = roadNameBonbun.replace("0", " ").trim().replace(" ", "0").replace("!", "");
-		roadNameBubun = roadNameBubun.replace("0", " ").trim().replace(" ", "0").replace("!", "");
-
-		if (roadNameBonbun.length() != 0) {
-			roadName = roadName + " " + roadNameBonbun;
-			if (roadNameBubun.length() != 0) {
-				roadName = roadName + "-" + roadNameBubun;
+		try {
+			roadName = roadName.trim();
+			if (roadName.equals("-")) {
+				roadName = "";
 			}
-		} else if (roadNameBonbun.length() == 0) {
-			if (roadNameBubun.length() != 0) {
-				roadName = roadName + " " + roadNameBubun;
+			if (roadNameBonbun.equals("-")) {
+				roadNameBonbun = "";
 			}
+			if (roadNameBubun.equals("-")) {
+				roadNameBubun = "";
+			}
+
+			roadNameBonbun = roadNameBonbun + "!";
+			roadNameBubun = roadNameBubun + "!";
+
+			roadNameBonbun = roadNameBonbun.replace("0", " ").trim().replace(" ", "0").replace("!", "");
+			roadNameBubun = roadNameBubun.replace("0", " ").trim().replace(" ", "0").replace("!", "");
+
+			if (roadNameBonbun.length() != 0) {
+				roadName = roadName + " " + roadNameBonbun;
+				if (roadNameBubun.length() != 0) {
+					roadName = roadName + "-" + roadNameBubun;
+				}
+			} else if (roadNameBonbun.length() == 0) {
+				if (roadNameBubun.length() != 0) {
+					roadName = roadName + " " + roadNameBubun;
+				}
+			}
+			roadName = roadName.trim();
+			if (roadName.equals("")) {
+				roadName = "-";
+			}
+			return roadName;
+		} catch (Exception e) {
+			logger.error("도로명 주소 생성 중 오류 발생 roadName: {} roadNameBonbun: {} roadNameBubun: {]", roadName, roadNameBonbun, roadNameBubun, e);
+			throw new ParserAndConverterException(ErrorCode.PARSER_AND_CONVERTER_ERROR);
 		}
-		roadName = roadName.trim();
-		if (roadName.equals("")) {
-			roadName = "-";
-		}
-		return roadName;
+		
 	}
 	
 	public Element createNodeList(StringBuilder sb) throws SAXException, IOException, ParserConfigurationException {
-		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-		DocumentBuilder builder = null;
-		Document document = null;
-		Element root = null;
+		
+		try {
+			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder builder = null;
+			Document document = null;
+			Element root = null;
 
-		builder = factory.newDocumentBuilder();
-		document = builder.parse(new InputSource(new StringReader(sb.toString())));
-		document.getDocumentElement().normalize();
-		root = document.getDocumentElement();
+			builder = factory.newDocumentBuilder();
+			document = builder.parse(new InputSource(new StringReader(sb.toString())));
+			document.getDocumentElement().normalize();
+			root = document.getDocumentElement();
 
-		return root;
+			return root;
+		} catch (SAXException e) {
+			logger.error("NodeList 생성 중(국토교통부 API 응답) XML 파싱 오류 발생", e);
+			throw e;
+		} catch (IOException e) {
+			logger.error("NodeList 생성 중(국토교통부 API 응답) XML StringReader 읽기 작업 오류 발생", e);
+			throw e;
+		} catch (ParserConfigurationException e) {
+			logger.error("NodeList 생성 중(국토교통부 API 응답) DocumentBuilder 생성 오류 발생", e);
+			throw e;
+		} catch (Exception e) {
+			logger.error("NodeList 생성 중(국토교통부 API 응답) 예상치 못한 오류 발생", e);
+			throw new CustomException(ErrorCode.PARSER_AND_CONVERTER_ERROR);
+		}
 	}
 	
 	public String createDealYearMonth(int num) {
-		LocalDate now = LocalDate.now();
-		String yearMonth = now.minusMonths(num).format(DateTimeFormatter.ofPattern("yyyyMM"));
-		return yearMonth;
+		try {
+			LocalDate now = LocalDate.now();
+			String yearMonth = now.minusMonths(num).format(DateTimeFormatter.ofPattern("yyyyMM"));
+			return yearMonth;
+		} catch (Exception e) {
+			logger.error("거래년월 생성 중 오류 발생", e);
+			throw new CustomException(ErrorCode.PARSER_AND_CONVERTER_ERROR);
+		}
+		
 	}
 	
 	public List<String> createDealYearMonths(int num) {
-	    List<String> dealYearMonths = new ArrayList<>();
+		try {
+			List<String> dealYearMonths = new ArrayList<>();
+		    
+		    for(int i = 0; i <= num; i++) {
+		        String yearMonth = createDealYearMonth(i);
+		        dealYearMonths.add(yearMonth);
+		    }
+		    
+		    return dealYearMonths;
+		} catch (Exception e) {
+			logger.error("거래년월 목록 생성 중 오류 발생", e);
+			throw new CustomException(ErrorCode.PARSER_AND_CONVERTER_ERROR);
+		}
 	    
-	    for(int i = 0; i <= num; i++) {
-	        String yearMonth = createDealYearMonth(i);
-	        dealYearMonths.add(yearMonth);
-	    }
-	    
-	    return dealYearMonths;
 	}
 	
-	public List<AptTransactionDto> createSuccessedAptTransactionDtos(List<ProcessedRes> successProcesseds) {
-		return successProcesseds.stream().flatMap(successProcessed -> successProcessed.getProcesedResData().stream()).collect(Collectors.toList());
+	public List<AptTransactionDto> createSuccessedAptTransactionDtos(List<ProcessedAutoAptDataDto> successProcessedAutoAptDataDtos) {
+		
+		try {
+			return successProcessedAutoAptDataDtos.stream().flatMap(successProcessedAutoAptDataDto -> successProcessedAutoAptDataDto.getProcesedAptDatas().stream()).collect(Collectors.toList());
+		} catch (Exception e) {
+			logger.error("국토교통부 API 호출 성공 거래내역 추출 중 오류 발생", e);
+			throw new CustomException(ErrorCode.PARSER_AND_CONVERTER_ERROR);
+		}
 	}
 	
-	public Map<Boolean, List<ProcessedRes>> createProcessedsMap(List<ProcessedRes> processeds) {
-		return processeds.stream().collect(Collectors.groupingBy(processedDto -> processedDto.isSuccess()));
+	public Map<Boolean, List<ProcessedAutoAptDataDto>> createProcessedsMap(List<ProcessedAutoAptDataDto> processedAutoAptDataDtos) {
+		try {
+			return processedAutoAptDataDtos.stream().collect(Collectors.groupingBy(processedAutoAptDataDto -> processedAutoAptDataDto.isSuccess()));
+		} catch (Exception e) {
+			logger.error("국토교통부 API 호출 성공 또는 실패 분류 중 오류 발생", e);
+			throw new CustomException(ErrorCode.PARSER_AND_CONVERTER_ERROR);
+		}
 	}
 }

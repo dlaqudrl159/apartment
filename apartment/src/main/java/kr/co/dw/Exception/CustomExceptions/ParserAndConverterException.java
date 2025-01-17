@@ -5,6 +5,10 @@ import kr.co.dw.Exception.ErrorCode.ErrorCode;
 
 public class ParserAndConverterException extends CustomException{
 
+	public ParserAndConverterException(ErrorCode errorCode) {
+		super(errorCode);
+	}
+	
 	public ParserAndConverterException(ErrorCode errorCode, String message) {
 		super(errorCode, message);
 	}
