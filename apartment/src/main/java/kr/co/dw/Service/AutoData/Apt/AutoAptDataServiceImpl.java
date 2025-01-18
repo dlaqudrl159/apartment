@@ -23,6 +23,7 @@ import kr.co.dw.Dto.Common.ProcessedAutoAptDataDto;
 import kr.co.dw.Dto.Response.AutoAptDataResponse;
 import kr.co.dw.Exception.CustomException;
 import kr.co.dw.Exception.ErrorCode.ErrorCode;
+import kr.co.dw.Mapper.AutoAptDataMapper;
 import kr.co.dw.Repository.Auto.AutoAptDataRepository;
 import kr.co.dw.Service.AutoData.Apt.OpenApi.OpenApiService;
 import kr.co.dw.Service.ParserAndConverter.ParserAndConverter;
@@ -73,11 +74,11 @@ public class AutoAptDataServiceImpl implements AutoAptDataService {
 			
 			String deleteDealYearMonth = aptDataParserService.createDealYearMonth(Constant.DELETE_YEAR);
 			
-			autoAptDataRepository.deleteAptData(failProcessedAutoAptDataDtos, korSido, deleteDealYearMonth);
+			//autoAptDataRepository.deleteAptData(failProcessedAutoAptDataDtos, korSido, deleteDealYearMonth);
 			
 			List<AptTransactionDto> aptTransactionDtos = aptDataParserService.createSuccessedAptTransactionDtos(successProcessedAutoAptDataDtos);
-			
-			batchProcessAptTransactionDtos(aptTransactionDtos, korSido);
+			batchProcessAptTransactionDtos(aptTransactionDtos, korSido, failProcessedAutoAptDataDtos, deleteDealYearMonth);
+			//batchProcessAptTransactionDtos(aptTransactionDtos, korSido);
 			long heapSize = Runtime.getRuntime().totalMemory();
 			long heapMaxSize = Runtime.getRuntime().maxMemory();
 			long heapFreeSize = Runtime.getRuntime().freeMemory();
@@ -106,7 +107,6 @@ public class AutoAptDataServiceImpl implements AutoAptDataService {
 		}
 		List<Sigungu> sigungus = RegionManager.getSigungus(korSido);
 		List<String> dealYearMonths = aptDataParserService.createDealYearMonths(Constant.DELETE_YEAR);
-
 		for (String dealYearMonth : dealYearMonths) {
 			logger.info("dealyearmonth: {}", dealYearMonth);
 			sigungus.forEach(sigungu -> {
@@ -149,5 +149,35 @@ public class AutoAptDataServiceImpl implements AutoAptDataService {
 				sqlSession.close();
 			}
 	}
-	
+	@Override
+	public void batchProcessAptTransactionDtos(List<AptTransactionDto> aptTransactionDtos, String korSido, List<ProcessedAutoAptDataDto> failProcessedAutoAptDataDtos, String deleteDealYearMonth) {
+		if (aptTransactionDtos.isEmpty()) {
+			return;
+	    }
+		SqlSession sqlSession = this.sqlSessionFactory.openSession(ExecutorType.BATCH);
+		AutoAptDataMapper mapper = sqlSession.getMapper(AutoAptDataMapper.class);
+		try {
+			int count = 0;
+			mapper.deleteAptData(failProcessedAutoAptDataDtos, korSido, deleteDealYearMonth);
+			sqlSession.flushStatements();
+			for (AptTransactionDto aptTransactionDto : aptTransactionDtos) {
+				mapper.insertAptData(aptTransactionDto, korSido);
+				if (++count % Constant.BATCH_SIZE == 0) {
+					sqlSession.flushStatements();
+	                logger.info("korSido: {} Batch processed: {}/{}", korSido, count, aptTransactionDtos.size());
+	            }
+			}
+			if (count % Constant.BATCH_SIZE != 0) {
+				sqlSession.flushStatements();
+			}
+				sqlSession.commit();
+				logger.info("korSido: {} Total processed: {}", korSido, count);
+			} catch (Exception e) {
+		        logger.error("아파트 거래내역 배치 처리 중 오류 발생: {}", e);
+		        sqlSession.rollback();
+		        throw e;
+			} finally {
+				sqlSession.close();
+			}
+	}
 }
