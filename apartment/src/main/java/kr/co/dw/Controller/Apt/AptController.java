@@ -36,7 +36,13 @@ public class AptController {
 			logger.error("주소목록 요청이 NULL 이거나 비어있습니다 addresses: {}", addresses);
 			throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
 		}
-
+		long heapSize = Runtime.getRuntime().totalMemory();
+		long heapMaxSize = Runtime.getRuntime().maxMemory();
+		long heapFreeSize = Runtime.getRuntime().freeMemory();
+		logger.info("Heap Status - Total: {} MB, Max: {} MB, Free: {} MB", 
+			    heapSize / (1024*1024), 
+			    heapMaxSize / (1024*1024), 
+			    heapFreeSize / (1024*1024));
 		return ResponseEntity.status(HttpStatus.OK).body(aptService.getMarkers(addresses));
 	}
 
