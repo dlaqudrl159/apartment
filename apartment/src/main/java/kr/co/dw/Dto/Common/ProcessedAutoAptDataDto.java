@@ -26,7 +26,7 @@ public class ProcessedAutoAptDataDto {
 	private boolean isSuccess = false;
 	
 	@JsonIgnore
-	private final List<AptTransactionDto> procesedAptDatas = new ArrayList<>();
+	private List<AptTransactionDto> procesedAptDatas = new ArrayList<>();
 
 	public ProcessedAutoAptDataDto(String message, Sigungu sigungu, String dealYearMonth, Sido sido) {
 		this.message = message;
@@ -45,7 +45,5 @@ public class ProcessedAutoAptDataDto {
 		}
 		
 	}
-
-
 	
 }

@@ -41,11 +41,11 @@ public class OpenApiService {
 	public ProcessedAutoAptDataDto callRTMSDataSvcAptTradeDev(ProcessedAutoAptDataDto processedAutoAptDataDto) {
 
 		int MAX_RETRIES = 3;
-		int delayMs = 200;
+		int delayMs = 500;
 		Element root = null;
 		for (int tryCount = 1; tryCount <= MAX_RETRIES; tryCount++) {
 			try {
-				if(tryCount >= 1) {
+				if(tryCount > 1) {
 					Thread.sleep(delayMs);
 				}
 				
@@ -89,7 +89,7 @@ public class OpenApiService {
 	
 	public String getRTMSDataSvcAptTradeDev(Sigungu sigungu, String dealYearMonth) throws IOException {
 
-		StringBuilder sb = new StringBuilder(262144);
+		StringBuilder sb = new StringBuilder();
 		StringBuilder urlBuilder = new StringBuilder(this.API_APT_URL); /* URL */
 
 		urlBuilder.append("?" + URLEncoder.encode("serviceKey", "UTF-8") + this.API_APT_SERVICE_KEY); /* Service Key */
@@ -117,7 +117,6 @@ public class OpenApiService {
 		while ((line = rd.readLine()) != null) {
 			sb.append(line);
 		}
-		logger.info("sb.capacity: {}" ,sb.capacity());
 		rd.close();
 		conn.disconnect();
 		return sb.toString();
