@@ -74,11 +74,8 @@ public class AutoAptDataServiceImpl implements AutoAptDataService {
 			
 			String deleteDealYearMonth = aptDataParserService.createDealYearMonth(Constant.DELETE_YEAR);
 			
-			//autoAptDataRepository.deleteAptData(failProcessedAutoAptDataDtos, korSido, deleteDealYearMonth);
-			
 			List<AptTransactionDto> aptTransactionDtos = aptDataParserService.createSuccessedAptTransactionDtos(successProcessedAutoAptDataDtos);
 			batchProcessAptTransactionDtos(aptTransactionDtos, korSido, failProcessedAutoAptDataDtos, deleteDealYearMonth);
-			//batchProcessAptTransactionDtos(aptTransactionDtos, korSido);
 			
 			for(int i = 0 ; i < successProcessedAutoAptDataDtos.size() ; i++) {
 				successProcessedAutoAptDataDtos.get(i).setProcesedAptDatas(null);
