@@ -36,7 +36,7 @@ public class AptController {
 			logger.error("주소목록 요청이 NULL 이거나 비어있습니다 addresses: {}", addresses);
 			throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
 		}
-
+		
 		return ResponseEntity.status(HttpStatus.OK).body(aptService.getMarkers(addresses));
 	}
 
