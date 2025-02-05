@@ -18,9 +18,9 @@ bin/
 !**/src/test/**/bin/
 
 # Application properties
-*.properties
-application.properties
-application-*.properties
+apartment/*.properties
+
+
 
 # 도움되는 명령어
 apartment/도움되는 명령어.txt
