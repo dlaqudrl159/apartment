@@ -23,7 +23,7 @@ application.properties
 application-*.properties
 
 # 도움되는 명령어
-/도움되는 명령어.txt
+apartment/도움되는 명령어.txt
 
 ### IntelliJ IDEA ###
 .idea
