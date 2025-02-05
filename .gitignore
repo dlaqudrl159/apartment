@@ -18,8 +18,8 @@ bin/
 !**/src/test/**/bin/
 
 # Application properties
-*.properties
 
+apartment/src/main/resources/*.properties
 
 
 # 도움되는 명령어
