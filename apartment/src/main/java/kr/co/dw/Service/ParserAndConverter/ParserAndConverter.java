@@ -194,18 +194,14 @@ public class ParserAndConverter {
 		
 	}
 	
-	public Element createNodeList(StringBuilder sb) throws SAXException, IOException, ParserConfigurationException {
+	public Element createNodeList(String sb) throws SAXException, IOException, ParserConfigurationException {
 		
 		try {
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-			DocumentBuilder builder = null;
-			Document document = null;
-			Element root = null;
-
-			builder = factory.newDocumentBuilder();
-			document = builder.parse(new InputSource(new StringReader(sb.toString())));
+			DocumentBuilder builder = factory.newDocumentBuilder();
+			Document document = builder.parse(new InputSource(new StringReader(sb)));
 			document.getDocumentElement().normalize();
-			root = document.getDocumentElement();
+			Element root = document.getDocumentElement();
 
 			return root;
 		} catch (SAXException e) {

@@ -41,7 +41,7 @@ public class GeocoderApi {
 		JSONParser jspa = new JSONParser();
 		JSONObject jsob = (JSONObject) jspa.parse(br);
 		JSONObject jsrs = (JSONObject) jsob.get("response");
-		
+		br.close();
 		return jsrs;
 	}
 
