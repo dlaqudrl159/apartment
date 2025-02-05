@@ -17,6 +17,17 @@ bin/
 !**/src/main/**/bin/
 !**/src/test/**/bin/
 
+# Application properties
+*.properties
+application.properties
+application-*.properties
+
+# 깃허브 토큰
+깃허브토큰.txt
+
+# 도움되는 명령어
+/apartment/도움되는 명령어.txt
+
 ### IntelliJ IDEA ###
 .idea
 *.iws
