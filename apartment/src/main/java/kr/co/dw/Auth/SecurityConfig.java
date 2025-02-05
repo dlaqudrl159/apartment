@@ -29,6 +29,7 @@ public class SecurityConfig {
 		.authorizeHttpRequests(authz -> authz
 				.requestMatchers("/auth/admin/dashboard").authenticated()
 				.requestMatchers("/data/*").authenticated()
+				.requestMatchers("/api/index.php/v1/config/application").authenticated()
 				.anyRequest().permitAll());
 		
 		return http.build();
