@@ -20,7 +20,8 @@ bin/
 # Application properties
 
 apartment/src/main/resources/*.properties
-
+.metadata
+apartment/.metadata
 
 # 도움되는 명령어
 apartment/도움되는 명령어.txt
