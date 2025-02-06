@@ -16,25 +16,35 @@
 9. 아파트 거래내역 데이터는 매일 02시에 자동으로 갱신됩니다.
 
 ## 개발 환경
-- java
-- spring
-- spring boot
-- spring security
-- jwt
-- lombok
-- gradle
-- oracle
-- mybatis
-- junit
-- react
-- axios
-- http-proxy-middleware
-- kakao map api
-- mui
-- styled-component
+Backend
+- Java
+- Spring Boot
+- Spring Security
+- JWT
+- Lombok
+- MyBatis
+- Junit
+- Gradle
+  
+Frontend
+- React
+- Axios
+- Http-Proxy-Middleware
+- MUI(Material-UI)
+- Styled-Component
 - npm
-- sts
-- vscode
+
+Database
+- Oracle
+  
+External API
+- Kakao Map API
+
+Ide&Tools
+- STS (Spring Tool Suite)
+- VSCode
+
+배포 환경
 - aws ec2
 - aws route53
   
