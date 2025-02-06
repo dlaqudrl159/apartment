@@ -15,7 +15,28 @@
 8. 지번검색, 도로명검색을 제공하며 아파트의 이름을 검색할수 있고 검색된 아파트 내역을 클릭하면 해당 아파트의 좌표로 이동하며 거래내역이 모달창이 오픈됩니다.
 9. 아파트 거래내역 데이터는 매일 02시에 자동으로 갱신됩니다.
 
-
-
+## 개발 환경
+- java
+- spring
+- spring boot
+- spring security
+- jwt
+- lombok
+- gradle
+- oracle
+- mybatis
+- junit
+- react
+- axios
+- http-proxy-middleware
+- kakao map api
+- mui
+- styled-component
+- npm
+- sts
+- vscode
+- aws ec2
+- aws route53
+  
 [![Top Langs](https://github-readme-stats.vercel.app/api/top-langs/?username=dlaqudrl159)](https://github.com/anuraghazra/github-readme-stats)
 
