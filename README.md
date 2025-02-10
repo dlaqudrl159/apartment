@@ -55,6 +55,45 @@ Ide&Tools
 배포 환경
 - aws ec2
 - aws route53
-  
-[![Top Langs](https://github-readme-stats.vercel.app/api/top-langs/?username=dlaqudrl159)](https://github.com/anuraghazra/github-readme-stats)
+
+## 데이터베이스 구조
+이 데이터베이스는 각 시도 아파트의 실거래가 정보와 위치 정보를 저장합니다.
+
+예시는 부산테이블이며 각시도별로 테이블이 존재합니다.
+
+COORDINATES 테이블은 아파트의 좌표 정보를 저장합니다.
+```mermaid
+erDiagram
+    BUSAN ||--o{ COORDINATES : "has location"
+    BUSAN {
+        varchar2(100) SIGUNGU "시군구"
+        varchar2(100) BUNGI "법정동"
+        varchar2(100) BONBUN "본번"
+        varchar2(100) BUBUN "부번"
+        varchar2(100) APARTMENTNAME "아파트명"
+        varchar2(100) AREAFOREXCLUSIVEUSE "전용면적"
+        varchar2(100) DEALYEARMONTH "거래년월"
+        varchar2(100) DEALDAY "거래일"
+        varchar2(100) DEALAMOUNT "거래금액"
+        varchar2(100) APARTMENTDONG "동"
+        varchar2(100) FLOOR "층"
+        varchar2(100) BUYERGBN "매수자구분"
+        varchar2(100) SELLERGBN "매도자구분"
+        varchar2(100) BUILDYEAR "건축년도"
+        varchar2(100) ROADNAME "도로명"
+        varchar2(100) CANCLEDEALDAY "해제거래일"
+        varchar2(100) REQGBN "요청구분"
+        varchar2(100) RDEALERLAWDNM "중개사법정동명"
+        varchar2(100) REGISTRATIONDATE "등기일자"
+        varchar2(100) SGGCD "시군구코드"
+    }
+    COORDINATES {
+        varchar2(100) SIGUNGU "시군구"
+        varchar2(100) BUNGI "법정동"
+        varchar2(100) LAT "위도"
+        varchar2(100) LNG "경도"
+        varchar2(100) ROADNAME "도로명"
+        varchar2(100) APARTMENTNAME "아파트명"
+    }
+  ```
 
