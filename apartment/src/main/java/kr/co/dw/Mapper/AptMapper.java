@@ -8,16 +8,20 @@ import org.apache.ibatis.annotations.Param;
 
 import kr.co.dw.Dto.Common.AptCoordsDto;
 import kr.co.dw.Dto.Common.AptTransactionDto;
+import kr.co.dw.Dto.Common.SearchAptDataDto;
+import kr.co.dw.Dto.Common.SearchRoadNamesDto;
 
 @Mapper
 public interface AptMapper {
 
 	List<AptCoordsDto> getMarkers(Map<String, String> map);
 
-	List<AptTransactionDto> getAptTrancsactionHistory(@Param("aptCoordsDto") AptCoordsDto aptCoordsDto,@Param("tableName") String tableName);
+	List<AptTransactionDto> getAptTransactionHistory(@Param("aptCoordsDto") AptCoordsDto aptCoordsDto,@Param("korSido") String korSido);
 	
 	List<String> getRoadName(@Param("aptCoordsDto") AptCoordsDto aptCoordsDto);
 
-	
+	List<AptCoordsDto> getRoadNames(@Param("searchRoadNamesDto") SearchRoadNamesDto searchRoadNamesDto);
+
+	List<AptCoordsDto> getCategoryClickData(@Param("searchAptDataDto") SearchAptDataDto searchAptDatDto);
 	
 }

@@ -4,9 +4,7 @@ import java.util.Arrays;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -31,6 +29,7 @@ public class SecurityConfig {
 		.authorizeHttpRequests(authz -> authz
 				.requestMatchers("/auth/admin/dashboard").authenticated()
 				.requestMatchers("/data/*").authenticated()
+				.requestMatchers("/api/index.php/v1/config/application").authenticated()
 				.anyRequest().permitAll());
 		
 		return http.build();
@@ -40,7 +39,7 @@ public class SecurityConfig {
 	public CorsConfigurationSource corsConfigurationSource() {
 		
 		CorsConfiguration configuration = new CorsConfiguration();
-		configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
+		configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000","http://54.180.220.158","http://www.apttrade.info","http://apttrade.info"));
 		configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
 		configuration.setAllowedHeaders(Arrays.asList("*"));
 		configuration.setAllowCredentials(true);

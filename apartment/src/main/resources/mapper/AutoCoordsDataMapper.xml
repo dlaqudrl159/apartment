@@ -3,79 +3,123 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.co.dw.Mapper.AutoCoordsDataMapper">
-    
-    <resultMap type="AptCoordsDto" id="newAptCoordsDto">
-  	<!-- 1:1로 DTO의 멤버변수를 매핑-->
-  	<result column="sigungu" property="SIGUNGU"/>
-  	<result column="bungi" property="BUNGI"/>
-  	<result column="apartmentname" property="APARTMENTNAME"/>
-  	<result column="roadname" property="ROADNAME"/>
-  	<result column="lat" property="LAT"/>
-  	<result column="lng" property="LNG"/>
-	</resultMap>   
-    
-    <resultMap type="AptTransactionDto" id="newAptTransactionDto">
-  	<!-- 1:1로 DTO의 멤버변수를 매핑-->
-  	<result column="SIGUNGU" property="SIGUNGU"/>
-  	<result column="BUNGI" property="BUNGI"/>
-  	<result column="BONBUN" property="BONBUN"/>
-  	<result column="BUBUN" property="BUBUN"/>
-  	<result column="APARTMENTNAME" property="APARTMENTNAME"/>
-  	<result column="AREAFOREXCLUSIVEUSE" property="AREAFOREXCLUSIVEUSE"/>
-  	<result column="DEALYEARMONTH" property="DEALYEARMONTH"/>
-  	<result column="DEALDAY" property="DEALDAY"/>
-  	<result column="DEALAMOUNT" property="DEALAMOUNT"/>
-  	<result column="APARTMENTDONG" property="APARTMENTDONG"/>
-  	<result column="FLOOR" property="FLOOR"/>
-  	<result column="BUYERGBN" property="BUYERGBN"/>
-  	<result column="SELLERGBN" property="SELLERGBN"/>
-  	<result column="BUILDYEAR" property="BUILDYEAR"/>
-  	<result column="ROADNAME" property="ROADNAME"/>
-  	<result column="CANCLEDEALDAY" property="CANCLEDEALDAY"/>
-  	<result column="REQGBN" property="REQGBN"/>
-  	<result column="RDEALERLAWDNM" property="RDEALERLAWDNM"/>
-  	<result column="REGISTRATIONDATE" property="REGISTRATIONDATE"/>
-  	<result column="SGGCD" property="SGGCD"/>
-	</resultMap>   
-    
-    <insert id="insertCoords" parameterType="AptCoordsDto">
-    
-    insert into COORDINATES (SIGUNGU, BUNGI, LAT,LNG,ROADNAME,APARTMENTNAME) values (#{SIGUNGU},#{BUNGI},#{LAT},#{LNG},#{ROADNAME},#{APARTMENTNAME})
-    
-    </insert>
-    
-    <select id="getParentRegionAptCoordsDtoList" parameterType="ParentRegionName">
-    select SIGUNGU,BUNGI,ROADNAME,APARTMENTNAME from 
-    <choose>
-    
-    <when test="engParentName == 'SEOUL'">SEOUL</when>
-    <when test="engParentName == 'BUSAN'">BUSAN</when>    
-    <when test="engParentName == 'DAEGU'">DAEGU</when>
-    <when test="engParentName == 'INCHEON'">INCHEON</when>
-    <when test="engParentName == 'GWANGJU'">GWANGJU</when>
-    <when test="engParentName == 'DAEJEON'">DAEJEON</when>
-    <when test="engParentName == 'ULSAN'">ULSAN</when>
-    <when test="engParentName == 'SEJONG'">SEJONG</when>
-    <when test="engParentName == 'GYEONGGIDO'">GYEONGGIDO</when>
-    <when test="engParentName == 'GANGWONDO'">GANGWONDO</when>
-    <when test="engParentName == 'CHUNGCHEONGBUKDO'">CHUNGCHEONGBUKDO</when>
-    <when test="engParentName == 'CHUNGCHEONGNAMDO'">CHUNGCHEONGNAMDO</when>
-    <when test="engParentName == 'JEOLLABUKDO'">JEOLLABUKDO</when>
-    <when test="engParentName == 'GYEONGSANGBUKDO'">GYEONGSANGBUKDO</when>
-    <when test="engParentName == 'GYEONGSANGNAMDO'">GYEONGSANGNAMDO</when>    
-    <when test="engParentName == 'JEJU'">JEJU</when>
 
-    <otherwise>
-    ${engParentName}
-    </otherwise> 
-    </choose>
-    group by SIGUNGU,BUNGI,ROADNAME,APARTMENTNAME order by SIGUNGU DESC
-    </select>
-    
-    <select id = "getCoordsDto" parameterType="AptCoordsDto">
-    
-    select * from COORDINATES where SIGUNGU = #{SIGUNGU} and BUNGI = #{BUNGI} and ROADNAME = #{ROADNAME} and APARTMENTNAME = #{APARTMENTNAME}
-   
-    </select>
-    
+	<resultMap type="AptCoordsDto" id="newAptCoordsDto">
+		<!-- 1:1로 DTO의 멤버변수를 매핑 -->
+		<result column="sigungu" property="SIGUNGU" />
+		<result column="bungi" property="BUNGI" />
+		<result column="apartmentname" property="APARTMENTNAME" />
+		<result column="roadname" property="ROADNAME" />
+		<result column="lat" property="LAT" />
+		<result column="lng" property="LNG" />
+	</resultMap>
+
+	<insert id="insertCoords" parameterType="AptCoordsDto">
+
+		insert into COORDINATES (SIGUNGU, BUNGI, LAT,LNG,ROADNAME,APARTMENTNAME)
+		values
+		(#{SIGUNGU},#{BUNGI},#{LAT},#{LNG},#{ROADNAME},#{APARTMENTNAME})
+
+	</insert>
+
+	<select id="getAptCoordsDtosBySido">
+		select SIGUNGU,BUNGI,ROADNAME,APARTMENTNAME from
+		<choose>
+
+			<when test="korSido == '서울특별시'">SEOUL</when>
+			<when test="korSido == '부산광역시'">BUSAN</when>
+			<when test="korSido == '대구광역시'">DAEGU</when>
+			<when test="korSido == '인천광역시'">INCHEON</when>
+			<when test="korSido == '광주광역시'">GWANGJU</when>
+			<when test="korSido == '대전광역시'">DAEJEON</when>
+			<when test="korSido == '울산광역시'">ULSAN</when>
+			<when test="korSido == '세종특별자치시'">SEJONG</when>
+			<when test="korSido == '경기도'">GYEONGGIDO</when>
+			<when test="korSido == '강원특별자치도'">GANGWONDO</when>
+			<when test="korSido == '충청북도'">CHUNGCHEONGBUKDO</when>
+			<when test="korSido == '충청남도'">CHUNGCHEONGNAMDO</when>
+			<when test="korSido == '전북특별자치도'">JEOLLABUKDO</when>
+			<when test="korSido == '전라남도'">JEOLLANAMDO</when>
+			<when test="korSido == '경상북도'">GYEONGSANGBUKDO</when>
+			<when test="korSido == '경상남도'">GYEONGSANGNAMDO</when>
+			<when test="korSido == '제주특별자치도'">JEJU</when>
+
+			<otherwise>
+				#{korSido}
+			</otherwise>
+		</choose>
+		group by SIGUNGU,BUNGI,ROADNAME,APARTMENTNAME order by SIGUNGU DESC
+	</select>
+
+	<select id="getCoordsDto" parameterType="AptCoordsDto">
+
+		select * from COORDINATES where SIGUNGU = #{SIGUNGU} and BUNGI = #{BUNGI}
+		and ROADNAME = #{ROADNAME} and APARTMENTNAME = #{APARTMENTNAME}
+
+	</select>
+
+	<delete id="notExistTransactionCoordsDelete">
+
+		DELETE FROM COORDINATES C
+		WHERE C.SIGUNGU 
+		
+		<choose>
+
+			<when test="korSido == '서울특별시'">LIKE '서울특별시%'</when>
+			<when test="korSido == '부산광역시'">LIKE '부산광역시%'</when>
+			<when test="korSido == '대구광역시'">LIKE '대구광역시%'</when>
+			<when test="korSido == '인천광역시'">LIKE '인천광역시%'</when>
+			<when test="korSido == '광주광역시'">LIKE '광주광역시%'</when>
+			<when test="korSido == '대전광역시'">LIKE '대전광역시%'</when>
+			<when test="korSido == '울산광역시'">LIKE '울산광역시%'</when>
+			<when test="korSido == '세종특별자치시'">LIKE '세종특별자치시%'</when>
+			<when test="korSido == '경기도'">LIKE '경기도%'</when>
+			<when test="korSido == '강원특별자치도'">LIKE '강원특별자치도%'</when>
+			<when test="korSido == '충청북도'">LIKE '충청북도%'</when>
+			<when test="korSido == '충청남도'">LIKE '충청남도%'</when>
+			<when test="korSido == '전북특별자치도'">LIKE '전북특별자치도%'</when>
+			<when test="korSido == '전라남도'">LIKE '전라남도%'</when>
+			<when test="korSido == '경상북도'">LIKE '경상북도%'</when>
+			<when test="korSido == '경상남도'">LIKE '경상남도%'</when>
+			<when test="korSido == '제주특별자치도'">LIKE '제주특별자치도%'</when>
+
+			<otherwise>
+				#{korSido}
+			</otherwise>
+		</choose>
+		
+		
+		AND NOT EXISTS (
+		SELECT 1
+		FROM <choose>
+
+			<when test="korSido == '서울특별시'">SEOUL</when>
+			<when test="korSido == '부산광역시'">BUSAN</when>
+			<when test="korSido == '대구광역시'">DAEGU</when>
+			<when test="korSido == '인천광역시'">INCHEON</when>
+			<when test="korSido == '광주광역시'">GWANGJU</when>
+			<when test="korSido == '대전광역시'">DAEJEON</when>
+			<when test="korSido == '울산광역시'">ULSAN</when>
+			<when test="korSido == '세종특별자치시'">SEJONG</when>
+			<when test="korSido == '경기도'">GYEONGGIDO</when>
+			<when test="korSido == '강원특별자치도'">GANGWONDO</when>
+			<when test="korSido == '충청북도'">CHUNGCHEONGBUKDO</when>
+			<when test="korSido == '충청남도'">CHUNGCHEONGNAMDO</when>
+			<when test="korSido == '전북특별자치도'">JEOLLABUKDO</when>
+			<when test="korSido == '전라남도'">JEOLLANAMDO</when>
+			<when test="korSido == '경상북도'">GYEONGSANGBUKDO</when>
+			<when test="korSido == '경상남도'">GYEONGSANGNAMDO</when>
+			<when test="korSido == '제주특별자치도'">JEJU</when>
+
+			<otherwise>
+				#{korSido}
+			</otherwise>
+		</choose> A
+		WHERE C.SIGUNGU = A.SIGUNGU
+		AND C.BUNGI = A.BUNGI
+		AND C.APARTMENTNAME = A.APARTMENTNAME
+		)
+
+	</delete>
+
 </mapper>	
