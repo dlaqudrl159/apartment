@@ -1,29 +1,25 @@
 package kr.co.dw.Service.AutoData.Coords;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import kr.co.dw.Domain.ParentRegionName;
+import kr.co.dw.Domain.Sido;
 import kr.co.dw.Domain.RegionManager;
 import kr.co.dw.Dto.Common.AptCoordsDto;
+import kr.co.dw.Dto.Common.ProcessedAutoCoordsDataDto;
 import kr.co.dw.Dto.Response.AutoCoordsDataResponse;
-import kr.co.dw.Mapper.AutoCoordsDataMapper;
+import kr.co.dw.Dto.Response.AutoCoordsDataResponse;
+import kr.co.dw.Exception.CustomException;
+import kr.co.dw.Exception.ErrorCode.ErrorCode;
+import kr.co.dw.Repository.Auto.AutoCoordsDataRepository;
+import kr.co.dw.Service.AutoData.Coords.GeocoderApi.GeocoderApi;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -32,143 +28,114 @@ public class AutoCoordsDataServiceImpl implements AutoCoordsDataService{
 	
 	private final Logger logger = LoggerFactory.getLogger(AutoCoordsDataServiceImpl.class);
 	
-	private final AutoCoordsDataMapper autoCoordsDataMapper;
+	private final AutoCoordsDataRepository autoCoordsDataRepository;
 	
-	@Value("${api.geocoder.url}")
-	private String api_Geocoder_Url;
+	private final GeocoderApi geocoderApi;
 	
-	@Value("${api.geocoder.service-key}") //"#{@environment.getProperty('geocodersearchaddress.apikey')}" // "${geocodersearchaddress.apikey}"
-	private String api_Geocoder_Service_Key;
-
 	@Override
-	public JSONObject geocodersearchaddress(String searchAddr, String searchType) throws IOException, ParseException {
-		
-		String epsg = "epsg:4326";
-		StringBuilder sb = new StringBuilder(this.api_Geocoder_Url);
-		sb.append("?service=address");
-		sb.append("&request=getCoord");
-		sb.append("&format=json");
-		sb.append("&crs=" + epsg);
-		sb.append("&key=" + this.api_Geocoder_Service_Key);
-		sb.append("&type=" + searchType);
-		sb.append("&address=" + URLEncoder.encode(searchAddr, StandardCharsets.UTF_8));
-		
-		URL url = new URL(sb.toString());
-		BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream(),StandardCharsets.UTF_8));
-		JSONParser jspa = new JSONParser();
-		JSONObject jsob = (JSONObject) jspa.parse(br);
-		JSONObject jsrs = (JSONObject) jsob.get("response");
-		
-		return jsrs;
-	}
-
-	@Override
-	public JSONObject getparcel(AptCoordsDto aptCoordsDto) throws IOException, ParseException {
-		String searchType = "parcel";
-		String Sigungu = aptCoordsDto.getSIGUNGU();
-		String Bungi = aptCoordsDto.getBUNGI();		
-		String searchAddr = Sigungu + " " + Bungi;
-		return geocodersearchaddress(searchAddr, searchType);
-	}
-
-	@Override
-	public JSONObject getroadname(AptCoordsDto aptCoordsDto) throws IOException, ParseException {
-		String searchType = "road";
-		String Sigungu = aptCoordsDto.getSIGUNGU();
-		String roadname = aptCoordsDto.getROADNAME();
-		String searchAddr = Sigungu + " " + roadname;
-		return geocodersearchaddress(searchAddr, searchType);
-	}
-
-	@Override
-	public AutoCoordsDataResponse allCoordsInsert() {
+	public List<AutoCoordsDataResponse> allCoordsInsert() {
 		
 		List<AutoCoordsDataResponse> totalresponse = new ArrayList<>();
 		
-		List<ParentRegionName> parentRegionNameLIst = RegionManager.getInstance().getParentRegionNameList();
+		List<Sido> sidos = RegionManager.getSidos();
 		
-		for(int i = 0 ; i < parentRegionNameLIst.size() ; i++) {
-			AutoCoordsDataResponse response = CoordsInsert(parentRegionNameLIst.get(i).getEngParentName());
-			if("ERROR".equals(response.getStatus())) {
-				return new AutoCoordsDataResponse("ERROR", "01", parentRegionNameLIst.get(i).getEngParentName() + "지역 좌표 처리 중 오류 발생", null, totalresponse);
+		for(int i = 0 ; i < sidos.size() ; i++) {
+			String korSido = sidos.get(i).getKorSido();
+			try {
+				AutoCoordsDataResponse response = syncCoordinateData(korSido);
+				totalresponse.add(response);
+			} catch (Exception e) {
+				totalresponse.add(new AutoCoordsDataResponse(500, korSido + " 지역 좌표 입력 정리 중 오류 발생",
+						new Sido(korSido, RegionManager.toEngSido(korSido)), null, null));
 			}
-			totalresponse.add(response);
+			
 		}
-		
-		return new AutoCoordsDataResponse("OK", "01", "전체 지역 좌표 입력 완료", null, totalresponse);
+		logger.info("전국 시도 아파트 좌표 조회 작업 종료");
+		return totalresponse;
 	}
 
-	@Transactional
 	@Override
-	public AutoCoordsDataResponse CoordsInsert(String parentEngRegionName) {
-		
-		ParentRegionName parentRegionName = RegionManager.getInstance().getParentName(parentEngRegionName);
-		List<AptCoordsDto> updateAptCoordsDtoList = getParentRegionAptCoordsDtoList(parentRegionName);
-		
-		List<AutoCoordsDataResponse> response = new ArrayList<>();
-		List<AptCoordsDto> updateAptCoords = new ArrayList<>();
-		for(int i = 0 ; i< updateAptCoordsDtoList.size() ; i++) {
+	public AutoCoordsDataResponse coordsInsert(String korSido) {
+		return syncCoordinateData(korSido);
+	}
+	
+	@Override
+	public AutoCoordsDataResponse syncCoordinateData(String korSido) {
+		try {
+			logger.info("korSido: {} 지역 좌표 입력 시작", korSido);
+			List<AptCoordsDto> updateAptCoordsDtos = autoCoordsDataRepository.getAptCoordsDtosBySido(korSido);
 			
-			AptCoordsDto aptCoordsDto = updateAptCoordsDtoList.get(i);
+			List<ProcessedAutoCoordsDataDto> ProcessedAutoCoordsDataDtos = processCoords(updateAptCoordsDtos);
 			
-			if(IsCoordsExist(aptCoordsDto)) {
-				continue;
-			}
-			
-			try {
-				updateAptCoords.add(processCoords(aptCoordsDto));
-				response.add(new AutoCoordsDataResponse("OK", "00", "좌표 조회 성공", aptCoordsDto));
-			} catch (Exception e) {
-				// TODO: handle exception
-				logger.error("Error processing LatLng for apt: " + aptCoordsDto.toString(), e);
-				response.add(new AutoCoordsDataResponse("ERROR", "01", "좌표 입력 실패", aptCoordsDto));
-				return new AutoCoordsDataResponse("ERROR", "01", parentEngRegionName + "지역 좌표 입력 실패", aptCoordsDto, response);
-			}
-			
+			logger.info("korSido: {} 지역 좌표 정리 시작", korSido);
+			autoCoordsDataRepository.notExistTransactionCoordsDelete(korSido);
+			return new AutoCoordsDataResponse(200, korSido + " 지역 좌표 입력 정리 완료",
+					new Sido(korSido, RegionManager.toEngSido(korSido)),
+					ProcessedAutoCoordsDataDtos, ProcessedAutoCoordsDataDtos);
+		} catch (Exception e) {
+			logger.error("korSido: {} 지역 좌표 입력 정리 중 오류 발생", korSido, e);
+			throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR, korSido + " 지역 좌표 입력 정리 중 오류 발생");
 		}
 		
-		
-		
-		
-		return new AutoCoordsDataResponse("OK", "00", parentEngRegionName + "지역 좌표 입력 성공", null, response);
 	}
 	
 	@Override
-	public List<AptCoordsDto> getParentRegionAptCoordsDtoList(ParentRegionName parentRegionName) {
+	public List<ProcessedAutoCoordsDataDto> processCoords(List<AptCoordsDto> updateAptCoordsDtos) {
+		List<ProcessedAutoCoordsDataDto> ProcessedAutoCoordsDataDtos = new ArrayList<>();
+		for(int i = 0 ; i < updateAptCoordsDtos.size() ; i++) {
+			AptCoordsDto aptCoordsDto = updateAptCoordsDtos.get(i);
+			
+			if(isCoordsExist(aptCoordsDto)) {
+				continue;
+			}
+			ProcessedAutoCoordsDataDto processedAutoCoordsDataDto = new ProcessedAutoCoordsDataDto(null, aptCoordsDto);
+			ProcessedAutoCoordsDataDtos.add(callGeoCoderApi(processedAutoCoordsDataDto)); 
+		}
 		
-		List<AptCoordsDto> updateAptCoordsDtoList = autoCoordsDataMapper.getParentRegionAptCoordsDtoList(parentRegionName);
-		return updateAptCoordsDtoList;
+		return ProcessedAutoCoordsDataDtos;
 	}
 	
 	@Override
-	public AptCoordsDto getCoordsDto(AptCoordsDto aptCoordsDto) {
+	public boolean isCoordsExist (AptCoordsDto aptCoordsDto) {
 		
-		return autoCoordsDataMapper.getCoordsDto(aptCoordsDto);
+		return aptCoordsDto.equals(autoCoordsDataRepository.getCoordsDto(aptCoordsDto));
 	}
 	
-	@Override
-	public boolean IsCoordsExist (AptCoordsDto aptCoordsDto) {
-		
-		return aptCoordsDto.equals(getCoordsDto(aptCoordsDto));
-	}
-	
-	@Override
-	public AptCoordsDto processCoords(AptCoordsDto aptCoordsDto) throws IOException, ParseException {
-		JSONObject response = getparcel(aptCoordsDto);
-		
-	    if (!"OK".equals(response.get("status"))) {
-	        response = getroadname(aptCoordsDto);
-	    }
-	    
-	    if ("OK".equals(response.get("status"))) {
-	        setCoordinates(aptCoordsDto, response);
-	    } else {
-	    	setNoDataCoordinates(aptCoordsDto);
-	    }
-	    
-	    autoCoordsDataMapper.insertCoords(aptCoordsDto);
-	    
-		return aptCoordsDto;
+	public ProcessedAutoCoordsDataDto callGeoCoderApi(ProcessedAutoCoordsDataDto processedAutoCoordsDataDto) {
+		try {
+			logger.info("aptCoordsDto: {} 좌표 조회 시작", processedAutoCoordsDataDto.getAptCoordsDto());
+			JSONObject response = geocoderApi.getparcel(processedAutoCoordsDataDto.getAptCoordsDto());
+			
+		    if (!"OK".equals(response.get("status"))) {
+		        response = geocoderApi.getroadname(processedAutoCoordsDataDto.getAptCoordsDto());
+		    }
+		    
+		    if ("OK".equals(response.get("status"))) {
+		        setCoordinates(processedAutoCoordsDataDto.getAptCoordsDto(), response);
+		    } else {
+		    	logger.info("aptCoordsDto: {} 좌표 정보 없음 추후 추가 예정", processedAutoCoordsDataDto.getAptCoordsDto());
+		    	setNoDataCoordinates(processedAutoCoordsDataDto.getAptCoordsDto());
+		    }
+		    processedAutoCoordsDataDto.setMessage("success");
+		    processedAutoCoordsDataDto.setSuccess(true);
+		    autoCoordsDataRepository.insertCoords(processedAutoCoordsDataDto.getAptCoordsDto());
+			return processedAutoCoordsDataDto;
+		} catch (IOException e) {
+			logger.error("지오코더API 좌표 검색 응답 데이터 Reader 오류 발생 processedAutoCoordsDataDto: {}", processedAutoCoordsDataDto, e);
+			processedAutoCoordsDataDto.setMessage("fail");
+			processedAutoCoordsDataDto.setSuccess(false);
+			return processedAutoCoordsDataDto;
+		} catch (ParseException e) {
+			logger.error("지오코더API 좌표 검색 응답 데이터 JSON 파싱 중 오류 발생 processedAutoCoordsDataDto: {}", processedAutoCoordsDataDto, e);
+			processedAutoCoordsDataDto.setMessage("fail");
+			processedAutoCoordsDataDto.setSuccess(false);
+			return processedAutoCoordsDataDto;
+		} catch (Exception e) {
+			logger.error("지오코더API 좌표 검색 중 예상치 못한 오류 발생 processedAutoCoordsDataDto: {}", processedAutoCoordsDataDto, e);
+			processedAutoCoordsDataDto.setMessage("fail");
+			processedAutoCoordsDataDto.setSuccess(false);
+			return processedAutoCoordsDataDto;
+		} 
 	}
 	
 	@Override
@@ -194,6 +161,11 @@ public class AutoCoordsDataServiceImpl implements AutoCoordsDataService{
 	public void setNoDataCoordinates(AptCoordsDto aptCoordsDto) {
 		aptCoordsDto.setLAT("자료없음");
 		aptCoordsDto.setLNG("자료없음");
+	}
+
+	@Override
+	public void notExistTransactionCoordsDelete(String korSido) {
+		autoCoordsDataRepository.notExistTransactionCoordsDelete(korSido);
 	}
 	
 	

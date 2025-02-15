@@ -15,7 +15,7 @@ import io.jsonwebtoken.security.Keys;
 public class JwtTokenProvider {
 
 	@Value("${jwt.service.key}")
-	private String serviceKey;
+	private String JWT_SERVICE_KEY;
 
 	private final long tokenValidMilliseconds = 1000L * 60 * 60; // 1시간
 
@@ -53,7 +53,7 @@ public class JwtTokenProvider {
 	   }
 
 	private Key getSigningKey() {
-		byte[] keyBytes = serviceKey.getBytes(StandardCharsets.UTF_8);
+		byte[] keyBytes = JWT_SERVICE_KEY.getBytes(StandardCharsets.UTF_8);
 		return Keys.hmacShaKeyFor(keyBytes);
 	}
 }

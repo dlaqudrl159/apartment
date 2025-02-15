@@ -1,4 +1,4 @@
-package kr.co.dw.sidosigungu;
+package kr.co.dw.Domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
