@@ -31,7 +31,9 @@ public class AptController {
 
 	@GetMapping("/api/getMarkers")
 	public ResponseEntity<List<AptCoordsDto>> getMarkers(@RequestParam("addresses") List<String> addresses) {
-
+		String env = System.getenv("spring.datasource.username");
+		System.out.println(env);
+		System.out.println("::::::::::::::::::");
 		if (addresses == null || addresses.isEmpty()) {
 			logger.error("주소목록 요청이 NULL 이거나 비어있습니다 addresses: {}", addresses);
 			throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
