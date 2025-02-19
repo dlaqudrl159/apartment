@@ -109,7 +109,7 @@ public class AptServiceImpl implements AptService {
 	    List<String> roadNames = aptRepository.getRoadName(aptCoordsDto);
 	    roadNames.forEach(roadName -> {
 	        AptCoordsDto aptHistoryCoords = createResponseAptCoords(aptCoordsDto, roadName);
-	        responses.add(new AptTransactionResponse(List.of(2024), null, aptHistoryCoords));
+	        responses.add(new AptTransactionResponse(List.of(2025), null, aptHistoryCoords));
 	    });
 	    return responses;
 	}

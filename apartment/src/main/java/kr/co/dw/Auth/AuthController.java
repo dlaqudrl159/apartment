@@ -15,7 +15,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AuthController {
 
-    @Value("${spring.admin.userid}")
+	@Value("${spring.admin.userid}")
     private String adminUserId;
     
     @Value("${spring.admin.userpw}")
