@@ -8,6 +8,7 @@ import java.util.Map;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.mybatis.spring.SqlSessionTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -38,7 +39,6 @@ public class AutoAptDataServiceImpl implements AutoAptDataService {
 	private final ParserAndConverter aptDataParserService;
 	private final OpenApiService openApiService;
 	private final AutoAptDataRepository autoAptDataRepository;
-	private final SqlSessionFactory sqlSessionFactory;
 
 	@Override
 	public List<AutoAptDataResponse> allAutoAptDataInsert() {
@@ -81,13 +81,8 @@ public class AutoAptDataServiceImpl implements AutoAptDataService {
 				successProcessedAutoAptDataDtos.get(i).setProcesedAptDatas(null);
 			}
 			
-			long heapSize = Runtime.getRuntime().totalMemory();
-			long heapMaxSize = Runtime.getRuntime().maxMemory();
-			long heapFreeSize = Runtime.getRuntime().freeMemory();
-			logger.info("Heap Status - Total: {} MB, Max: {} MB, Free: {} MB", 
-				    heapSize / (1024*1024), 
-				    heapMaxSize / (1024*1024), 
-				    heapFreeSize / (1024*1024));
+			createMemoryLog();
+			
 			logger.info("korSido: {} 전체 행정구역 거래내역 데이터 삭제 입력 완료", korSido);
 			return new AutoAptDataResponse(200, korSido + "지역 데이터 삭제 입력(delete, insert) 성공", 
 					new Sido(korSido, RegionManager.toEngSido(korSido)), 
@@ -97,6 +92,16 @@ public class AutoAptDataServiceImpl implements AutoAptDataService {
 			throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR, "아파트 거래내역 자동 입력 중 오류 발생");
 		}
 		
+	}
+
+	private void createMemoryLog() {
+		long heapSize = Runtime.getRuntime().totalMemory();
+		long heapMaxSize = Runtime.getRuntime().maxMemory();
+		long heapFreeSize = Runtime.getRuntime().freeMemory();
+		logger.info("Heap Status - Total: {} MB, Max: {} MB, Free: {} MB", 
+			    heapSize / (1024*1024), 
+			    heapMaxSize / (1024*1024), 
+			    heapFreeSize / (1024*1024));
 	}
 	
 	@Override
@@ -118,41 +123,10 @@ public class AutoAptDataServiceImpl implements AutoAptDataService {
 		}
 		return processedAutoAptDataDtos;
 	}
-
-	@Transactional
-	public void batchProcessAptTransactionDtos(List<AptTransactionDto> aptTransactionDtos, String korSido) {
-		if (aptTransactionDtos.isEmpty()) {
-			return;
-	    }
-		SqlSession sqlSession = this.sqlSessionFactory.openSession(ExecutorType.BATCH);
-		try {
-			int count = 0;
-			
-			for (AptTransactionDto aptTransactionDto : aptTransactionDtos) {
-				Map<String, Object> map = new HashMap<>();
-				map.put("aptTransactionDto", aptTransactionDto);
-				map.put("korSido", korSido);
-				sqlSession.insert("kr.co.dw.Mapper.AutoAptDataMapper.insertAptData", map);
-				if (++count % Constant.BATCH_SIZE == 0) {
-					sqlSession.flushStatements();
-	                logger.info("korSido: {} Batch processed: {}/{}", korSido, count, aptTransactionDtos.size());
-	            }
-			}
-			if (count % Constant.BATCH_SIZE != 0) {
-				sqlSession.flushStatements();
-			}
-				sqlSession.commit();
-				logger.info("korSido: {} Total processed: {}", korSido, count);
-			} catch (Exception e) {
-		        logger.error("아파트 거래내역 배치 처리 중 오류 발생: {}", e);
-		        sqlSession.rollback();
-		        throw e;
-			} finally {
-				sqlSession.close();
-			}
-	}
-	@Override
+	
+	/*@Override SqlSession을 이용한 배치
 	public void batchProcessAptTransactionDtos(List<AptTransactionDto> aptTransactionDtos, String korSido, List<ProcessedAutoAptDataDto> failProcessedAutoAptDataDtos, String deleteDealYearMonth) {
+		long before = System.currentTimeMillis();
 		if (aptTransactionDtos.isEmpty()) {
 			return;
 	    }
@@ -181,5 +155,69 @@ public class AutoAptDataServiceImpl implements AutoAptDataService {
 			} finally {
 				sqlSession.close();
 			}
+		long after = System.currentTimeMillis();
+		logger.info("걸린시간: {}m/s", after-before);
+		
+	}*/
+	
+	/*@Transactional batchSqlSessionTemplate를 이용한 배치
+	public void batchProcessAptTransactionDtos2(List<AptTransactionDto> aptTransactionDtos, String korSido, List<ProcessedAutoAptDataDto> failProcessedAutoAptDataDtos, String deleteDealYearMonth) {
+		long before = System.currentTimeMillis();
+		if (aptTransactionDtos.isEmpty()) {
+			return;
+	    }
+		AutoAptDataMapper mapper = batchSqlSessionTemplate.getMapper(AutoAptDataMapper.class);
+		try {
+			int count = 0;
+			mapper.deleteAptData(failProcessedAutoAptDataDtos, korSido, deleteDealYearMonth);
+			batchSqlSessionTemplate.flushStatements();
+			for (AptTransactionDto aptTransactionDto : aptTransactionDtos) {
+				mapper.insertAptData(aptTransactionDto, korSido);
+				if (++count % Constant.BATCH_SIZE == 0) {
+					batchSqlSessionTemplate.flushStatements();
+	                logger.info("korSido: {} Batch processed: {}/{}", korSido, count, aptTransactionDtos.size());
+	            }
+			}
+			if (count % Constant.BATCH_SIZE != 0) {
+				batchSqlSessionTemplate.flushStatements();
+			}
+				logger.info("korSido: {} Total processed: {}", korSido, count);
+			} catch (Exception e) {
+		        logger.error("아파트 거래내역 배치 처리 중 오류 발생: {}", e);
+		        throw e;
+			} 
+		long after = System.currentTimeMillis();
+		logger.info("걸린시간: {}m/s", after-before);
+	}*/
+	
+	// autoAptDataRepository에 batchSqlSessionTemplate를 선언해 사용한 배치 이게 더 깔끔
+	@Transactional
+	@Override
+	public void batchProcessAptTransactionDtos(List<AptTransactionDto> aptTransactionDtos, String korSido, List<ProcessedAutoAptDataDto> failProcessedAutoAptDataDtos, String deleteDealYearMonth) {
+		long before = System.currentTimeMillis();
+		if (aptTransactionDtos.isEmpty()) {
+			return;
+	    }
+		try {
+			int count = 0;
+			autoAptDataRepository.deleteAptData(failProcessedAutoAptDataDtos, korSido, deleteDealYearMonth);
+			autoAptDataRepository.flushBatch();
+			for (AptTransactionDto aptTransactionDto : aptTransactionDtos) {
+				autoAptDataRepository.insertAptData(aptTransactionDto, korSido);
+				if (++count % Constant.BATCH_SIZE == 0) {
+					autoAptDataRepository.flushBatch();
+	                logger.info("korSido: {} Batch processed: {}/{}", korSido, count, aptTransactionDtos.size());
+	            }
+			}
+			if (count % Constant.BATCH_SIZE != 0) {
+				autoAptDataRepository.flushBatch();
+			}
+				logger.info("korSido: {} Total processed: {}", korSido, count);
+			} catch (Exception e) {
+		        logger.error("아파트 거래내역 배치 처리 중 오류 발생: {}", e);
+		        throw e;
+			}
+		long after = System.currentTimeMillis();
+		logger.info("걸린시간: {}m/s", after-before);
 	}
 }

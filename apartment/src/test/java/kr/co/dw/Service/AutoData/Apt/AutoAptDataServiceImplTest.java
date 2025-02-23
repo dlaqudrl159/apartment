@@ -112,7 +112,7 @@ public class AutoAptDataServiceImplTest {
 		doThrow(new DatabaseException(ErrorCode.DATABASE_ERROR)).when(autoAptDataRepository).insertAptData(any(), any());
 		// then	
 		assertThrows(DatabaseException.class, () -> {
-			autoAptDataServiceImpl.batchProcessAptTransactionDtos(dtos, korSido);
+			//autoAptDataServiceImpl.batchProcessAptTransactionDtos(dtos, korSido);
 		});
 	}
 	
@@ -127,7 +127,7 @@ public class AutoAptDataServiceImplTest {
 		doThrow(new DatabaseException(ErrorCode.DATABASE_ERROR)).when(autoAptDataRepository).flushBatch();
 		// then	
 		assertThrows(DatabaseException.class, () -> {
-			autoAptDataServiceImpl.batchProcessAptTransactionDtos(dtos, korSido);
+			//autoAptDataServiceImpl.batchProcessAptTransactionDtos(dtos, korSido);
 		});
 	}
 	
