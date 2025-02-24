@@ -1,6 +1,9 @@
 package kr.co.dw.Controller.Apt;
 
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +22,8 @@ import kr.co.dw.Dto.Response.AptTransactionResponse;
 import kr.co.dw.Exception.CustomException;
 import kr.co.dw.Exception.ErrorCode.ErrorCode;
 import kr.co.dw.Service.Apt.AptService;
+import kr.co.dw.Service.ExternalAPI.ExternalAPI;
+import kr.co.dw.Service.ExternalAPI.ExternalAPIImpl;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -60,5 +65,14 @@ public class AptController {
 
 		return ResponseEntity.status(HttpStatus.OK).body(aptService.getCategoryClickData(searchAptDatDto));
 	}
-
+	
+	 @GetMapping("/favicon.ico")
+	 public void returnNoFavicon() {
+	}
+	
+	private final ExternalAPI ExternalApIImpl;
+	@GetMapping("/api/test")
+	public void test() throws IOException {
+		ExternalApIImpl.getRTMSDataSvcAptTradeDev();
+	}
 }
