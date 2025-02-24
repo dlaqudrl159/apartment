@@ -121,5 +121,9 @@ public class OpenApiService {
 		conn.disconnect();
 		return sb.toString();
 	}
+
+	public void getRTMSDataSvcAptTradeDev(String url) {
+		// TODO Auto-generated method stub
+	}
 	
 }

@@ -60,5 +60,10 @@ public class GeocoderApi {
 		String searchAddr = Sigungu + " " + roadname;
 		return geocodersearchaddress(searchAddr, searchType);
 	}
+
+	public void geocodersearchaddress(String url) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }
