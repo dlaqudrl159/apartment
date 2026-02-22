@@ -19,7 +19,7 @@ bin/
 
 # Application properties
 
-apartment/src/main/resources/*.properties
+#apartment/src/main/resources/*.properties
 .metadata
 apartment/.metadata
 
