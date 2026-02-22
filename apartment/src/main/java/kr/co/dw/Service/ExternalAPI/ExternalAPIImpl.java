@@ -47,7 +47,7 @@ public class ExternalAPIImpl implements ExternalAPI{
 		UrlCreateService ucs = new UrlCreateService(baseUrl);
 		
 		String LAWD_CD = "11110";
-		String DEAL_YMD = "202502";
+		String DEAL_YMD = "202601";
 		String pageNo = "1";
 		String numOfRows = "10";
 		
