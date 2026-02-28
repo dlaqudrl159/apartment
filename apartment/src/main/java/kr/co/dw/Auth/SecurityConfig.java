@@ -39,7 +39,7 @@ public class SecurityConfig {
 	public CorsConfigurationSource corsConfigurationSource() {
 		
 		CorsConfiguration configuration = new CorsConfiguration();
-		configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000","http://54.180.220.158","https://54.180.220.158","http://www.apttrade.info","http://apttrade.info","https://www.apttrade.info","https://apttrade.info"));
+		configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000","http://54.180.220.158","https://54.180.220.158","http://www.apttrade.info","http://apttrade.info","https://www.apttrade.info","https://apttrade.info","http://34.64.58.195","https://34.64.58.195"));
 		configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
 		configuration.setAllowedHeaders(Arrays.asList("*"));
 		configuration.setAllowCredentials(true);
