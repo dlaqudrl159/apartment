@@ -4,7 +4,7 @@ public class Constant {
 
 	private Constant() {};
 	
-	public static final Integer DELETE_YEAR = 24;
+	public static final Integer DELETE_YEAR = 27;
 	public static final int BATCH_SIZE = 1000;
 	
 	public static final String API_DEAL_AMOUNT = "dealAmount";
