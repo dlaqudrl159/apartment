@@ -1,7 +1,9 @@
 package kr.co.dw.Auth;
 
 import java.util.Arrays;
+import java.util.List;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -19,6 +21,9 @@ public class SecurityConfig {
 
 	private final JwtTokenFilter jwtTokenFilter;
 
+	@Value("${cors.allowed-origins}")
+	private List<String> allowedOrigins;
+	
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		
@@ -39,7 +44,7 @@ public class SecurityConfig {
 	public CorsConfigurationSource corsConfigurationSource() {
 		
 		CorsConfiguration configuration = new CorsConfiguration();
-		configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000","http://54.180.220.158","https://54.180.220.158","http://www.apttrade.info","http://apttrade.info","https://www.apttrade.info","https://apttrade.info","http://34.64.58.195","https://34.64.58.195"));
+		configuration.setAllowedOrigins(allowedOrigins);
 		configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
 		configuration.setAllowedHeaders(Arrays.asList("*"));
 		configuration.setAllowCredentials(true);

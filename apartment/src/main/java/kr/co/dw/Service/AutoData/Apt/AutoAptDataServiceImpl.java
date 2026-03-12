@@ -40,6 +40,9 @@ public class AutoAptDataServiceImpl implements AutoAptDataService {
 	private final OpenApiService openApiService;
 	private final AutoAptDataRepository autoAptDataRepository;
 
+	@Value("${delete.year}")
+	private Integer DELETE_YEAR;
+	
 	@Override
 	public List<AutoAptDataResponse> allAutoAptDataInsert() {
 		List<Sido> sidos = RegionManager.getSidos();
@@ -72,7 +75,7 @@ public class AutoAptDataServiceImpl implements AutoAptDataService {
 			List<ProcessedAutoAptDataDto> successProcessedAutoAptDataDtos = processedAutoAptDataDtosMap.get(true); 
 			List<ProcessedAutoAptDataDto> failProcessedAutoAptDataDtos = processedAutoAptDataDtosMap.get(false); 
 			
-			String deleteDealYearMonth = aptDataParserService.createDealYearMonth(Constant.DELETE_YEAR);
+			String deleteDealYearMonth = aptDataParserService.createDealYearMonth(DELETE_YEAR);
 			
 			List<AptTransactionDto> aptTransactionDtos = aptDataParserService.createSuccessedAptTransactionDtos(successProcessedAutoAptDataDtos);
 			batchProcessAptTransactionDtos(aptTransactionDtos, korSido, failProcessedAutoAptDataDtos, deleteDealYearMonth);
@@ -113,7 +116,7 @@ public class AutoAptDataServiceImpl implements AutoAptDataService {
 			throw new CustomException(ErrorCode.EMPTY_OR_NULL_Parameter);
 		}
 		List<Sigungu> sigungus = RegionManager.getSigungus(korSido);
-		List<String> dealYearMonths = aptDataParserService.createDealYearMonths(Constant.DELETE_YEAR);
+		List<String> dealYearMonths = aptDataParserService.createDealYearMonths(DELETE_YEAR);
 		for (String dealYearMonth : dealYearMonths) {
 			logger.info("dealyearmonth: {}", dealYearMonth);
 			sigungus.forEach(sigungu -> {
